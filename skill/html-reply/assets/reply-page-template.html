@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HTML 回复</title>
+  <style>
+    :root{--paper:#faf9f5;--paper2:#efe8d6;--ink:#4f4a3c;--muted:#8a8271;--line:#4f4a3c;--accent:#d9a441;--blue:#dce9f4;--green:#dcebd9}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:18px;line-height:1.68}.page{width:min(1480px,calc(100% - 24px));margin:24px auto 60px;border:2px solid var(--line);border-radius:6px;overflow:hidden}.head{padding:54px clamp(24px,6vw,72px) 40px;border-bottom:2px solid var(--line)}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.13em;color:var(--muted)}h1{margin:18px 0 10px;font-size:clamp(36px,4vw,52px);line-height:1.12;letter-spacing:-.03em}.sub{margin:0;color:var(--muted);font-size:19px}.layout{display:grid;grid-template-columns:180px minmax(0,1fr);gap:44px;padding:42px}.toc{position:sticky;top:20px;align-self:start;padding:18px;border:1.5px solid var(--line);border-radius:5px;background:var(--paper2)}.toc b{display:block;margin-bottom:12px;font-size:11px;letter-spacing:.12em}.toc a{display:block;padding:6px 4px;color:var(--muted);font-size:13px;font-weight:700;text-decoration:none}.reading{max-width:1050px}.answer{margin:0 0 26px;padding:18px 20px;border:1.5px solid var(--line);border-left:10px solid var(--accent);border-radius:5px;background:var(--paper2);font-size:21px;font-weight:750}.line{margin:0 0 14px}h2{max-width:1050px;margin:46px 0 16px;padding-bottom:8px;border-bottom:1.5px solid var(--line);font-size:28px}.uses{display:grid;gap:10px;max-width:1050px}.use{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:24px;padding:17px 20px;border:1.5px solid var(--line);border-radius:5px;background:var(--blue)}.use:nth-child(2){background:var(--green)}.use:nth-child(3){background:var(--paper2)}.use b{white-space:nowrap;font-size:20px}.use p{margin:0}.source{max-width:1050px;color:var(--muted);font-size:13px}@media(max-width:900px){.layout{display:block;padding:30px 20px}.toc{position:static;margin-bottom:30px}.use{grid-template-columns:1fr;gap:6px}.use b{white-space:normal}}@media print{.toc{display:none}.page{width:100%;margin:0;border:0}.layout{display:block}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="head"><div class="eyebrow">HTML REPLY</div><h1>当前回复主题</h1><p class="sub">一句话说明这次回复解决了什么。</p></header>
+    <div class="layout">
+      <nav class="toc"><b>THIS LESSON</b><a href="#answer">直接答案</a><a href="#detail">具体解释</a></nav>
+      <article>
+        <section class="reading" id="answer"><p class="answer">先给出直接、简洁、可以独立理解的答案。</p></section>
+        <h2 id="detail">具体解释</h2>
+        <div class="uses">
+          <section class="use"><b>概念 A</b><p>用一句完整的话解释。</p></section>
+          <section class="use"><b>概念 B</b><p>说明关键区别或联系。</p></section>
+        </div>
+        <p class="source">依据或交付文件：仅在当前回复需要时显示。</p>
+      </article>
+    </div>
+  </main>
+</body>
+</html>
