@@ -94,8 +94,7 @@ def html_visible_text(source: str) -> str:
 def valid_html(path: Path, summary: str, expected_name: str) -> bool:
     try:
         resolved = path.resolve()
-        allowed_names = {expected_name, "reply.html"}  # reply.html is a migration fallback for already-running sessions.
-        if "output" not in resolved.parts or resolved.name not in allowed_names or not resolved.is_file():
+        if "output" not in resolved.parts or resolved.name != expected_name or not resolved.is_file():
             return False
         if time.time() - resolved.stat().st_mtime > MAX_AGE_SECONDS:
             return False
@@ -124,7 +123,7 @@ def main() -> int:
 
     cwd = find_cwd(payload)
     sid = session_id(payload)
-    expected_name = f"reply-{sid}.html"
+    expected_name = "reply.html" if sid == "legacy" else f"reply-{sid}.html"
     summary = final_summary(message)
     if any(valid_html(path, summary, expected_name) for target in link_targets(message) if (path := local_path(target, cwd))):
         respond({})

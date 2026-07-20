@@ -38,6 +38,7 @@ Turn every substantive answer into one focused HTML response that is easy to ref
 ## Completion checks
 
 - Confirm this session's stable file still exists at the same path.
+- Confirm the stable filename exactly matches the Hook-supplied session ID. Never use shared `output/reply.html` unless the Hook explicitly identifies the session as `legacy`.
 - Confirm short headings and complete short sentences stay on one line when space permits.
 - Confirm abbreviations are expanded on first use.
 - Confirm no image is broken, blurry, unnecessarily narrow, or cropped past relevant content.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Archive reply.html and inject a prompt-aware history drawer into the current page."""
+"""Archive one session-specific reply page and inject its prompt-aware history drawer."""
 
 from __future__ import annotations
 

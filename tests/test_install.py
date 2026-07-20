@@ -125,6 +125,79 @@ class InstallerTests(unittest.TestCase):
             )
             self.assertEqual(json.loads(stopped.stdout), {})
 
+    def test_stop_hook_rejects_shared_or_other_session_pages(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            output = root / "output"
+            output.mkdir()
+            scripts = ROOT / "skill" / "html-reply" / "scripts"
+            summary = "session-b 只能使用自己的页面。"
+
+            def write_reply(name: str) -> Path:
+                path = output / name
+                path.write_text(
+                    f'<!doctype html><html><body><p>{summary}</p>'
+                    '<script type="application/json" id="html-reply-history-data">{}</script>'
+                    '</body></html>',
+                    encoding="utf-8",
+                )
+                return path
+
+            def stop_with(path: Path) -> dict:
+                payload = {
+                    "session_id": "session-b",
+                    "cwd": str(root),
+                    "last_assistant_message": f"{summary}\n\n[查看]({path})",
+                }
+                result = subprocess.run(
+                    [sys.executable, str(scripts / "stop_hook.py")],
+                    input=json.dumps(payload), check=True, capture_output=True, text=True,
+                )
+                return json.loads(result.stdout)
+
+            self.assertEqual(stop_with(write_reply("reply-session-b.html")), {})
+            self.assertEqual(stop_with(write_reply("reply.html"))["decision"], "block")
+            self.assertEqual(stop_with(write_reply("reply-session-a.html"))["decision"], "block")
+
+    def test_prompt_state_and_history_are_isolated_by_session(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            output = root / "output"
+            output.mkdir()
+            scripts = ROOT / "skill" / "html-reply" / "scripts"
+
+            for session, prompt in (("session-a", "Prompt A"), ("session-b", "Prompt B")):
+                subprocess.run(
+                    [sys.executable, str(scripts / "prompt_hook.py")],
+                    input=json.dumps({"session_id": session, "cwd": str(root), "prompt": prompt}),
+                    check=True, capture_output=True, text=True,
+                )
+                reply = output / f"reply-{session}.html"
+                reply.write_text(
+                    f"<!doctype html><html><head><title>{session}</title></head>"
+                    f"<body><p>{prompt}</p></body></html>",
+                    encoding="utf-8",
+                )
+                subprocess.run(
+                    [sys.executable, str(scripts / "reply_history.py"), "finalize", "--root", str(root), "--session", session],
+                    check=True, capture_output=True, text=True,
+                )
+                subprocess.run(
+                    [sys.executable, str(scripts / "reply_history.py"), "archive", "--root", str(root), "--session", session],
+                    check=True, capture_output=True, text=True,
+                )
+
+            a_source = (output / "reply-session-a.html").read_text(encoding="utf-8")
+            b_source = (output / "reply-session-b.html").read_text(encoding="utf-8")
+            self.assertIn('"session": "session-a"', a_source)
+            self.assertIn('"currentPrompt": "Prompt A"', a_source)
+            self.assertNotIn('"currentPrompt": "Prompt B"', a_source)
+            self.assertIn('"session": "session-b"', b_source)
+            self.assertIn('"currentPrompt": "Prompt B"', b_source)
+            self.assertNotIn('"currentPrompt": "Prompt A"', b_source)
+            self.assertTrue((output / "archive" / "html-reply" / "session-a" / "reply-0001.html").is_file())
+            self.assertTrue((output / "archive" / "html-reply" / "session-b" / "reply-0001.html").is_file())
+
 
 if __name__ == "__main__":
     unittest.main()
