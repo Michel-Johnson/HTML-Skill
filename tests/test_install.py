@@ -236,6 +236,9 @@ class InstallerTests(unittest.TestCase):
             self.assertNotIn("html-reply-embedded", source)
             self.assertNotIn("hideEmbeddedChrome", source)
             self.assertIn("a.href=item.path", source)
+            self.assertNotIn('id="hr-current-prompt"', source)
+            self.assertNotIn("a.querySelector('span')", source)
+            self.assertIn("a.innerHTML='<b></b>'", source)
 
             replay = output / "archive" / "html-reply" / session / ".replay" / "reply-0001.html"
             replay_source = replay.read_text(encoding="utf-8")
@@ -246,6 +249,8 @@ class InstallerTests(unittest.TestCase):
             self.assertIn('"currentPrompt": "第一轮 Prompt"', replay_source)
             self.assertIn(reply.resolve().as_uri(), replay_source)
             self.assertNotIn("<iframe", replay_source)
+            self.assertNotIn('id="hr-current-prompt"', replay_source)
+            self.assertNotIn("a.querySelector('span')", replay_source)
 
 
 if __name__ == "__main__":
