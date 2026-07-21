@@ -16,6 +16,118 @@ START = "<!-- HTML_REPLY_HISTORY_START -->"
 END = "<!-- HTML_REPLY_HISTORY_END -->"
 DATA_RE = re.compile(r'<script type="application/json" id="html-reply-history-data">([\s\S]*?)</script>')
 TITLE_RE = re.compile(r"<title>([\s\S]*?)</title>", re.I)
+CODE_BLOCK_RE = re.compile(
+    r"(?P<pre><pre\b[^>]*>)(?P<gap>\s*)<code\b(?P<attrs>[^>]*)>(?P<body>[\s\S]*?)</code>(?P<close>\s*</pre>)",
+    re.I,
+)
+
+LANGUAGE_ALIASES = {
+    "js": "javascript", "jsx": "javascript", "javascript": "javascript",
+    "ts": "typescript", "tsx": "typescript", "typescript": "typescript",
+    "py": "python", "python": "python",
+    "sh": "shell", "bash": "shell", "zsh": "shell", "shell": "shell",
+    "html": "html", "htm": "html", "xml": "html",
+    "css": "css", "sql": "sql", "json": "json",
+}
+
+
+def explicit_language(attrs: str) -> str:
+    match = re.search(r"(?:class\s*=\s*['\"][^'\"]*\b(?:language|lang)-|data-language\s*=\s*['\"])([\w+-]+)", attrs, re.I)
+    return LANGUAGE_ALIASES.get(match.group(1).lower(), "") if match else ""
+
+
+def detect_language(text: str) -> str:
+    sample = text.strip()
+    if not sample:
+        return "text"
+    if sample[:1] in "[{":
+        try:
+            json.loads(sample)
+            return "json"
+        except Exception:
+            pass
+    if re.search(r"<!doctype\s+html|</?[a-z][^>]*>", sample, re.I):
+        return "html"
+    if re.search(r"^\s*(?:select|insert|update|delete|create|alter|with)\b", sample, re.I | re.M):
+        return "sql"
+    if re.search(r"^\s*(?:def|class|from|import)\b|\b(?:None|True|False|self)\b", sample, re.M):
+        return "python"
+    if re.search(r"\b(?:interface|namespace|enum)\s+\w+|\btype\s+\w+\s*=|:\s*(?:string|number|boolean)\b", sample):
+        return "typescript"
+    if re.search(r"\b(?:const|let|var|function)\b|=>|console\.\w+", sample):
+        return "javascript"
+    if re.search(r"^#!.*\b(?:ba|z)?sh\b|^\s*(?:\$\s+|sudo\s+|cd\s+|export\s+|echo\s+)", sample, re.M):
+        return "shell"
+    if re.search(r"(?:^|})\s*[^{}]+\{\s*[\w-]+\s*:", sample, re.M):
+        return "css"
+    return "text"
+
+
+TOKEN_PATTERNS = {
+    "json": re.compile(
+        r'(?P<key>"(?:\\.|[^"\\])*")(?=\s*:)|(?P<string>"(?:\\.|[^"\\])*")|'
+        r'(?P<number>-?\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b)|(?P<literal>\b(?:true|false|null)\b)|(?P<punct>[{}\[\],:])'
+    ),
+    "python": re.compile(
+        r'(?P<comment>\#[^\n]*)|(?P<string>"""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\'|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\')|'
+        r'(?P<keyword>\b(?:and|as|assert|async|await|break|class|continue|def|del|elif|else|except|False|finally|for|from|global|if|import|in|is|lambda|None|nonlocal|not|or|pass|raise|return|True|try|while|with|yield)\b)|'
+        r'(?P<number>\b\d+(?:\.\d+)?\b)|(?P<variable>@[A-Za-z_]\w*)'
+    ),
+    "javascript": re.compile(
+        r'(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)|(?P<string>`(?:\\.|[^`\\])*`|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\')|'
+        r'(?P<keyword>\b(?:async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|export|extends|false|finally|for|from|function|if|import|in|instanceof|let|new|null|of|return|static|super|switch|this|throw|true|try|typeof|undefined|var|void|while|with|yield)\b)|'
+        r'(?P<number>\b\d+(?:\.\d+)?\b)'
+    ),
+    "typescript": re.compile(
+        r'(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)|(?P<string>`(?:\\.|[^`\\])*`|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\')|'
+        r'(?P<keyword>\b(?:abstract|any|as|async|await|boolean|break|case|catch|class|const|constructor|continue|declare|default|delete|do|else|enum|export|extends|false|finally|for|from|function|if|implements|import|in|instanceof|interface|keyof|let|namespace|never|new|null|number|object|of|private|protected|public|readonly|return|static|string|super|switch|this|throw|true|try|type|typeof|undefined|unknown|var|void|while|yield)\b)|'
+        r'(?P<number>\b\d+(?:\.\d+)?\b)'
+    ),
+    "shell": re.compile(
+        r'(?P<comment>\#[^\n]*)|(?P<string>"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\')|'
+        r'(?P<variable>\$\{?\w+\}?|\$[@*#?$!-])|(?P<keyword>\b(?:case|do|done|elif|else|esac|export|fi|for|function|if|in|local|readonly|select|then|until|while)\b)|'
+        r'(?P<number>\b\d+(?:\.\d+)?\b)'
+    ),
+    "sql": re.compile(
+        r'(?P<comment>--[^\n]*|/\*[\s\S]*?\*/)|(?P<string>\'(?:\'\'|[^\'])*\')|'
+        r'(?P<keyword>\b(?:ADD|ALL|ALTER|AND|AS|ASC|BETWEEN|BY|CASE|CHECK|COLUMN|CREATE|DATABASE|DEFAULT|DELETE|DESC|DISTINCT|DROP|ELSE|END|EXISTS|FOREIGN|FROM|FULL|GROUP|HAVING|IN|INDEX|INNER|INSERT|INTO|IS|JOIN|LEFT|LIKE|LIMIT|NOT|NULL|ON|OR|ORDER|OUTER|PRIMARY|REFERENCES|RIGHT|ROW|SELECT|SET|TABLE|THEN|UNION|UNIQUE|UPDATE|VALUES|VIEW|WHEN|WHERE|WITH)\b)|'
+        r'(?P<number>\b\d+(?:\.\d+)?\b)', re.I
+    ),
+    "html": re.compile(r'(?P<comment><!--[\s\S]*?-->)|(?P<tag></?[A-Za-z][^>]*>|<!doctype[^>]*>)', re.I),
+    "css": re.compile(
+        r'(?P<comment>/\*[\s\S]*?\*/)|(?P<string>"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\')|'
+        r'(?P<property>--?[\w-]+|[A-Za-z-]+)(?=\s*:)|(?P<number>#[0-9A-Fa-f]{3,8}|\b\d+(?:\.\d+)?(?:px|rem|em|%|vh|vw|s|ms|deg)?)'
+    ),
+}
+
+
+def highlight_tokens(text: str, language: str) -> str:
+    pattern = TOKEN_PATTERNS.get(language)
+    if not pattern:
+        return html.escape(text)
+    parts: list[str] = []
+    cursor = 0
+    for match in pattern.finditer(text):
+        parts.append(html.escape(text[cursor:match.start()]))
+        kind = match.lastgroup or "text"
+        parts.append(f'<span class="hr-tok-{kind}">{html.escape(match.group(0))}</span>')
+        cursor = match.end()
+    parts.append(html.escape(text[cursor:]))
+    return "".join(parts)
+
+
+def highlight_code_blocks(source: str) -> str:
+    def replace(match: re.Match[str]) -> str:
+        attrs = match.group("attrs")
+        if "data-html-reply-highlighted" in attrs:
+            return match.group(0)
+        raw = html.unescape(re.sub(r"<[^>]+>", "", match.group("body")))
+        language = explicit_language(attrs) or detect_language(raw)
+        pre = match.group("pre")[:-1] + f' data-hr-language="{language}">'
+        code_attrs = attrs + f' data-html-reply-highlighted="1" data-language="{language}"'
+        return f'{pre}{match.group("gap")}<code{code_attrs}>{highlight_tokens(raw, language)}</code>{match.group("close")}'
+
+    return CODE_BLOCK_RE.sub(replace, source)
 
 
 def strip_history(source: str) -> str:
@@ -82,7 +194,7 @@ def history_entries(root: Path, session: str) -> list[dict[str, str]]:
     for path in sorted(folder.glob("*.html"), key=lambda p: p.stat().st_mtime, reverse=True):
         source = path.read_text(encoding="utf-8", errors="ignore")
         prompt = existing_prompt(source) or "未记录 Prompt（该页面生成于历史功能启用之前）"
-        replay_source = strip_history(source)
+        replay_source = highlight_code_blocks(strip_history(source))
         if not re.search(r"<base\b", replay_source, re.I):
             replay_source = re.sub(r"(<head\b[^>]*>)", r'\1\n<base href="../">', replay_source, count=1, flags=re.I)
         replay_path = replay_folder / path.name
@@ -112,6 +224,10 @@ def shell(data: dict) -> str:
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     return f'''{START}
 <style id="html-reply-history-style">
+  pre[data-hr-language]{{position:relative;overflow:auto;padding:46px 24px 24px!important;border:1.5px solid #4f4a3c!important;border-left:9px solid #7ca0b8!important;border-radius:4px!important;background:#202622!important;color:#e9e5d8!important;text-align:left;tab-size:2}}
+  pre[data-hr-language]::before{{content:attr(data-hr-language);position:absolute;top:12px;right:16px;color:#b9b3a4;font:800 16px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;letter-spacing:.08em;text-transform:uppercase}}
+  pre[data-hr-language] code{{display:block;color:inherit!important;background:transparent!important;font:500 17px/1.65 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;white-space:pre}}
+  .hr-tok-key,.hr-tok-property{{color:#91c8ff}}.hr-tok-string{{color:#a8dc95}}.hr-tok-number{{color:#efbd78}}.hr-tok-literal,.hr-tok-keyword{{color:#d8afe9}}.hr-tok-comment{{color:#98a198;font-style:italic}}.hr-tok-tag{{color:#efa98c}}.hr-tok-variable{{color:#f0d27f}}.hr-tok-punct{{color:#cbc5b6}}
   #hr-history-button{{position:fixed;left:14px;top:50%;z-index:2147483000;transform:translateY(-50%);padding:14px 9px;border:1.5px solid #4f4a3c;border-radius:5px;background:#d9a441;color:#4f4a3c;font:800 16px/1 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;writing-mode:vertical-rl;letter-spacing:.12em;cursor:pointer}}
   #hr-history-backdrop{{position:fixed;inset:0;z-index:2147483001;display:none;background:rgba(30,28,23,.34)}}
   #hr-history-backdrop.open{{display:block}}
@@ -132,7 +248,7 @@ def finalize(root: Path, session: str, prompt: str) -> Path:
     reply = reply_path(root, session)
     if not reply.exists():
         raise SystemExit(f"missing {reply}")
-    source = strip_history(reply.read_text(encoding="utf-8", errors="ignore"))
+    source = highlight_code_blocks(strip_history(reply.read_text(encoding="utf-8", errors="ignore")))
     if not prompt.strip():
         state = root / "output" / ".html-reply" / "sessions" / f"{safe_session(session)}.json"
         try:

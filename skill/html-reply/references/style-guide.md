@@ -56,6 +56,14 @@ Use only the sections needed by the current response:
 
 Do not force every page into the same number of cards. Avoid dashboards, excessive badges, decorative statistics, and overly fragmented layouts.
 
+## Code rendering
+
+- Put code in semantic `<pre><code>` elements and prefer an explicit `language-*` class, such as `language-python` or `language-json`.
+- The finalizer automatically highlights JSON, Python, JavaScript, TypeScript, Shell, SQL, HTML, and CSS. When no language class is present, it performs lightweight detection and uses plain text if uncertain.
+- Keep code rendering dependency-free and server-side so syntax colors remain visible under `file://`, history replay, static screenshots, and Quick Look.
+- Show the detected language as a label of at least 16px. Code should remain at least 17px on desktop, preserve whitespace, and scroll horizontally instead of wrapping syntax unpredictably.
+- Use a dark, high-contrast code surface with distinct colors for keys, strings, numbers, keywords, comments, tags, properties, and variables. Do not encode meaning with faint gray text alone.
+
 ## Conditional PDF evidence
 
 - Prefer one focused crop over a complete page.

@@ -252,6 +252,48 @@ class InstallerTests(unittest.TestCase):
             self.assertNotIn('id="hr-current-prompt"', replay_source)
             self.assertNotIn("a.querySelector('span')", replay_source)
 
+    def test_finalizer_highlights_multiple_code_languages_and_is_idempotent(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            output = root / "output"
+            output.mkdir()
+            scripts = ROOT / "skill" / "html-reply" / "scripts"
+            session = "syntax-colors"
+            reply = output / f"reply-{session}.html"
+            samples = {
+                "json": '<pre><code class="language-json">{&quot;ok&quot;: true, &quot;count&quot;: 3}</code></pre>',
+                "python": '<pre><code>def greet(name):\n    return f&quot;Hi {name}&quot;</code></pre>',
+                "javascript": '<pre><code class="language-js">const answer = true;</code></pre>',
+                "typescript": '<pre><code class="language-ts">interface User { id: number }</code></pre>',
+                "shell": '<pre><code class="language-bash">export NAME=&quot;Codex&quot;\necho $NAME</code></pre>',
+                "sql": '<pre><code>SELECT id FROM users WHERE active = 1;</code></pre>',
+                "html": '<pre><code class="language-html">&lt;main&gt;Hello&lt;/main&gt;</code></pre>',
+                "css": '<pre><code class="language-css">.card { color: #d9a441; }</code></pre>',
+            }
+            reply.write_text(
+                '<!doctype html><html><head><title>Syntax</title></head><body>'
+                + "".join(samples.values()) + '</body></html>',
+                encoding="utf-8",
+            )
+            command = [
+                sys.executable, str(scripts / "reply_history.py"), "finalize",
+                "--root", str(root), "--session", session, "--prompt", "高亮代码",
+            ]
+            subprocess.run(command, check=True, capture_output=True, text=True)
+            subprocess.run(command, check=True, capture_output=True, text=True)
+
+            source = reply.read_text(encoding="utf-8")
+            for language in samples:
+                self.assertIn(f'data-hr-language="{language}"', source)
+            self.assertEqual(source.count('data-html-reply-highlighted="1"'), len(samples))
+            self.assertIn('class="hr-tok-key"', source)
+            self.assertIn('class="hr-tok-string"', source)
+            self.assertIn('class="hr-tok-keyword"', source)
+            self.assertIn('class="hr-tok-variable"', source)
+            self.assertIn('class="hr-tok-tag"', source)
+            self.assertIn('class="hr-tok-property"', source)
+            self.assertIn('content:attr(data-hr-language)', source)
+
 
 if __name__ == "__main__":
     unittest.main()

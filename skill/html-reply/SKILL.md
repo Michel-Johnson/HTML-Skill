@@ -25,6 +25,7 @@ Turn every substantive answer into one focused HTML response that is easy to ref
 - Preserve an existing approved layout instead of rebuilding it unnecessarily.
 - Keep each page centered on the current request. Choose only the structure the answer needs: explanation, comparison, implementation report, review findings, or file delivery.
 - Use local, dependency-free HTML/CSS/JavaScript so `file://` viewing works.
+- Mark code semantically as `<pre><code class="language-json">…</code></pre>` whenever the language is known. The finalizer performs dependency-free server-side syntax highlighting and falls back to lightweight language detection when the class is omitted.
 
 ## Task-specific handling
 
@@ -42,6 +43,7 @@ Turn every substantive answer into one focused HTML response that is easy to ref
 - Confirm short headings and complete short sentences stay on one line when space permits.
 - Confirm abbreviations are expanded on first use.
 - Confirm no image is broken, blurry, unnecessarily narrow, or cropped past relevant content.
+- Confirm code samples show a readable language label and syntax colors; check both explicitly labelled code and any block that relies on automatic detection.
 - Confirm the previous response was archived and the archive was not presented as the primary link.
 
 ## Stop Hook enforcement
