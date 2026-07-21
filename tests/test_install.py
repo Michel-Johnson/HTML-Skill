@@ -198,6 +198,33 @@ class InstallerTests(unittest.TestCase):
             self.assertTrue((output / "archive" / "html-reply" / "session-a" / "reply-0001.html").is_file())
             self.assertTrue((output / "archive" / "html-reply" / "session-b" / "reply-0001.html").is_file())
 
+    def test_history_replay_uses_a_full_viewport_reading_mode(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            output = root / "output"
+            output.mkdir()
+            scripts = ROOT / "skill" / "html-reply" / "scripts"
+            session = "full-page-history"
+            reply = output / f"reply-{session}.html"
+            reply.write_text(
+                "<!doctype html><html><head><title>Full page</title></head>"
+                "<body><p>History viewer test</p></body></html>",
+                encoding="utf-8",
+            )
+            subprocess.run(
+                [sys.executable, str(scripts / "reply_history.py"), "finalize", "--root", str(root), "--session", session, "--prompt", "测试历史模式"],
+                check=True, capture_output=True, text=True,
+            )
+
+            source = reply.read_text(encoding="utf-8")
+            self.assertIn("#hr-history-viewer{position:fixed;inset:0;", source)
+            self.assertNotIn("#hr-history-viewer{position:fixed;inset:22px;", source)
+            self.assertNotIn("#hr-history-viewer{inset:8px}", source)
+            self.assertIn("html.hr-history-mode,html.hr-history-mode body{overflow:hidden!important}", source)
+            self.assertIn("document.documentElement.classList.add('hr-history-mode')", source)
+            self.assertIn("document.documentElement.classList.remove('hr-history-mode')", source)
+            self.assertIn("← 返回当前回复", source)
+
 
 if __name__ == "__main__":
     unittest.main()
