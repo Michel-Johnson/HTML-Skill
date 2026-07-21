@@ -64,11 +64,20 @@ def archive(root: Path, session: str) -> Path | None:
     return target
 
 
+def inject_shell(source: str, data: dict) -> str:
+    injection = shell(data)
+    if "</body>" in source.lower():
+        pos = source.lower().rfind("</body>")
+        return source[:pos] + injection + "\n" + source[pos:]
+    return source + injection
+
+
 def history_entries(root: Path, session: str) -> list[dict[str, str]]:
     output = root / "output"
     folder = output / "archive" / "html-reply" / safe_session(session)
     replay_folder = folder / ".replay"
     replay_folder.mkdir(parents=True, exist_ok=True)
+    records = []
     entries = []
     for path in sorted(folder.glob("*.html"), key=lambda p: p.stat().st_mtime, reverse=True):
         source = path.read_text(encoding="utf-8", errors="ignore")
@@ -77,13 +86,25 @@ def history_entries(root: Path, session: str) -> list[dict[str, str]]:
         if not re.search(r"<base\b", replay_source, re.I):
             replay_source = re.sub(r"(<head\b[^>]*>)", r'\1\n<base href="../">', replay_source, count=1, flags=re.I)
         replay_path = replay_folder / path.name
-        replay_path.write_text(replay_source, encoding="utf-8")
-        entries.append({
+        entry = {
             "title": title_of(source, path.stem),
             "prompt": prompt,
-            "path": replay_path.relative_to(output).as_posix(),
+            "path": replay_path.as_uri(),
             "time": datetime.fromtimestamp(path.stat().st_mtime).strftime("%Y-%m-%d %H:%M"),
-        })
+        }
+        entries.append(entry)
+        records.append((replay_path, replay_source, entry))
+    latest_path = reply_path(root, session).as_uri()
+    for replay_path, replay_source, entry in records:
+        replay_data = {
+            "session": safe_session(session),
+            "currentPrompt": entry["prompt"],
+            "entries": entries,
+            "isReplay": True,
+            "currentPath": entry["path"],
+            "latestPath": latest_path,
+        }
+        replay_path.write_text(inject_shell(replay_source, replay_data), encoding="utf-8")
     return entries
 
 
@@ -97,16 +118,14 @@ def shell(data: dict) -> str:
   #hr-history-drawer{{position:absolute;inset:0 auto 0 0;width:min(390px,88vw);display:flex;flex-direction:column;border-right:2px solid #4f4a3c;background:#faf9f5;color:#4f4a3c;box-shadow:12px 0 30px rgba(40,35,25,.12)}}
   .hr-head{{display:flex;align-items:center;justify-content:space-between;padding:22px;border-bottom:1.5px solid #4f4a3c;background:#efe8d6}}.hr-head b{{font:800 20px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}}.hr-close{{border:1.5px solid #4f4a3c;border-radius:4px;background:#faf9f5;color:#4f4a3c;font-size:20px;cursor:pointer}}
   .hr-current{{padding:16px 20px;border-bottom:1.5px solid #4f4a3c;background:#dcebd9;font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}}.hr-current b{{display:block;margin-bottom:5px}}
-  #hr-history-list{{overflow:auto;padding:10px}}.hr-item{{display:block;width:100%;margin:0 0 8px;padding:13px 14px;border:1.5px solid #4f4a3c;border-radius:5px;background:#fff;text-align:left;color:#4f4a3c;cursor:pointer}}.hr-item b{{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:800 17px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}}.hr-item span{{display:block;margin-top:5px;color:#817968;font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}}
-  html.hr-history-mode,html.hr-history-mode body{{overflow:hidden!important}}
-  #hr-history-viewer{{position:fixed;inset:0;z-index:2147483002;display:none;grid-template-rows:auto minmax(0,1fr);background:#faf9f5;color:#4f4a3c;overflow:hidden}}#hr-history-viewer.open{{display:grid}}.hr-view-head{{padding:18px 22px;border-bottom:2px solid #4f4a3c;background:#efe8d6}}.hr-view-row{{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}}.hr-view-head b{{font:800 18px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;letter-spacing:.08em}}#hr-history-prompt{{margin:10px 0 0;max-height:24vh;overflow:auto;white-space:pre-wrap;font:18px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}}#hr-history-frame{{width:100%;height:100%;border:0;background:#faf9f5}}#hr-view-close{{padding:9px 13px;font:800 16px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;white-space:nowrap}}
-  @media(max-width:700px){{#hr-history-button{{left:5px}}.hr-view-head{{padding:15px 16px}}#hr-history-prompt{{font-size:17px}}}}
+  #hr-latest-link{{display:none;margin:12px 10px 2px;padding:13px 14px;border:1.5px solid #4f4a3c;border-radius:5px;background:#efe8d6;color:#4f4a3c;text-decoration:none;font:800 17px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}}
+  #hr-history-list{{overflow:auto;padding:10px}}.hr-item{{display:block;width:100%;margin:0 0 8px;padding:13px 14px;border:1.5px solid #4f4a3c;border-radius:5px;background:#fff;text-align:left;color:#4f4a3c;text-decoration:none;cursor:pointer}}.hr-item[aria-current="page"]{{background:#dce9f4}}.hr-item b{{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:800 17px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}}.hr-item span{{display:block;margin-top:5px;color:#817968;font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}}
+  @media(max-width:700px){{#hr-history-button{{left:5px}}}}
 </style>
 <button id="hr-history-button" type="button" aria-label="打开历史回复">历史</button>
-<div id="hr-history-backdrop"><aside id="hr-history-drawer" aria-label="历史回复目录"><div class="hr-head"><b>回复历史</b><button class="hr-close" id="hr-drawer-close" type="button">×</button></div><div class="hr-current"><b>本轮 Prompt</b><span id="hr-current-prompt"></span></div><div id="hr-history-list"></div></aside></div>
-<div id="hr-history-viewer"><div class="hr-view-head"><div class="hr-view-row"><b>用户 Prompt</b><button class="hr-close" id="hr-view-close" type="button">← 返回当前回复</button></div><p id="hr-history-prompt"></p></div><iframe id="hr-history-frame" title="历史 HTML 原文"></iframe></div>
+<div id="hr-history-backdrop"><aside id="hr-history-drawer" aria-label="历史回复目录"><div class="hr-head"><b>回复历史</b><button class="hr-close" id="hr-drawer-close" type="button">×</button></div><div class="hr-current"><b>当前页面 Prompt</b><span id="hr-current-prompt"></span></div><a id="hr-latest-link" href="#">← 返回最新回复</a><div id="hr-history-list"></div></aside></div>
 <script type="application/json" id="html-reply-history-data">{payload}</script>
-<script id="html-reply-history-script">(()=>{{const chromeIds=['hr-history-button','hr-history-backdrop','hr-history-viewer'];const hideEmbeddedChrome=doc=>{{try{{chromeIds.forEach(id=>doc.getElementById(id)?.remove())}}catch(_error){{}}}};if(new URLSearchParams(location.search).get('html-reply-embedded')==='1'){{hideEmbeddedChrome(document);return}}const data=JSON.parse(document.getElementById('html-reply-history-data').textContent);const back=document.getElementById('hr-history-backdrop');const viewer=document.getElementById('hr-history-viewer');const frame=document.getElementById('hr-history-frame');const list=document.getElementById('hr-history-list');const trigger=document.getElementById('hr-history-button');const leaveHistory=()=>{{viewer.classList.remove('open');document.documentElement.classList.remove('hr-history-mode');frame.src='about:blank';trigger.style.display=''}};document.getElementById('hr-current-prompt').textContent=data.currentPrompt||'未记录';trigger.onclick=()=>back.classList.add('open');document.getElementById('hr-drawer-close').onclick=()=>back.classList.remove('open');back.onclick=e=>{{if(e.target===back)back.classList.remove('open')}};frame.onload=()=>hideEmbeddedChrome(frame.contentDocument);document.getElementById('hr-view-close').onclick=leaveHistory;document.addEventListener('keydown',e=>{{if(e.key==='Escape'&&viewer.classList.contains('open'))leaveHistory()}});(data.entries||[]).forEach(item=>{{const b=document.createElement('button');b.className='hr-item';b.innerHTML='<b></b><span></span>';b.querySelector('b').textContent=item.title;b.querySelector('span').textContent=item.time+' · '+item.prompt.replace(/\s+/g,' ').slice(0,80);b.onclick=()=>{{document.getElementById('hr-history-prompt').textContent=item.prompt;frame.src=item.path+(item.path.includes('?')?'&':'?')+'html-reply-embedded=1';trigger.style.display='none';document.documentElement.classList.add('hr-history-mode');viewer.classList.add('open');back.classList.remove('open')}};list.appendChild(b)}});}})();</script>
+<script id="html-reply-history-script">(()=>{{const data=JSON.parse(document.getElementById('html-reply-history-data').textContent);const back=document.getElementById('hr-history-backdrop');const list=document.getElementById('hr-history-list');const trigger=document.getElementById('hr-history-button');const latest=document.getElementById('hr-latest-link');document.getElementById('hr-current-prompt').textContent=data.currentPrompt||'未记录';trigger.onclick=()=>back.classList.add('open');document.getElementById('hr-drawer-close').onclick=()=>back.classList.remove('open');back.onclick=e=>{{if(e.target===back)back.classList.remove('open')}};document.addEventListener('keydown',e=>{{if(e.key==='Escape')back.classList.remove('open')}});if(data.isReplay&&data.latestPath){{latest.href=data.latestPath;latest.style.display='block'}};(data.entries||[]).forEach(item=>{{const a=document.createElement('a');a.className='hr-item';a.href=item.path;a.innerHTML='<b></b><span></span>';a.querySelector('b').textContent=item.title;a.querySelector('span').textContent=item.time+' · '+item.prompt.replace(/\s+/g,' ').slice(0,80);if(data.currentPath===item.path)a.setAttribute('aria-current','page');list.appendChild(a)}});}})();</script>
 {END}'''
 
 
@@ -126,12 +145,7 @@ def finalize(root: Path, session: str, prompt: str) -> Path:
         "currentPrompt": prompt.strip() or "未记录",
         "entries": history_entries(root, session),
     }
-    injection = shell(data)
-    if "</body>" in source.lower():
-        pos = source.lower().rfind("</body>")
-        source = source[:pos] + injection + "\n" + source[pos:]
-    else:
-        source += injection
+    source = inject_shell(source, data)
     reply.write_text(source, encoding="utf-8")
     return reply
 

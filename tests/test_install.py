@@ -198,7 +198,7 @@ class InstallerTests(unittest.TestCase):
             self.assertTrue((output / "archive" / "html-reply" / "session-a" / "reply-0001.html").is_file())
             self.assertTrue((output / "archive" / "html-reply" / "session-b" / "reply-0001.html").is_file())
 
-    def test_history_replay_uses_a_full_viewport_reading_mode(self) -> None:
+    def test_history_replay_uses_top_level_navigation_and_keeps_history_button(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             output = root / "output"
@@ -212,18 +212,40 @@ class InstallerTests(unittest.TestCase):
                 encoding="utf-8",
             )
             subprocess.run(
-                [sys.executable, str(scripts / "reply_history.py"), "finalize", "--root", str(root), "--session", session, "--prompt", "测试历史模式"],
+                [sys.executable, str(scripts / "reply_history.py"), "finalize", "--root", str(root), "--session", session, "--prompt", "第一轮 Prompt"],
+                check=True, capture_output=True, text=True,
+            )
+            subprocess.run(
+                [sys.executable, str(scripts / "reply_history.py"), "archive", "--root", str(root), "--session", session],
+                check=True, capture_output=True, text=True,
+            )
+            reply.write_text(
+                "<!doctype html><html><head><title>Latest</title></head>"
+                "<body><p>Latest reply</p></body></html>",
+                encoding="utf-8",
+            )
+            subprocess.run(
+                [sys.executable, str(scripts / "reply_history.py"), "finalize", "--root", str(root), "--session", session, "--prompt", "最新 Prompt"],
                 check=True, capture_output=True, text=True,
             )
 
             source = reply.read_text(encoding="utf-8")
-            self.assertIn("#hr-history-viewer{position:fixed;inset:0;", source)
-            self.assertNotIn("#hr-history-viewer{position:fixed;inset:22px;", source)
-            self.assertNotIn("#hr-history-viewer{inset:8px}", source)
-            self.assertIn("html.hr-history-mode,html.hr-history-mode body{overflow:hidden!important}", source)
-            self.assertIn("document.documentElement.classList.add('hr-history-mode')", source)
-            self.assertIn("document.documentElement.classList.remove('hr-history-mode')", source)
-            self.assertIn("← 返回当前回复", source)
+            self.assertIn('id="hr-history-button"', source)
+            self.assertNotIn("hr-history-viewer", source)
+            self.assertNotIn("hr-history-frame", source)
+            self.assertNotIn("html-reply-embedded", source)
+            self.assertNotIn("hideEmbeddedChrome", source)
+            self.assertIn("a.href=item.path", source)
+
+            replay = output / "archive" / "html-reply" / session / ".replay" / "reply-0001.html"
+            replay_source = replay.read_text(encoding="utf-8")
+            self.assertIn('id="hr-history-button"', replay_source)
+            self.assertIn('id="hr-latest-link"', replay_source)
+            self.assertIn("← 返回最新回复", replay_source)
+            self.assertIn('"isReplay": true', replay_source)
+            self.assertIn('"currentPrompt": "第一轮 Prompt"', replay_source)
+            self.assertIn(reply.resolve().as_uri(), replay_source)
+            self.assertNotIn("<iframe", replay_source)
 
 
 if __name__ == "__main__":
