@@ -6,6 +6,22 @@
 
 [查看完整 HTML 预览](docs/readme-preview.html)
 
+## 不同任务的实际效果
+
+这些示例均为本仓库单独生成的演示任务，不复用已有回复页面。
+
+### Transformer 学习
+
+[![Transformer 注意力机制学习页面](docs/assets/examples/transformer-learning.png)](docs/examples/transformer-learning.html)
+
+### Tokenizer 学习
+
+[![Tokenizer 分词器学习页面](docs/assets/examples/tokenizer-learning.png)](docs/examples/tokenizer-learning.html)
+
+### Agent 调试报告
+
+[![Agent 调试报告页面](docs/assets/examples/agent-debug-report.png)](docs/examples/agent-debug-report.html)
+
 ## 安装
 
 要求：Codex 与 Python 3.9+。
