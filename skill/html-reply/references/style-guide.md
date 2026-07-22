@@ -45,6 +45,8 @@ Suggested tokens:
 }
 ```
 
+The finalizer enforces this foundation under the versioned body marker `data-html-reply-theme="soft-bauhaus-v1"`. Author pages may choose their own information structure, but must not depend on a conflicting narrow canvas, large rounded surfaces, decorative shadows, ornate fonts, or a different page/ink palette.
+
 ## Information structure
 
 Use only the sections needed by the current response:

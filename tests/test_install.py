@@ -136,7 +136,7 @@ class InstallerTests(unittest.TestCase):
             def write_reply(name: str) -> Path:
                 path = output / name
                 path.write_text(
-                    f'<!doctype html><html><body><p>{summary}</p>'
+                    f'<!doctype html><html><body data-html-reply-theme="soft-bauhaus-v1"><p>{summary}</p>'
                     '<script type="application/json" id="html-reply-history-data">{}</script>'
                     '</body></html>',
                     encoding="utf-8",
@@ -231,6 +231,7 @@ class InstallerTests(unittest.TestCase):
 
             source = reply.read_text(encoding="utf-8")
             self.assertIn('id="hr-history-button"', source)
+            self.assertIn('data-html-reply-theme="soft-bauhaus-v1"', source)
             self.assertIn("right:18px;top:18px", source)
             self.assertNotIn("left:14px;top:50%", source)
             self.assertNotIn("writing-mode:vertical-rl", source)
@@ -247,6 +248,7 @@ class InstallerTests(unittest.TestCase):
             replay = output / "archive" / "html-reply" / session / ".replay" / "reply-0001.html"
             replay_source = replay.read_text(encoding="utf-8")
             self.assertIn('id="hr-history-button"', replay_source)
+            self.assertIn('data-html-reply-theme="soft-bauhaus-v1"', replay_source)
             self.assertIn("right:18px;top:18px", replay_source)
             self.assertIn('id="hr-latest-link"', replay_source)
             self.assertIn("← 返回最新回复", replay_source)
@@ -298,6 +300,58 @@ class InstallerTests(unittest.TestCase):
             self.assertIn('class="hr-tok-tag"', source)
             self.assertIn('class="hr-tok-property"', source)
             self.assertIn('content:attr(data-hr-language)', source)
+
+    def test_finalizer_normalizes_drifted_visual_foundation_and_stop_hook_requires_it(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            output = root / "output"
+            output.mkdir()
+            scripts = ROOT / "skill" / "html-reply" / "scripts"
+            session = "canonical-theme"
+            summary = "固定主题已经生效。"
+            reply = output / f"reply-{session}.html"
+            reply.write_text(
+                '<!doctype html><html><head><title>Drift</title>'
+                '<style>body{background:#102f27}main{max-width:1080px}.card{border-radius:18px;box-shadow:0 20px 50px #000}</style>'
+                f'</head><body><main><article class="card"><p>{summary}</p></article></main></body></html>',
+                encoding="utf-8",
+            )
+
+            def stop() -> dict:
+                payload = {
+                    "session_id": session,
+                    "cwd": str(root),
+                    "last_assistant_message": f"{summary}\n\n[查看]({reply})",
+                }
+                result = subprocess.run(
+                    [sys.executable, str(scripts / "stop_hook.py")],
+                    input=json.dumps(payload), check=True, capture_output=True, text=True,
+                )
+                return json.loads(result.stdout)
+
+            reply.write_text(
+                f'<!doctype html><html><body><p>{summary}</p>'
+                '<script type="application/json" id="html-reply-history-data">{}</script></body></html>',
+                encoding="utf-8",
+            )
+            self.assertEqual(stop()["decision"], "block")
+
+            reply.write_text(
+                '<!doctype html><html><head><title>Drift</title>'
+                '<style>body{background:#102f27}main{max-width:1080px}.card{border-radius:18px;box-shadow:0 20px 50px #000}</style>'
+                f'</head><body><main><article class="card"><p>{summary}</p></article></main></body></html>',
+                encoding="utf-8",
+            )
+            subprocess.run(
+                [sys.executable, str(scripts / "reply_history.py"), "finalize", "--root", str(root), "--session", session],
+                check=True, capture_output=True, text=True,
+            )
+            source = reply.read_text(encoding="utf-8")
+            self.assertIn('data-html-reply-theme="soft-bauhaus-v1"', source)
+            self.assertGreater(source.index("max-width:none!important"), source.index("max-width:1080px"))
+            self.assertGreater(source.index("border-radius:5px!important"), source.index("border-radius:18px"))
+            self.assertIn("box-shadow:none!important", source)
+            self.assertEqual(stop(), {})
 
 
 if __name__ == "__main__":

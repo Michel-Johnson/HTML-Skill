@@ -14,7 +14,7 @@ Turn every substantive answer into one focused HTML response that is easy to ref
 3. Perform the task and verify relevant sources, files, code, or artifacts before writing the response.
 4. Answer only the current request. Lead with the outcome, then add the minimum explanation, evidence, files, or next steps needed.
 5. Update the injected `output/reply-<session-id>.html`. Never overwrite another session's page.
-6. Run the exact cross-platform finalize command injected by the Hook to inject the top-right History trigger and left history drawer, record the current prompt, and index only this session's archived HTML pages.
+6. Run the exact cross-platform finalize command injected by the Hook. It applies the canonical `soft-bauhaus-v1` visual foundation, injects the top-right History trigger and left history drawer, records the current prompt, and indexes only this session's archived HTML pages.
 7. Render the HTML and visually inspect typography, wrapping, spacing, drawer behavior, history replay, image clarity, and overflow before delivery.
 8. Return only the stable page link and a short answer summary. Do not link archive files.
 
@@ -23,6 +23,7 @@ Turn every substantive answer into one focused HTML response that is easy to ref
 - Read [references/style-guide.md](references/style-guide.md) before creating or materially restyling a page.
 - Start from [assets/reply-page-template.html](assets/reply-page-template.html) when no established page exists.
 - Preserve an existing approved layout instead of rebuilding it unnecessarily.
+- Let the finalizer normalize only the visual foundation: paper, ink, system font, wide canvas, restrained radius, and shadows. Keep the content structure free to use the tables, flows, cards, or prose the answer actually needs.
 - Keep each page centered on the current request. Choose only the structure the answer needs: explanation, comparison, implementation report, review findings, or file delivery.
 - Use local, dependency-free HTML/CSS/JavaScript so `file://` viewing works.
 - Mark code semantically as `<pre><code class="language-json">…</code></pre>` whenever the language is known. The finalizer performs dependency-free server-side syntax highlighting and falls back to lightweight language detection when the class is omitted.
@@ -45,6 +46,7 @@ Turn every substantive answer into one focused HTML response that is easy to ref
 - Confirm no image is broken, blurry, unnecessarily narrow, or cropped past relevant content.
 - Confirm code samples show a readable language label and syntax colors; check both explicitly labelled code and any block that relies on automatic detection.
 - Confirm the previous response was archived and the archive was not presented as the primary link.
+- Confirm the finalized `<body>` contains `data-html-reply-theme="soft-bauhaus-v1"`; the Stop Hook rejects an unthemed page.
 
 ## Stop Hook enforcement
 

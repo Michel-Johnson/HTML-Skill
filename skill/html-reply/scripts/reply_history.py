@@ -14,6 +14,7 @@ from pathlib import Path
 
 START = "<!-- HTML_REPLY_HISTORY_START -->"
 END = "<!-- HTML_REPLY_HISTORY_END -->"
+THEME_VERSION = "soft-bauhaus-v1"
 DATA_RE = re.compile(r'<script type="application/json" id="html-reply-history-data">([\s\S]*?)</script>')
 TITLE_RE = re.compile(r"<title>([\s\S]*?)</title>", re.I)
 CODE_BLOCK_RE = re.compile(
@@ -134,6 +135,24 @@ def strip_history(source: str) -> str:
     return re.sub(re.escape(START) + r"[\s\S]*?" + re.escape(END), "", source)
 
 
+def mark_theme(source: str) -> str:
+    """Attach the canonical theme marker without duplicating an older marker."""
+    def replace(match: re.Match[str]) -> str:
+        opening = match.group(0)
+        marker = r"\sdata-html-reply-theme\s*=\s*(['\"])[^'\"]*\1"
+        if re.search(marker, opening, re.I):
+            return re.sub(
+                marker,
+                f' data-html-reply-theme="{THEME_VERSION}"',
+                opening,
+                count=1,
+                flags=re.I,
+            )
+        return opening[:-1] + f' data-html-reply-theme="{THEME_VERSION}">'
+
+    return re.sub(r"<body\b[^>]*>", replace, source, count=1, flags=re.I)
+
+
 def existing_prompt(source: str) -> str:
     match = DATA_RE.search(source)
     if not match:
@@ -194,7 +213,7 @@ def history_entries(root: Path, session: str) -> list[dict[str, str]]:
     for path in sorted(folder.glob("*.html"), key=lambda p: p.stat().st_mtime, reverse=True):
         source = path.read_text(encoding="utf-8", errors="ignore")
         prompt = existing_prompt(source) or "未记录 Prompt（该页面生成于历史功能启用之前）"
-        replay_source = highlight_code_blocks(strip_history(source))
+        replay_source = mark_theme(highlight_code_blocks(strip_history(source)))
         if not re.search(r"<base\b", replay_source, re.I):
             replay_source = re.sub(r"(<head\b[^>]*>)", r'\1\n<base href="../">', replay_source, count=1, flags=re.I)
         replay_path = replay_folder / path.name
@@ -224,6 +243,17 @@ def shell(data: dict) -> str:
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     return f'''{START}
 <style id="html-reply-history-style">
+  body[data-html-reply-theme="{THEME_VERSION}"]{{
+    --hr-paper:#faf9f5;--hr-paper-2:#efe8d6;--hr-ink:#4f4a3c;--hr-muted:#8a8271;
+    --hr-accent:#d9a441;--hr-blue:#dce9f4;--hr-green:#dcebd9;
+    margin:0!important;background:var(--hr-paper)!important;color:var(--hr-ink)!important;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif!important;
+  }}
+  body[data-html-reply-theme="{THEME_VERSION}"] main{{width:calc(100% - 56px)!important;max-width:none!important;margin:28px auto 48px!important}}
+  body[data-html-reply-theme="{THEME_VERSION}"] :where(h1,h2,h3,h4,p,li,td,th){{color:inherit}}
+  body[data-html-reply-theme="{THEME_VERSION}"] :where(header,section,article,.card,.panel,.metric,.file,.callout,table){{border-radius:5px!important;box-shadow:none!important}}
+  body[data-html-reply-theme="{THEME_VERSION}"] :where(a){{color:#315f78}}
+  body[data-html-reply-theme="{THEME_VERSION}"] :where(th){{background:var(--hr-paper-2)}}
   pre[data-hr-language]{{position:relative;overflow:auto;padding:46px 24px 24px!important;border:1.5px solid #4f4a3c!important;border-left:9px solid #7ca0b8!important;border-radius:4px!important;background:#202622!important;color:#e9e5d8!important;text-align:left;tab-size:2}}
   pre[data-hr-language]::before{{content:attr(data-hr-language);position:absolute;top:12px;right:16px;color:#b9b3a4;font:800 16px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;letter-spacing:.08em;text-transform:uppercase}}
   pre[data-hr-language] code{{display:block;color:inherit!important;background:transparent!important;font:500 17px/1.65 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;white-space:pre}}
@@ -235,7 +265,7 @@ def shell(data: dict) -> str:
   .hr-head{{display:flex;align-items:center;justify-content:space-between;padding:22px;border-bottom:1.5px solid #4f4a3c;background:#efe8d6}}.hr-head b{{font:800 20px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}}.hr-close{{border:1.5px solid #4f4a3c;border-radius:4px;background:#faf9f5;color:#4f4a3c;font-size:20px;cursor:pointer}}
   #hr-latest-link{{display:none;margin:12px 10px 2px;padding:13px 14px;border:1.5px solid #4f4a3c;border-radius:5px;background:#efe8d6;color:#4f4a3c;text-decoration:none;font:800 17px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}}
   #hr-history-list{{overflow:auto;padding:10px}}.hr-item{{display:block;width:100%;margin:0 0 8px;padding:15px 14px;border:1.5px solid #4f4a3c;border-radius:5px;background:#fff;text-align:left;color:#4f4a3c;text-decoration:none;cursor:pointer}}.hr-item[aria-current="page"]{{background:#dce9f4}}.hr-item b{{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:800 17px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}}
-  @media(max-width:700px){{#hr-history-button{{right:8px;top:8px}}}}
+  @media(max-width:700px){{body[data-html-reply-theme="{THEME_VERSION}"] main{{width:calc(100% - 24px)!important;margin:12px auto 32px!important}}#hr-history-button{{right:8px;top:8px}}}}
 </style>
 <button id="hr-history-button" type="button" aria-label="打开历史回复">历史</button>
 <div id="hr-history-backdrop"><aside id="hr-history-drawer" aria-label="历史回复目录"><div class="hr-head"><b>回复历史</b><button class="hr-close" id="hr-drawer-close" type="button">×</button></div><a id="hr-latest-link" href="#">← 返回最新回复</a><div id="hr-history-list"></div></aside></div>
@@ -248,7 +278,7 @@ def finalize(root: Path, session: str, prompt: str) -> Path:
     reply = reply_path(root, session)
     if not reply.exists():
         raise SystemExit(f"missing {reply}")
-    source = highlight_code_blocks(strip_history(reply.read_text(encoding="utf-8", errors="ignore")))
+    source = mark_theme(highlight_code_blocks(strip_history(reply.read_text(encoding="utf-8", errors="ignore"))))
     if not prompt.strip():
         state = root / "output" / ".html-reply" / "sessions" / f"{safe_session(session)}.json"
         try:

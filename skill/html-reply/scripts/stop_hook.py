@@ -14,6 +14,7 @@ from urllib.parse import unquote, urlparse
 
 SKILL_PATH = Path(__file__).resolve().parents[1] / "SKILL.md"
 MAX_AGE_SECONDS = 15 * 60
+THEME_VERSION = "soft-bauhaus-v1"
 SESSION_KEYS = {"session_id", "sessionId", "thread_id", "threadId", "conversation_id", "conversationId"}
 
 
@@ -103,6 +104,8 @@ def valid_html(path: Path, summary: str, expected_name: str) -> bool:
         if "<html" not in head and "<!doctype html" not in head:
             return False
         if 'id="html-reply-history-data"' not in source:
+            return False
+        if f'data-html-reply-theme="{THEME_VERSION}"' not in source:
             return False
         wanted = normalized_text(summary)
         page = normalized_text(html_visible_text(source))
