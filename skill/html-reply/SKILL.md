@@ -14,7 +14,7 @@ Turn every substantive answer into one focused HTML response that is easy to ref
 3. Perform the task and verify relevant sources, files, code, or artifacts before writing the response.
 4. Answer only the current request. Lead with the outcome, then add the minimum explanation, evidence, files, or next steps needed.
 5. Update the injected `output/reply-<session-id>.html`. Never overwrite another session's page.
-6. Run the exact cross-platform finalize command injected by the Hook to inject the left history drawer, record the current prompt, and index only this session's archived HTML pages.
+6. Run the exact cross-platform finalize command injected by the Hook to inject the top-right History trigger and left history drawer, record the current prompt, and index only this session's archived HTML pages.
 7. Render the HTML and visually inspect typography, wrapping, spacing, drawer behavior, history replay, image clarity, and overflow before delivery.
 8. Return only the stable page link and a short answer summary. Do not link archive files.
 

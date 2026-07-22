@@ -231,6 +231,10 @@ class InstallerTests(unittest.TestCase):
 
             source = reply.read_text(encoding="utf-8")
             self.assertIn('id="hr-history-button"', source)
+            self.assertIn("right:18px;top:18px", source)
+            self.assertNotIn("left:14px;top:50%", source)
+            self.assertNotIn("writing-mode:vertical-rl", source)
+            self.assertNotIn("translateY(-50%)", source)
             self.assertNotIn("hr-history-viewer", source)
             self.assertNotIn("hr-history-frame", source)
             self.assertNotIn("html-reply-embedded", source)
@@ -243,6 +247,7 @@ class InstallerTests(unittest.TestCase):
             replay = output / "archive" / "html-reply" / session / ".replay" / "reply-0001.html"
             replay_source = replay.read_text(encoding="utf-8")
             self.assertIn('id="hr-history-button"', replay_source)
+            self.assertIn("right:18px;top:18px", replay_source)
             self.assertIn('id="hr-latest-link"', replay_source)
             self.assertIn("← 返回最新回复", replay_source)
             self.assertIn('"isReplay": true', replay_source)

@@ -82,7 +82,7 @@ Do not force every page into the same number of cards. Avoid dashboards, excessi
 
 ## Prompt-aware history
 
-- Every finalized page must include the injected left-side History button from `scripts/reply_history.py` and show only that session's history.
+- Every finalized page must include the injected horizontal History button in the top-right corner from `scripts/reply_history.py` and show only that session's history. Keep the primary left reading edge clear.
 - Record the current user prompt with the page; redact common passwords, tokens, API keys, and secrets before persistence.
 - The history drawer lists archived replies by title and time, with a short prompt preview.
 - Opening an entry shows the original user prompt above and the archived HTML unchanged below in an iframe.
