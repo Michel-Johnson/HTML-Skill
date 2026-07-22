@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Codex HTML Reply</title>
+  <style>
+    :root{--paper:#faf9f5;--paper2:#efe8d6;--ink:#4f4a3c;--muted:#8a8271;--accent:#d9a441;--blue:#dce9f4;--green:#dcebd9}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:18px;line-height:1.65}
+    main{width:calc(100% - 56px);margin:28px auto 56px}
+    header{position:relative;overflow:hidden;padding:58px 62px 54px;border:2px solid var(--ink);border-left:12px solid var(--accent);background:var(--paper2)}
+    header::after{content:"";position:absolute;right:-90px;top:-130px;width:360px;height:360px;border-radius:50%;background:var(--blue);opacity:.75}
+    .eyebrow{position:relative;z-index:1;margin:0 0 12px;font-size:16px;font-weight:850;letter-spacing:.16em;color:var(--muted)}
+    h1{position:relative;z-index:1;margin:0;font-size:clamp(52px,7vw,104px);line-height:.98;letter-spacing:-.055em}
+    .lead{position:relative;z-index:1;max-width:1100px;margin:26px 0 0;font-size:24px;font-weight:650;line-height:1.55}
+    .feature-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:22px}
+    .feature{min-height:210px;padding:28px 30px;border:1.5px solid var(--ink);background:#fff}
+    .feature:nth-child(2){background:var(--blue)}.feature:nth-child(3){background:var(--green)}
+    .number{display:block;margin-bottom:28px;font-size:16px;font-weight:850;letter-spacing:.12em;color:var(--muted)}
+    h2{margin:0 0 12px;font-size:28px;line-height:1.2}
+    p{margin:0}
+    .install{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px}
+    .terminal{padding:28px 30px;border:1.5px solid var(--ink);background:#202622;color:#e9e5d8}
+    .terminal b{display:block;margin-bottom:15px;font-size:18px;color:#efbd78}
+    pre{margin:0;overflow:auto;font:600 17px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap}
+    .note{margin-top:22px;padding:22px 26px;border:1.5px solid var(--ink);border-left:10px solid var(--accent);background:var(--paper2);font-size:19px;font-weight:700}
+    @media(max-width:850px){main{width:calc(100% - 24px);margin-top:12px}header{padding:42px 28px}.feature-grid,.install{grid-template-columns:1fr}}
+  </style>
+</head>
+<body data-html-reply-theme="soft-bauhaus-v1">
+  <main>
+    <header>
+      <p class="eyebrow">CODEX SKILL · HTML REPLY</p>
+      <h1>每次回答，<br>都是一页可读的 HTML</h1>
+      <p class="lead">自动把 Codex 的正式回复写入独立、可刷新、带历史记录的页面；同一 Session 持续更新自己的文件，不同 Session 互不覆盖。</p>
+    </header>
+
+    <section class="feature-grid" aria-label="核心能力">
+      <article class="feature"><span class="number">01 · CONSISTENT</span><h2>统一视觉语言</h2><p>固定软化包豪斯主题：浅色纸张、系统字体、宽画布、低圆角与克制配色。</p></article>
+      <article class="feature"><span class="number">02 · SESSION SAFE</span><h2>Session 完全隔离</h2><p>每个 Session 使用独立稳定页面、Prompt 状态和历史归档，不再相互覆盖。</p></article>
+      <article class="feature"><span class="number">03 · HISTORY</span><h2>随时回看旧回复</h2><p>右上角历史入口可回看原始 HTML；代码高亮、布局与内容保持完整。</p></article>
+    </section>
+
+    <section class="install" aria-label="安装命令">
+      <article class="terminal"><b>macOS</b><pre>curl -fsSL https://raw.githubusercontent.com/
+Michel-Johnson/HTML-Skill/main/install.py | python3 -</pre></article>
+      <article class="terminal"><b>Windows PowerShell</b><pre>irm https://raw.githubusercontent.com/
+Michel-Johnson/HTML-Skill/main/install.py | py -3</pre></article>
+    </section>
+
+    <p class="note">安装完成后重启 Codex 或新建 Session；之后无需手动加载 Skill，正式回复会自动进入 HTML 页面。</p>
+  </main>
+</body>
+</html>

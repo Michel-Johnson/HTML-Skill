@@ -2,6 +2,10 @@
 
 让 Codex 的每次正式回复自动写入独立、可刷新、带历史记录的 HTML 页面。
 
+![Codex HTML Reply 的软化包豪斯页面预览](docs/assets/html-reply-preview.png)
+
+[查看完整 HTML 预览](docs/readme-preview.html)
+
 ## 安装
 
 要求：Codex 与 Python 3.9+。
