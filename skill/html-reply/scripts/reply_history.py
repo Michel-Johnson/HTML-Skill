@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
 import json
 import re
@@ -234,6 +235,7 @@ def history_entries(root: Path, session: str) -> list[dict[str, str]]:
             "isReplay": True,
             "currentPath": entry["path"],
             "latestPath": latest_path,
+            "revision": hashlib.sha256(replay_source.encode("utf-8")).hexdigest()[:12],
         }
         replay_path.write_text(inject_shell(replay_source, replay_data), encoding="utf-8")
     return entries
@@ -258,6 +260,15 @@ def shell(data: dict) -> str:
   pre[data-hr-language]::before{{content:attr(data-hr-language);position:absolute;top:12px;right:16px;color:#b9b3a4;font:800 16px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;letter-spacing:.08em;text-transform:uppercase}}
   pre[data-hr-language] code{{display:block;color:inherit!important;background:transparent!important;font:500 17px/1.65 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;white-space:pre}}
   .hr-tok-key,.hr-tok-property{{color:#91c8ff}}.hr-tok-string{{color:#a8dc95}}.hr-tok-number{{color:#efbd78}}.hr-tok-literal,.hr-tok-keyword{{color:#d8afe9}}.hr-tok-comment{{color:#98a198;font-style:italic}}.hr-tok-tag{{color:#efa98c}}.hr-tok-variable{{color:#f0d27f}}.hr-tok-punct{{color:#cbc5b6}}
+  form[data-html-reply-interaction]{{margin:28px 0;padding:24px;border:1.5px solid #4f4a3c;border-radius:5px;background:#fff}}
+  form[data-html-reply-interaction] fieldset{{min-width:0;margin:0 0 18px;padding:18px;border:1.5px solid #4f4a3c;border-radius:5px;background:#faf9f5}}
+  form[data-html-reply-interaction] legend{{padding:0 8px;font-size:20px;font-weight:800}}
+  form[data-html-reply-interaction] label{{display:flex;align-items:flex-start;gap:10px;margin:10px 0;font-size:18px;line-height:1.55;cursor:pointer}}
+  form[data-html-reply-interaction] :where(input[type="radio"],input[type="checkbox"]){{width:20px;height:20px;margin-top:4px;accent-color:#d9a441}}
+  form[data-html-reply-interaction] :where(input[type="text"],textarea,select){{box-sizing:border-box;width:100%;margin-top:8px;padding:12px 14px;border:1.5px solid #4f4a3c;border-radius:4px;background:#fff;color:#4f4a3c;font:500 18px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}}
+  form[data-html-reply-interaction] textarea{{min-height:120px;resize:vertical}}
+  form[data-html-reply-interaction] button[type="submit"]{{display:none}}
+  [data-interaction-status]{{min-height:28px;margin:12px 0 0;color:#315f78;font-size:17px;line-height:1.55}}
   #hr-history-button{{position:fixed;right:18px;top:18px;z-index:2147483000;min-height:44px;padding:10px 15px;border:1.5px solid #4f4a3c;border-radius:5px;background:#d9a441;color:#4f4a3c;font:800 16px/1 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;letter-spacing:.04em;cursor:pointer}}
   #hr-history-backdrop{{position:fixed;inset:0;z-index:2147483001;display:none;background:rgba(30,28,23,.34)}}
   #hr-history-backdrop.open{{display:block}}
@@ -270,7 +281,11 @@ def shell(data: dict) -> str:
 <button id="hr-history-button" type="button" aria-label="打开历史回复">历史</button>
 <div id="hr-history-backdrop"><aside id="hr-history-drawer" aria-label="历史回复目录"><div class="hr-head"><b>回复历史</b><button class="hr-close" id="hr-drawer-close" type="button">×</button></div><a id="hr-latest-link" href="#">← 返回最新回复</a><div id="hr-history-list"></div></aside></div>
 <script type="application/json" id="html-reply-history-data">{payload}</script>
-<script id="html-reply-history-script">(()=>{{const data=JSON.parse(document.getElementById('html-reply-history-data').textContent);const back=document.getElementById('hr-history-backdrop');const list=document.getElementById('hr-history-list');const trigger=document.getElementById('hr-history-button');const latest=document.getElementById('hr-latest-link');trigger.onclick=()=>back.classList.add('open');document.getElementById('hr-drawer-close').onclick=()=>back.classList.remove('open');back.onclick=e=>{{if(e.target===back)back.classList.remove('open')}};document.addEventListener('keydown',e=>{{if(e.key==='Escape')back.classList.remove('open')}});if(data.isReplay&&data.latestPath){{latest.href=data.latestPath;latest.style.display='block'}};(data.entries||[]).forEach(item=>{{const a=document.createElement('a');a.className='hr-item';a.href=item.path;a.innerHTML='<b></b>';a.querySelector('b').textContent=item.title;if(data.currentPath===item.path)a.setAttribute('aria-current','page');list.appendChild(a)}});}})();</script>
+<script id="html-reply-history-script">(()=>{{const data=JSON.parse(document.getElementById('html-reply-history-data').textContent);const back=document.getElementById('hr-history-backdrop');const list=document.getElementById('hr-history-list');const trigger=document.getElementById('hr-history-button');const latest=document.getElementById('hr-latest-link');trigger.onclick=()=>back.classList.add('open');document.getElementById('hr-drawer-close').onclick=()=>back.classList.remove('open');back.onclick=e=>{{if(e.target===back)back.classList.remove('open')}};document.addEventListener('keydown',e=>{{if(e.key==='Escape')back.classList.remove('open')}});if(data.isReplay&&data.latestPath){{latest.href=data.latestPath;latest.style.display='block'}};(data.entries||[]).forEach(item=>{{const a=document.createElement('a');a.className='hr-item';a.href=item.path;a.innerHTML='<b></b>';a.querySelector('b').textContent=item.title;if(data.currentPath===item.path)a.setAttribute('aria-current','page');list.appendChild(a)}});
+const collect=form=>{{const answers=[];const seen=new Set();form.querySelectorAll('[name]').forEach(control=>{{if(seen.has(control.name)||control.disabled)return;seen.add(control.name);const group=[...form.querySelectorAll('[name="'+CSS.escape(control.name)+'"]')];let value='';if(control.type==='radio')value=(group.find(item=>item.checked)||{{}}).value||'';else if(control.type==='checkbox')value=group.filter(item=>item.checked).map(item=>item.value);else value=control.value;const owner=control.closest('[data-question]');answers.push({{id:control.name,question:(control.dataset.question||(owner&&owner.dataset.question)||control.name).trim(),answer:value}})}});return answers.filter(item=>Array.isArray(item.answer)?item.answer.length:String(item.answer).trim())}};
+document.querySelectorAll('form[data-html-reply-interaction]').forEach(form=>{{let status=form.querySelector('[data-interaction-status]');if(!status){{status=document.createElement('p');status.setAttribute('data-interaction-status','');form.appendChild(status)}}if(data.isReplay){{form.querySelectorAll('input,textarea,select,button').forEach(control=>control.disabled=true);status.textContent='这是历史回复，只能查看；请返回最新回复继续回答。';return}}const formId=form.dataset.interactionId||form.id||'default';const key='html-reply:'+data.session+':'+formId;try{{const draft=JSON.parse(localStorage.getItem(key)||'{{}}');form.querySelectorAll('[name]').forEach(control=>{{const value=draft[control.name];if(value===undefined)return;if(control.type==='radio')control.checked=control.value===value;else if(control.type==='checkbox')control.checked=Array.isArray(value)&&value.includes(control.value);else control.value=value}})}}catch(_e){{}}
+const exportAnswers=()=>{{const answers=collect(form);const draft={{}};answers.forEach(item=>draft[item.id]=item.answer);try{{localStorage.setItem(key,JSON.stringify(draft))}}catch(_e){{}}if(!answers.length){{status.textContent='等待回答…';return}}const payload={{version:1,session:data.session,pageTitle:document.title,revision:data.revision||'',submittedAt:new Date().toISOString(),answers}};const blob=new Blob([JSON.stringify(payload,null,2)],{{type:'application/json'}});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='html-reply-response-'+data.session+'.json';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status.textContent='已自动保存。下次向 Codex 发送消息时会读取最新回答。'}};
+form.addEventListener('submit',event=>{{event.preventDefault();exportAnswers()}});form.addEventListener('change',exportAnswers);form.addEventListener('blur',event=>{{if(event.target.matches('textarea,input[type="text"]'))exportAnswers()}},true);status.textContent='回答会自动保存；文本输入在离开输入框时保存。'}});}})();</script>
 {END}'''
 
 
@@ -289,6 +304,7 @@ def finalize(root: Path, session: str, prompt: str) -> Path:
         "session": safe_session(session),
         "currentPrompt": prompt.strip() or "未记录",
         "entries": history_entries(root, session),
+        "revision": hashlib.sha256(source.encode("utf-8")).hexdigest()[:12],
     }
     source = inject_shell(source, data)
     reply.write_text(source, encoding="utf-8")

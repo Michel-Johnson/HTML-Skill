@@ -2,6 +2,8 @@
 
 让 Codex 的每次正式回复自动写入独立、可刷新、带历史记录的 HTML 页面。
 
+页面也可以直接向用户提问：单选、复选、下拉选择会在改动后自动保存，文本回答会在离开输入框时自动保存。用户下一次正常向 Codex 发送消息时，`UserPromptSubmit` Hook 会读取当前 session 最新的回答；不需要点击“保存”，也不需要启动 localhost 服务。
+
 ![Codex HTML Reply 的软化包豪斯页面预览](docs/assets/html-reply-preview.png)
 
 [查看完整 HTML 预览](docs/readme-preview.html)
@@ -82,6 +84,7 @@ python3 install.py --uninstall
 - Windows 10/11：支持 `py -3` 或 `python`，路径包含空格时也能正确安装。
 - 安装位置遵循 Codex 用户级 Skill 目录；如果检测到旧的 `$CODEX_HOME/skills/html-reply`，会先备份再迁移，并保留仅含 Hook 转发脚本的兼容目录，避免正在运行的旧 session 中断。
 - 当前只配置 Codex，不修改其他 Agent 或编辑器。
+- 交互回答默认从系统 `Downloads` 目录读取；浏览器使用自定义下载目录时，可通过 `HTML_REPLY_INTERACTION_INBOX` 指定。回答文件必须匹配当前 session，且每个版本只会消费一次。
 
 官方依据：[Build skills](https://learn.chatgpt.com/docs/build-skills) · [Codex Hooks](https://learn.chatgpt.com/docs/hooks)
 

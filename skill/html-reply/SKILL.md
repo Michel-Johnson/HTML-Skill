@@ -27,6 +27,8 @@ Turn every substantive answer into one focused HTML response that is easy to ref
 - Keep each page centered on the current request. Choose only the structure the answer needs: explanation, comparison, implementation report, review findings, or file delivery.
 - Use local, dependency-free HTML/CSS/JavaScript so `file://` viewing works.
 - Mark code semantically as `<pre><code class="language-json">…</code></pre>` whenever the language is known. The finalizer performs dependency-free server-side syntax highlighting and falls back to lightweight language detection when the class is omitted.
+- When a reply materially benefits from user choices, use a semantic `<form data-html-reply-interaction data-interaction-id="...">`. Put each question in a `<fieldset data-question="完整问题">`, give every input a stable `name`, and include `<p data-interaction-status></p>`. The finalizer restores drafts and automatically exports the current answers after a choice changes or a text field loses focus; do not require a separate Save button.
+- Treat the generated `html-reply-response-<session-id>.json` as a session-scoped sidecar, not as a modified HTML file. The next `UserPromptSubmit` Hook validates and consumes only a new matching response once. The current explicit user message always takes priority over older form data.
 
 ## Task-specific handling
 
@@ -45,6 +47,7 @@ Turn every substantive answer into one focused HTML response that is easy to ref
 - Confirm abbreviations are expanded on first use.
 - Confirm no image is broken, blurry, unnecessarily narrow, or cropped past relevant content.
 - Confirm code samples show a readable language label and syntax colors; check both explicitly labelled code and any block that relies on automatic detection.
+- If the page asks questions, confirm choices auto-save, text saves on blur, the visible status explains this behavior, and archived pages disable stale inputs.
 - Confirm the previous response was archived and the archive was not presented as the primary link.
 - Confirm the finalized `<body>` contains `data-html-reply-theme="soft-bauhaus-v1"`; the Stop Hook rejects an unthemed page.
 

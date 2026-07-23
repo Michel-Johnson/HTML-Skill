@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -352,6 +353,97 @@ class InstallerTests(unittest.TestCase):
             self.assertGreater(source.index("border-radius:5px!important"), source.index("border-radius:18px"))
             self.assertIn("box-shadow:none!important", source)
             self.assertEqual(stop(), {})
+
+    def test_interactive_answers_are_consumed_once_and_isolated_by_session(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            downloads = root / "downloads"
+            downloads.mkdir()
+            scripts = ROOT / "skill" / "html-reply" / "scripts"
+            old_response = downloads / "html-reply-response-session-a.json"
+            old_response.write_text(json.dumps({
+                "version": 1,
+                "session": "session-a",
+                "pageTitle": "交互测试",
+                "revision": "old",
+                "submittedAt": "2026-07-23T11:59:00Z",
+                "answers": [{"id": "priority", "question": "优先支持什么？", "answer": "旧答案"}],
+            }, ensure_ascii=False), encoding="utf-8")
+            os.utime(old_response, ns=(1_000_000_000, 1_000_000_000))
+            response = downloads / "html-reply-response-session-a (1).json"
+            response.write_text(json.dumps({
+                "version": 1,
+                "session": "session-a",
+                "pageTitle": "交互测试",
+                "revision": "new",
+                "submittedAt": "2026-07-23T12:00:00Z",
+                "answers": [
+                    {"id": "priority", "question": "优先支持什么？", "answer": "单选题"},
+                    {"id": "notes", "question": "补充要求", "answer": "不需要保存按钮"},
+                ],
+            }, ensure_ascii=False), encoding="utf-8")
+            env = os.environ.copy()
+            env["HTML_REPLY_INTERACTION_INBOX"] = str(downloads)
+
+            def invoke(session: str) -> str:
+                result = subprocess.run(
+                    [sys.executable, str(scripts / "prompt_hook.py"), "UserPromptSubmit"],
+                    input=json.dumps({"session_id": session, "cwd": str(root), "prompt": "继续"}),
+                    env=env, check=True, capture_output=True, text=True,
+                )
+                return json.loads(result.stdout)["hookSpecificOutput"]["additionalContext"]
+
+            first = invoke("session-a")
+            self.assertIn("优先支持什么？: 单选题", first)
+            self.assertIn("补充要求: 不需要保存按钮", first)
+            self.assertNotIn("旧答案", first)
+            self.assertNotIn("interaction update detected", invoke("session-a"))
+            self.assertNotIn("优先支持什么？", invoke("session-b"))
+            self.assertTrue((root / "output" / ".html-reply" / "interactions" / "session-a.state.json").is_file())
+            self.assertEqual(
+                len(list((root / "output" / ".html-reply" / "interactions" / "session-a").glob("*.json"))),
+                1,
+            )
+
+    def test_finalizer_adds_automatic_interaction_runtime_and_disables_replay(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            output = root / "output"
+            output.mkdir()
+            scripts = ROOT / "skill" / "html-reply" / "scripts"
+            session = "interactive"
+            reply = output / f"reply-{session}.html"
+            reply.write_text(
+                '<!doctype html><html><head><title>Interactive</title></head><body>'
+                '<form data-html-reply-interaction data-interaction-id="next-step">'
+                '<fieldset data-question="下一步做什么？"><legend>下一步做什么？</legend>'
+                '<label><input type="radio" name="next" value="测试">测试</label></fieldset>'
+                '<label data-question="补充要求">补充要求<textarea name="notes"></textarea></label>'
+                '<p data-interaction-status></p></form></body></html>',
+                encoding="utf-8",
+            )
+            finalize = [
+                sys.executable, str(scripts / "reply_history.py"), "finalize",
+                "--root", str(root), "--session", session, "--prompt", "请提问",
+            ]
+            subprocess.run(finalize, check=True, capture_output=True, text=True)
+            source = reply.read_text(encoding="utf-8")
+            self.assertIn("html-reply-response-'+data.session+'.json", source)
+            self.assertIn("form.addEventListener('change',exportAnswers)", source)
+            self.assertIn("form.addEventListener('blur'", source)
+            self.assertIn("已自动保存", source)
+            self.assertIn("localStorage", source)
+            self.assertIn('"revision": "', source)
+            subprocess.run(
+                [sys.executable, str(scripts / "reply_history.py"), "archive", "--root", str(root), "--session", session],
+                check=True, capture_output=True, text=True,
+            )
+            reply.write_text("<!doctype html><html><head><title>Next</title></head><body>next</body></html>", encoding="utf-8")
+            subprocess.run(finalize, check=True, capture_output=True, text=True)
+            replay = output / "archive" / "html-reply" / session / ".replay" / "reply-0001.html"
+            replay_source = replay.read_text(encoding="utf-8")
+            self.assertIn("这是历史回复，只能查看", replay_source)
+            self.assertIn('"isReplay": true', replay_source)
 
 
 if __name__ == "__main__":
