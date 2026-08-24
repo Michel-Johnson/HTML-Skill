@@ -1,4 +1,6 @@
 interface:
   display_name: "HTML Reply"
-  short_description: "强制所有正式回复写入同一个简洁、可刷新的 HTML 页面"
-  default_prompt: "Use $html-reply to write every substantive response into the same polished HTML page."
+  short_description: "按明确要求生成可刷新、带历史记录的 HTML 回复"
+  default_prompt: "Use $html-reply to deliver this response as a polished HTML page."
+policy:
+  allow_implicit_invocation: false

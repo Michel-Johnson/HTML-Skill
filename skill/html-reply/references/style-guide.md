@@ -61,6 +61,7 @@ Do not force every page into the same number of cards. Avoid dashboards, excessi
 ## Code rendering
 
 - Put code in semantic `<pre><code>` elements and prefer an explicit `language-*` class, such as `language-python` or `language-json`.
+- Keep inline `code` styling separate from code blocks. Every `pre code` must use a transparent background, inherit the `pre` color, and reset padding and border radius so selectors such as `.blog-guide code` cannot create light strips inside a dark block.
 - The finalizer automatically highlights JSON, Python, JavaScript, TypeScript, Shell, SQL, HTML, and CSS. When no language class is present, it performs lightweight detection and uses plain text if uncertain.
 - Keep code rendering dependency-free and server-side so syntax colors remain visible under `file://`, history replay, static screenshots, and Quick Look.
 - Show the detected language as a label of at least 16px. Code should remain at least 17px on desktop, preserve whitespace, and scroll horizontally instead of wrapping syntax unpredictably.
@@ -77,9 +78,15 @@ Do not force every page into the same number of cards. Avoid dashboards, excessi
 
 ## Stable output behavior
 
+- Normal authoring writes a session-specific body fragment under `output/.html-reply/drafts/`; `publish.py` is the only normal path from that fragment to the stable page.
+- Keep document boilerplate and the visual foundation in `assets/fragment-shell.html`. Do not spend model tokens restating the shared CSS on every turn.
 - Use one stable presentation file per session: `output/reply-<session-id>.html`. Replies within the same session refresh that file; different sessions use different files.
+- Take `<session-id>` from the current Codex process environment variable `CODEX_THREAD_ID` through `reply_history.py path --root <workspace>`. Never infer it from an open browser URL, an older reply, history, nested workspace metadata, or a hard-coded business script, and never collapse missing identity to `local`.
+- Do not embed stable `reply-<id>.html` paths in reusable report generators. Pass the current helper-resolved output path into the generator or publish a neutral staging artifact afterward.
+- Enforce the boundary in the publisher: it must reject a draft or target whose session ID differs from the current process `CODEX_THREAD_ID`.
+- Keep one searchable history entry per session: `output/history-<session-id>.html`. Rebuild it on every finalize and list the current reply before archived replies.
 - Archive every accepted or superseded response under a topic-specific archive folder.
-- Never direct the user to the archive as the main result.
+- In chat, link the history index first and the current stable reply second. Never expose a raw archive file as the primary history link.
 - Keep related images under `output/assets/<topic>/` with stable descriptive names.
 
 ## Prompt-aware history
@@ -95,4 +102,4 @@ Do not force every page into the same number of cards. Avoid dashboards, excessi
 - Render at roughly 1400–1600 px width.
 - Check the top of the page and all wide figures.
 - Reject layouts with clipped text, unwanted single-word title wraps, broken local assets, tiny PDF text, excessive empty margins, or figures confined to a narrow prose column.
-- Treat the Stop Hook as a delivery gate, not a page generator: the agent must create, archive, and visually verify the HTML before finalizing.
+- Treat Publisher validation as the delivery check: the agent must create, archive, and visually verify the HTML before finalizing. No Stop Hook is registered.
