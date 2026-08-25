@@ -164,7 +164,7 @@ class InstallerTests(unittest.TestCase):
             wrapper = legacy / "scripts" / "stop_hook.py"
             self.assertTrue(wrapper.is_file())
             installed_stop = (skills_home / "html-reply" / "scripts" / "stop_hook.py").resolve()
-            self.assertIn(str(installed_stop), wrapper.read_text(encoding="utf-8"))
+            self.assertIn(repr(str(installed_stop)), wrapper.read_text(encoding="utf-8"))
             self.assertTrue((legacy / "scripts" / "write_guard.py").is_file())
 
     def test_install_quarantines_old_backups_outside_skill_discovery_roots(self) -> None:
