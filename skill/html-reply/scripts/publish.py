@@ -101,7 +101,9 @@ def main() -> int:
     parser.add_argument("--prompt", default="")
     args = parser.parse_args()
     result = publish(Path(args.root).expanduser().resolve(), args.session, args.prompt)
-    print(json.dumps(result, ensure_ascii=False))
+    # Keep stdout ASCII-safe because Windows runners may expose a legacy
+    # console encoding even when the fragment and summary contain Unicode.
+    print(json.dumps(result, ensure_ascii=True))
     return 0
 
 

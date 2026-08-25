@@ -163,7 +163,8 @@ class InstallerTests(unittest.TestCase):
             self.assertFalse((legacy / "SKILL.md").exists())
             wrapper = legacy / "scripts" / "stop_hook.py"
             self.assertTrue(wrapper.is_file())
-            self.assertIn(str(skills_home / "html-reply" / "scripts" / "stop_hook.py"), wrapper.read_text(encoding="utf-8"))
+            installed_stop = (skills_home / "html-reply" / "scripts" / "stop_hook.py").resolve()
+            self.assertIn(str(installed_stop), wrapper.read_text(encoding="utf-8"))
             self.assertTrue((legacy / "scripts" / "write_guard.py").is_file())
 
     def test_install_quarantines_old_backups_outside_skill_discovery_roots(self) -> None:
@@ -548,6 +549,7 @@ class InstallerTests(unittest.TestCase):
                 [sys.executable, str(scripts / "publish.py"), "--root", str(root), "--session", session, "--prompt", "简化流程"],
                 check=True, capture_output=True, text=True,
             )
+            self.assertTrue(published.stdout.isascii())
             result = json.loads(published.stdout)
             self.assertEqual(result["summary"], summary)
             self.assertEqual(Path(result["reply"]).resolve(), old_reply.resolve())
