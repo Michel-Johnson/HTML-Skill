@@ -29,8 +29,11 @@ GUIDANCE = f"""{BLOCK_START}
 - 已打开的 HTML 页面、Codex Desktop 环境、历史 HTML 回复和过去的用户偏好都不能作为自动调用依据。
 - 一次明确调用只对当前回合生效；除非用户明确要求后续多个回合持续使用 HTML。
 - 从进程环境变量 `CODEX_THREAD_ID` 获取当前 task；不要从已打开的浏览器 URL、旧回复、历史记录或现有构建脚本中复制 task ID。
-- 显式调用时，只写入当前 session 正文 fragment，然后运行一次 `publish.py --root <workspace>`；路径解析、归档、套用模板、Finalize 和校验均由 Publisher 负责。
-- 每个 Codex task 只保留一个 `output/reply-<CODEX_THREAD_ID>.html`，不要直接写入稳定回复页面。
+- 显式调用时，先运行 `publish.py --root <workspace> --paths`，把正文 fragment 写入返回的 `draft`，把当前用户请求（不含自动界面上下文）写入 `promptFile`，最后运行一次 `publish.py --root <workspace>`；不要把 Prompt 放在命令行中，`--root` 只标识项目，不是输出目录。
+- 持久数据目录按 `$HTML_REPLY_DATA_DIR`、`$CODEX_HOME/html-reply`、`~/.codex/html-reply` 的顺序解析，并按 workspace hash 与 `CODEX_THREAD_ID` 隔离。所有持久 HTML、历史、状态和资产都必须在仓库外；临时 draft 发布成功后由 Publisher 删除。
+- 数据目录位于项目或任何 Git 工作树内时必须拒绝；外部目录无写权限时直接报错，不能回退到仓库内。
+- 旧版 `output/` 只能通过 `reply_history.py migrate --root <workspace>` 显式复制迁移；最早的共享 `reply.html` 使用 `migrate-shared` 导入当前合法 task。迁移不得删除源文件，卸载也必须保留用户数据。
+- 每个 Codex task 只保留一个外部稳定 `reply-<CODEX_THREAD_ID>.html`，不要直接写入稳定回复页面。
 - 不要在可复用脚本或业务脚本中写死 `reply-<id>.html`。这类脚本必须接收为当前 task 提供的输出路径。
 - 最终聊天消息必须重复页面中的简短摘要，然后依次链接 `历史总览` 和 `当前回复`。
 {BLOCK_END}"""

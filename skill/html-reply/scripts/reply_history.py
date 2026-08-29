@@ -10,8 +10,12 @@ import json
 import os
 import re
 import shutil
+import sys
+import tempfile
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urljoin
 
 
 START = "<!-- HTML_REPLY_HISTORY_START -->"
@@ -32,6 +36,63 @@ LANGUAGE_ALIASES = {
     "html": "html", "htm": "html", "xml": "html",
     "css": "css", "sql": "sql", "json": "json",
 }
+
+SESSION_RE = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9._-]{0,126}[A-Za-z0-9])?")
+RESERVED_SESSIONS = {"local", "legacy", ".", ".."}
+WINDOWS_DEVICE_NAMES = {
+    "con", "prn", "aux", "nul", *(f"com{number}" for number in range(1, 10)),
+    *(f"lpt{number}" for number in range(1, 10)),
+}
+
+
+@dataclass(frozen=True)
+class StorageLayout:
+    workspace_root: Path
+    data_root: Path
+    workspace_id: str
+    workspace_dir: Path
+    session: str
+    session_dir: Path
+    draft: Path
+    prompt_file: Path
+    reply: Path
+    history: Path
+    archive: Path
+    replay: Path
+    state: Path
+    assets: Path
+
+    def paths(self) -> dict[str, str]:
+        legacy_output = self.workspace_root / "output"
+        has_legacy = (
+            (legacy_output / "reply.html").is_file()
+            or (legacy_output / "history.html").is_file()
+            or any(legacy_output.glob("reply-*.html"))
+            or any(legacy_output.glob("history-*.html"))
+            or (legacy_output / "archive" / "html-reply").exists()
+        ) if legacy_output.is_dir() else False
+        result = {
+            "workspaceRoot": str(self.workspace_root),
+            "dataRoot": str(self.data_root),
+            "workspaceId": self.workspace_id,
+            "session": self.session,
+            "sessionDir": str(self.session_dir),
+            "draft": str(self.draft),
+            "promptFile": str(self.prompt_file),
+            "reply": str(self.reply),
+            "history": str(self.history),
+            "archive": str(self.archive),
+            "replay": str(self.replay),
+            "state": str(self.state),
+            "assets": str(self.assets),
+        }
+        if has_legacy:
+            result["legacyOutput"] = str(legacy_output)
+            result["legacyWarning"] = (
+                "Legacy workspace output still exists and may be committed; migrate it explicitly, "
+                "then review it before manual cleanup."
+            )
+        return result
 
 
 def explicit_language(attrs: str) -> str:
@@ -172,8 +233,16 @@ def title_of(source: str, fallback: str) -> str:
 
 
 def safe_session(value: str) -> str:
-    value = re.sub(r"[^A-Za-z0-9._-]+", "-", value).strip("-.")
-    return value or "local"
+    if not isinstance(value, str) or not value or value != value.strip():
+        raise SystemExit("HTML Reply isolation error: the session ID is missing or malformed")
+    if not SESSION_RE.fullmatch(value):
+        raise SystemExit(
+            "HTML Reply isolation error: the session ID may contain only letters, digits, '.', '_' and '-'"
+        )
+    lowered = value.casefold()
+    if lowered in RESERVED_SESSIONS or lowered.split(".", 1)[0] in WINDOWS_DEVICE_NAMES:
+        raise SystemExit(f"HTML Reply isolation error: reserved session ID '{value}' is not allowed")
+    return value
 
 
 def current_thread_session(requested: str = "") -> str:
@@ -184,11 +253,11 @@ def current_thread_session(requested: str = "") -> str:
     may still pass ``--session`` for tests and non-Codex use, but a mismatched
     value is rejected inside Codex instead of publishing into another thread.
     """
-    runtime_raw = os.environ.get("CODEX_THREAD_ID", "").strip()
+    runtime_raw = os.environ.get("CODEX_THREAD_ID", "")
     runtime = safe_session(runtime_raw) if runtime_raw else ""
-    explicit_raw = requested.strip()
+    explicit_raw = requested
     explicit = safe_session(explicit_raw) if explicit_raw else ""
-    if runtime and explicit and explicit not in {runtime, "legacy"}:
+    if runtime and explicit and explicit != runtime:
         raise SystemExit(
             "HTML Reply isolation error: --session does not match "
             f"CODEX_THREAD_ID ({explicit} != {runtime})"
@@ -202,14 +271,224 @@ def current_thread_session(requested: str = "") -> str:
     return session
 
 
-def reply_path(root: Path, session: str) -> Path:
-    session = safe_session(session)
-    return root / "output" / ("reply.html" if session == "legacy" else f"reply-{session}.html")
+def is_within(path: Path, parent: Path) -> bool:
+    try:
+        path.relative_to(parent)
+        return True
+    except ValueError:
+        return False
 
 
-def history_path(root: Path, session: str) -> Path:
+def git_root_for(path: Path) -> Path | None:
+    for candidate in (path, *path.parents):
+        if (candidate / ".git").exists():
+            return candidate
+    return None
+
+
+def resolve_data_root(workspace_root: Path, explicit: str | Path | None = None) -> Path:
+    if explicit:
+        candidate = Path(explicit)
+    elif os.environ.get("HTML_REPLY_DATA_DIR", "").strip():
+        candidate = Path(os.environ["HTML_REPLY_DATA_DIR"].strip())
+    else:
+        codex_home = (
+            Path(os.environ["CODEX_HOME"].strip()).expanduser()
+            if os.environ.get("CODEX_HOME", "").strip()
+            else Path.home() / ".codex"
+        )
+        candidate = codex_home / "html-reply"
+    data_root = candidate.expanduser().resolve()
+    workspace_root = workspace_root.expanduser().resolve()
+    workspace_git_root = git_root_for(workspace_root)
+    data_git_root = git_root_for(data_root)
+    if is_within(data_root, workspace_root) or (
+        workspace_git_root is not None and is_within(data_root, workspace_git_root)
+    ) or data_git_root is not None:
+        raise SystemExit(
+            "HTML Reply storage error: the data directory must be outside every workspace and Git worktree; "
+            f"refusing {data_root}"
+        )
+    return data_root
+
+
+def storage_layout(
+    root: Path,
+    session: str,
+    data_dir: str | Path | None = None,
+) -> StorageLayout:
+    workspace_root = root.expanduser().resolve()
+    if not workspace_root.is_dir():
+        raise SystemExit(f"HTML Reply storage error: workspace does not exist: {workspace_root}")
     session = safe_session(session)
-    return root / "output" / ("history.html" if session == "legacy" else f"history-{session}.html")
+    data_root = resolve_data_root(workspace_root, data_dir)
+    canonical_workspace = os.path.normcase(str(workspace_root)).replace("\\", "/")
+    workspace_id = hashlib.sha256(canonical_workspace.encode("utf-8")).hexdigest()
+    canonical_data_root = os.path.normcase(str(data_root)).replace("\\", "/")
+    data_root_id = hashlib.sha256(canonical_data_root.encode("utf-8")).hexdigest()
+    workspace_dir = data_root / "workspaces" / workspace_id
+    session_dir = workspace_dir / "threads" / session
+    draft_root = (Path(tempfile.gettempdir()) / "codex-html-reply" / "drafts").resolve()
+    workspace_git_root = git_root_for(workspace_root)
+    draft_git_root = git_root_for(draft_root)
+    if is_within(draft_root, workspace_root) or (
+        workspace_git_root is not None and is_within(draft_root, workspace_git_root)
+    ) or draft_git_root is not None:
+        raise SystemExit(
+            "HTML Reply storage error: the system temporary directory is inside a workspace or Git worktree"
+        )
+    layout = StorageLayout(
+        workspace_root=workspace_root,
+        data_root=data_root,
+        workspace_id=workspace_id,
+        workspace_dir=workspace_dir,
+        session=session,
+        session_dir=session_dir,
+        draft=draft_root / data_root_id / workspace_id / f"reply-{session}.html",
+        prompt_file=draft_root / data_root_id / workspace_id / f"prompt-{session}.txt",
+        reply=session_dir / f"reply-{session}.html",
+        history=session_dir / f"history-{session}.html",
+        archive=session_dir / "archive",
+        replay=session_dir / "archive" / ".replay",
+        state=session_dir / "session.json",
+        assets=session_dir / "assets",
+    )
+    central_targets = (
+        layout.workspace_dir,
+        layout.session_dir,
+        layout.reply,
+        layout.history,
+        layout.archive,
+        layout.replay,
+        layout.state,
+        layout.assets,
+        layout.workspace_dir / "workspace.json",
+    )
+    for target in central_targets:
+        if not is_within(target.resolve(), layout.data_root):
+            raise SystemExit(f"HTML Reply storage error: resolved path escapes the data directory: {target}")
+    if not is_within(layout.draft.resolve(), draft_root):
+        raise SystemExit(f"HTML Reply storage error: resolved draft escapes the temporary directory: {layout.draft}")
+    if not is_within(layout.prompt_file.resolve(), draft_root):
+        raise SystemExit(
+            f"HTML Reply storage error: resolved prompt input escapes the temporary directory: {layout.prompt_file}"
+        )
+    return layout
+
+
+def ensure_private_directory(path: Path) -> None:
+    try:
+        path.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if os.name != "nt":
+            path.chmod(0o700)
+    except PermissionError as error:
+        raise SystemExit(
+            "HTML Reply storage error: the external data directory is not writable. "
+            "Grant the publisher access to this exact user-level directory; no repository fallback was used. "
+            f"({path})"
+        ) from error
+
+
+def write_private(path: Path, content: str) -> None:
+    ensure_private_directory(path.parent)
+    try:
+        path.write_text(content, encoding="utf-8")
+        if os.name != "nt":
+            path.chmod(0o600)
+    except PermissionError as error:
+        raise SystemExit(
+            "HTML Reply storage error: the external data directory is not writable. "
+            "Grant the publisher access to this exact user-level directory; no repository fallback was used. "
+            f"({path})"
+        ) from error
+
+
+def prepare_storage(layout: StorageLayout) -> None:
+    for folder in (layout.session_dir, layout.archive, layout.replay, layout.assets):
+        ensure_private_directory(folder)
+    metadata = {
+        "version": 1,
+        "workspaceId": layout.workspace_id,
+        "workspaceRoot": str(layout.workspace_root),
+        "displayName": layout.workspace_root.name,
+    }
+    write_private(layout.workspace_dir / "workspace.json", json.dumps(metadata, ensure_ascii=False, indent=2))
+
+
+def reply_path(root: Path, session: str, data_dir: str | Path | None = None) -> Path:
+    return storage_layout(root, session, data_dir).reply
+
+
+def history_path(root: Path, session: str, data_dir: str | Path | None = None) -> Path:
+    return storage_layout(root, session, data_dir).history
+
+
+def rewrite_workspace_urls(source: str, workspace_root: Path) -> str:
+    """Make project-relative resources portable without changing page-local anchors."""
+    base = workspace_root.as_uri().rstrip("/") + "/"
+
+    def absolute_url(value: str) -> str:
+        decoded = html.unescape(value.strip())
+        if not decoded or decoded.startswith(("#", "?", "/", "\\", "//")):
+            return decoded
+        if re.match(r"[A-Za-z][A-Za-z0-9+.-]*:", decoded):
+            return decoded
+        return urljoin(base, decoded.replace("\\", "/"))
+
+    def replace_attribute(match: re.Match[str]) -> str:
+        value = absolute_url(match.group("value"))
+        return f'{match.group("name")}{match.group("quote")}{html.escape(value, quote=True)}{match.group("quote")}'
+
+    def replace_css_url(match: re.Match[str]) -> str:
+        value = absolute_url(match.group("value"))
+        quote = match.group("quote") or ""
+        return f"url({quote}{value}{quote})"
+
+    source = re.sub(r"\s*<base\b[^>]*>", "", source, flags=re.I)
+    source = re.sub(
+        r"(?P<name>\b(?:href|src|poster|action|xlink:href)\s*=\s*)(?P<quote>[\"'])(?P<value>[^\"']*)(?P=quote)",
+        replace_attribute,
+        source,
+        flags=re.I,
+    )
+    return re.sub(
+        r"url\(\s*(?P<quote>[\"']?)(?P<value>[^)\"']+)(?P=quote)\s*\)",
+        replace_css_url,
+        source,
+        flags=re.I,
+    )
+
+
+def redact_sensitive_text(value: str) -> str:
+    value = re.sub(
+        r"\b(?:sk-[A-Za-z0-9_-]{8,}|github_pat_[A-Za-z0-9_]{8,}|gh[pousr]_[A-Za-z0-9_]{8,})\b",
+        "[已脱敏]",
+        value,
+        flags=re.I,
+    )
+    value = re.sub(
+        r"(\b(?:authorization|proxy-authorization)\s*:\s*)(?:bearer|basic|token)\s+[^\s<]+",
+        r"\1[已脱敏]",
+        value,
+        flags=re.I,
+    )
+    key = (
+        r"(?:[A-Za-z][A-Za-z0-9]*[_-])*"
+        r"(?:password|passwd|pwd|token|api[_-]?key|secret(?:[_-]?access[_-]?key)?|"
+        r"client[_-]?secret|access[_-]?key|cookie)"
+    )
+    value = re.sub(
+        rf"([\"']?\b{key}\b[\"']?\s*[:=]\s*)([\"'])([\s\S]*?)\2",
+        r"\1\2[已脱敏]\2",
+        value,
+        flags=re.I,
+    )
+    return re.sub(
+        rf"([\"']?\b{key}\b[\"']?\s*[:=]\s*)[^\s,;}}]+",
+        r"\1[已脱敏]",
+        value,
+        flags=re.I,
+    )
 
 
 def prompt_preview(value: str) -> str:
@@ -220,23 +499,34 @@ def prompt_preview(value: str) -> str:
         flags=re.I,
     )
     value = re.sub(r"^\s*#+\s*My request for Codex:\s*", "", value, flags=re.I)
+    value = redact_sensitive_text(value)
     value = re.sub(r"\s+", " ", value).strip()
     return value[:180] or "未记录 Prompt"
 
 
-def archive(root: Path, session: str) -> Path | None:
-    reply = reply_path(root, session)
+def archive(layout: StorageLayout) -> Path | None:
+    reply = layout.reply
     if not reply.exists():
         return None
-    folder = root / "output" / "archive" / "html-reply" / safe_session(session)
-    folder.mkdir(parents=True, exist_ok=True)
+    folder = layout.archive
+    ensure_private_directory(folder)
     numbers = []
     for path in folder.glob("reply-*.html"):
         match = re.fullmatch(r"reply-(\d+)\.html", path.name)
         if match:
             numbers.append(int(match.group(1)))
     target = folder / f"reply-{max(numbers, default=0) + 1:04d}.html"
-    shutil.copy2(reply, target)
+    if not is_within(target.resolve(), folder.resolve()):
+        raise SystemExit(f"HTML Reply storage error: archive path escapes its session: {target}")
+    try:
+        shutil.copy2(reply, target)
+        if os.name != "nt":
+            target.chmod(0o600)
+    except PermissionError as error:
+        raise SystemExit(
+            "HTML Reply storage error: the external archive is not writable; no repository fallback was used. "
+            f"({target})"
+        ) from error
     return target
 
 
@@ -248,57 +538,81 @@ def inject_shell(source: str, data: dict) -> str:
     return source + injection
 
 
-def history_entries(root: Path, session: str) -> list[dict[str, str]]:
-    output = root / "output"
-    folder = output / "archive" / "html-reply" / safe_session(session)
-    replay_folder = folder / ".replay"
-    replay_folder.mkdir(parents=True, exist_ok=True)
+def load_archive_metadata(layout: StorageLayout) -> dict[str, dict[str, object]]:
+    path = layout.archive / ".metadata.json"
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    entries = payload.get("entries", {}) if isinstance(payload, dict) else {}
+    return entries if isinstance(entries, dict) else {}
+
+
+def history_entries(layout: StorageLayout) -> list[dict[str, str]]:
+    folder = layout.archive
+    replay_folder = layout.replay
+    ensure_private_directory(replay_folder)
+    metadata = load_archive_metadata(layout)
+
+    def archived_at(path: Path) -> float:
+        record = metadata.get(path.name, {})
+        if not isinstance(record, dict):
+            return path.stat().st_mtime
+        try:
+            return float(record.get("mtime", path.stat().st_mtime))
+        except (TypeError, ValueError):
+            return path.stat().st_mtime
+
     records = []
     entries = []
-    for path in sorted(folder.glob("*.html"), key=lambda p: p.stat().st_mtime, reverse=True):
+    for path in sorted(folder.glob("*.html"), key=archived_at, reverse=True):
         source = path.read_text(encoding="utf-8", errors="ignore")
-        prompt = existing_prompt(source) or "未记录 Prompt（该页面生成于历史功能启用之前）"
-        replay_source = mark_theme(highlight_code_blocks(strip_history(source)))
-        if not re.search(r"<base\b", replay_source, re.I):
-            replay_source = re.sub(r"(<head\b[^>]*>)", r'\1\n<base href="../">', replay_source, count=1, flags=re.I)
+        record = metadata.get(path.name, {})
+        stored_prompt = record.get("prompt", "") if isinstance(record, dict) else ""
+        prompt = str(stored_prompt).strip() or existing_prompt(source) or "未记录 Prompt（该页面生成于历史功能启用之前）"
+        replay_source = rewrite_workspace_urls(
+            mark_theme(highlight_code_blocks(strip_history(source))),
+            layout.workspace_root,
+        )
         replay_path = replay_folder / path.name
         entry = {
             "title": title_of(source, path.stem),
             "prompt": prompt_preview(prompt),
             "path": replay_path.as_uri(),
-            "time": datetime.fromtimestamp(path.stat().st_mtime).strftime("%Y-%m-%d %H:%M"),
+            "time": datetime.fromtimestamp(archived_at(path)).strftime("%Y-%m-%d %H:%M"),
         }
         entries.append(entry)
         records.append((replay_path, replay_source, entry))
-    latest_path = reply_path(root, session).as_uri()
+    latest_path = layout.reply.as_uri()
     for replay_path, replay_source, entry in records:
+        if not is_within(replay_path.resolve(), replay_folder.resolve()):
+            raise SystemExit(f"HTML Reply storage error: replay path escapes its session: {replay_path}")
         replay_data = {
-            "session": safe_session(session),
+            "workspaceId": layout.workspace_id,
+            "session": layout.session,
             "currentPrompt": entry["prompt"],
             "entries": entries,
             "isReplay": True,
             "currentPath": entry["path"],
             "latestPath": latest_path,
-            "historyPath": history_path(root, session).as_uri(),
+            "historyPath": layout.history.as_uri(),
             "revision": hashlib.sha256(replay_source.encode("utf-8")).hexdigest()[:12],
         }
-        replay_path.write_text(inject_shell(replay_source, replay_data), encoding="utf-8")
+        write_private(replay_path, inject_shell(replay_source, replay_data))
     return entries
 
 
 def write_history_index(
-    root: Path,
-    session: str,
+    layout: StorageLayout,
     prompt: str,
     source: str,
     entries: list[dict[str, str]],
 ) -> Path:
-    target = history_path(root, session)
-    target.parent.mkdir(parents=True, exist_ok=True)
+    target = layout.history
     current = {
         "title": title_of(source, "当前回复"),
         "prompt": prompt_preview(prompt),
-        "path": reply_path(root, session).as_uri(),
+        "path": layout.reply.as_uri(),
         "time": "当前回复",
         "current": True,
     }
@@ -318,7 +632,8 @@ def write_history_index(
         )
     payload = json.dumps(
         {
-            "session": safe_session(session),
+            "workspaceId": layout.workspace_id,
+            "session": layout.session,
             "count": len(records),
             "currentPath": current["path"],
         },
@@ -354,7 +669,7 @@ def write_history_index(
   <script>(()=>{{const input=document.getElementById('history-search');const rows=[...document.querySelectorAll('.entry')];const empty=document.getElementById('history-empty');input.addEventListener('input',()=>{{const q=input.value.trim().toLocaleLowerCase();let shown=0;rows.forEach(row=>{{const ok=!q||row.dataset.search.toLocaleLowerCase().includes(q);row.hidden=!ok;if(ok)shown++}});empty.style.display=shown?'none':'block'}})}})();</script>
 </body>
 </html>'''
-    target.write_text(page, encoding="utf-8")
+    write_private(target, page)
     return target
 
 
@@ -402,41 +717,143 @@ def shell(data: dict) -> str:
 <script type="application/json" id="html-reply-history-data">{payload}</script>
 <script id="html-reply-history-script">(()=>{{const data=JSON.parse(document.getElementById('html-reply-history-data').textContent);const back=document.getElementById('hr-history-backdrop');const list=document.getElementById('hr-history-list');const trigger=document.getElementById('hr-history-button');const latest=document.getElementById('hr-latest-link');document.getElementById('hr-history-page').href=data.historyPath;trigger.onclick=()=>back.classList.add('open');document.getElementById('hr-drawer-close').onclick=()=>back.classList.remove('open');back.onclick=e=>{{if(e.target===back)back.classList.remove('open')}};document.addEventListener('keydown',e=>{{if(e.key==='Escape')back.classList.remove('open')}});if(data.isReplay&&data.latestPath){{latest.href=data.latestPath;latest.style.display='block'}};(data.entries||[]).forEach(item=>{{const a=document.createElement('a');a.className='hr-item';a.href=item.path;a.innerHTML='<b></b>';a.querySelector('b').textContent=item.title;if(data.currentPath===item.path)a.setAttribute('aria-current','page');list.appendChild(a)}});
 const collect=form=>{{const answers=[];const seen=new Set();form.querySelectorAll('[name]').forEach(control=>{{if(seen.has(control.name)||control.disabled)return;seen.add(control.name);const group=[...form.querySelectorAll('[name="'+CSS.escape(control.name)+'"]')];let value='';if(control.type==='radio')value=(group.find(item=>item.checked)||{{}}).value||'';else if(control.type==='checkbox')value=group.filter(item=>item.checked).map(item=>item.value);else value=control.value;const owner=control.closest('[data-question]');answers.push({{id:control.name,question:(control.dataset.question||(owner&&owner.dataset.question)||control.name).trim(),answer:value}})}});return answers.filter(item=>Array.isArray(item.answer)?item.answer.length:String(item.answer).trim())}};
-document.querySelectorAll('form[data-html-reply-interaction]').forEach(form=>{{let status=form.querySelector('[data-interaction-status]');if(!status){{status=document.createElement('p');status.setAttribute('data-interaction-status','');form.appendChild(status)}}if(data.isReplay){{form.querySelectorAll('input,textarea,select,button').forEach(control=>control.disabled=true);status.textContent='这是历史回复，只能查看；请返回最新回复继续回答。';return}}const formId=form.dataset.interactionId||form.id||'default';const key='html-reply:'+data.session+':'+formId;try{{const draft=JSON.parse(localStorage.getItem(key)||'{{}}');form.querySelectorAll('[name]').forEach(control=>{{const value=draft[control.name];if(value===undefined)return;if(control.type==='radio')control.checked=control.value===value;else if(control.type==='checkbox')control.checked=Array.isArray(value)&&value.includes(control.value);else control.value=value}})}}catch(_e){{}}
-const exportAnswers=()=>{{const answers=collect(form);const draft={{}};answers.forEach(item=>draft[item.id]=item.answer);try{{localStorage.setItem(key,JSON.stringify(draft))}}catch(_e){{}}if(!answers.length){{status.textContent='等待回答…';return}}const payload={{version:1,session:data.session,pageTitle:document.title,revision:data.revision||'',submittedAt:new Date().toISOString(),answers}};const blob=new Blob([JSON.stringify(payload,null,2)],{{type:'application/json'}});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='html-reply-response-'+data.session+'.json';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status.textContent='回答已保存，并导出为当前 Session 的 JSON 文件。'}};
+document.querySelectorAll('form[data-html-reply-interaction]').forEach(form=>{{let status=form.querySelector('[data-interaction-status]');if(!status){{status=document.createElement('p');status.setAttribute('data-interaction-status','');form.appendChild(status)}}if(data.isReplay){{form.querySelectorAll('input,textarea,select,button').forEach(control=>control.disabled=true);status.textContent='这是历史回复，只能查看；请返回最新回复继续回答。';return}}const formId=form.dataset.interactionId||form.id||'default';const key='html-reply:'+(data.workspaceId||'legacy')+':'+data.session+':'+formId;try{{const draft=JSON.parse(localStorage.getItem(key)||'{{}}');form.querySelectorAll('[name]').forEach(control=>{{const value=draft[control.name];if(value===undefined)return;if(control.type==='radio')control.checked=control.value===value;else if(control.type==='checkbox')control.checked=Array.isArray(value)&&value.includes(control.value);else control.value=value}})}}catch(_e){{}}
+const exportAnswers=()=>{{const answers=collect(form);const draft={{}};answers.forEach(item=>draft[item.id]=item.answer);try{{localStorage.setItem(key,JSON.stringify(draft))}}catch(_e){{}}if(!answers.length){{status.textContent='等待回答…';return}}const payload={{version:1,workspaceId:data.workspaceId||'',session:data.session,pageTitle:document.title,revision:data.revision||'',submittedAt:new Date().toISOString(),answers}};const blob=new Blob([JSON.stringify(payload,null,2)],{{type:'application/json'}});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='html-reply-response-'+data.session+'.json';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status.textContent='回答已保存，并导出为当前 Session 的 JSON 文件。'}};
 form.addEventListener('submit',event=>{{event.preventDefault();exportAnswers()}});form.addEventListener('change',exportAnswers);form.addEventListener('blur',event=>{{if(event.target.matches('textarea,input[type="text"]'))exportAnswers()}},true);status.textContent='回答会自动保存；文本输入在离开输入框时保存。'}});}})();</script>
 {END}'''
 
 
-def finalize(root: Path, session: str, prompt: str) -> Path:
-    reply = reply_path(root, session)
+def finalize(layout: StorageLayout, prompt: str) -> Path:
+    reply = layout.reply
     if not reply.exists():
         raise SystemExit(f"missing {reply}")
-    source = mark_theme(highlight_code_blocks(strip_history(reply.read_text(encoding="utf-8", errors="ignore"))))
-    if not prompt.strip():
-        state = root / "output" / ".html-reply" / "sessions" / f"{safe_session(session)}.json"
-        try:
-            prompt = str(json.loads(state.read_text(encoding="utf-8")).get("prompt", ""))
-        except Exception:
-            prompt = ""
-    entries = history_entries(root, session)
-    history = write_history_index(root, session, prompt, source, entries)
+    source = rewrite_workspace_urls(
+        mark_theme(highlight_code_blocks(strip_history(reply.read_text(encoding="utf-8", errors="ignore")))),
+        layout.workspace_root,
+    )
+    prompt = prompt_preview(prompt)
+    entries = history_entries(layout)
+    history = write_history_index(layout, prompt, source, entries)
     data = {
-        "session": safe_session(session),
-        "currentPrompt": prompt.strip() or "未记录",
+        "workspaceId": layout.workspace_id,
+        "session": layout.session,
+        "currentPrompt": prompt,
         "entries": entries,
         "historyPath": history.as_uri(),
         "revision": hashlib.sha256(source.encode("utf-8")).hexdigest()[:12],
     }
     source = inject_shell(source, data)
-    reply.write_text(source, encoding="utf-8")
+    write_private(reply, source)
+    state = {
+        "version": 1,
+        "workspaceId": layout.workspace_id,
+        "session": layout.session,
+        "reply": layout.reply.as_uri(),
+        "history": layout.history.as_uri(),
+        "updatedAt": datetime.now().astimezone().isoformat(timespec="seconds"),
+    }
+    write_private(layout.state, json.dumps(state, ensure_ascii=False, indent=2))
     return reply
+
+
+def migrate_legacy(layout: StorageLayout, shared: bool = False) -> Path:
+    """Copy old workspace history without deleting or overwriting its source."""
+    old_output = layout.workspace_root / "output"
+    source_session = "legacy" if shared else layout.session
+    old_reply = old_output / ("reply.html" if shared else f"reply-{layout.session}.html")
+    old_archive = old_output / "archive" / "html-reply" / source_session
+    marker = layout.session_dir / "legacy-migration.json"
+    if marker.is_file():
+        return marker
+    archive_sources = (
+        sorted(
+            path
+            for path in old_archive.glob("reply-*.html")
+            if re.fullmatch(r"reply-\d+\.html", path.name)
+        )
+        if old_archive.is_dir()
+        else []
+    )
+    if not old_reply.is_file() and not archive_sources:
+        raise SystemExit(
+            f"HTML Reply migration error: no legacy files found for source {source_session} under {old_output}"
+        )
+    if not old_reply.is_file():
+        raise SystemExit("HTML Reply migration error: the legacy stable reply is missing; nothing was copied")
+    if layout.session_dir.exists():
+        raise SystemExit(
+            "HTML Reply migration error: the external session already contains replies; refusing to overwrite it"
+        )
+
+    # Validate and decode every source before the first destination write so a
+    # malformed later archive cannot strand a half-migrated session.
+    old_source = old_reply.read_text(encoding="utf-8", errors="strict")
+    prompt = existing_prompt(old_source)
+    archive_payloads = []
+    for source_path in archive_sources:
+        source = source_path.read_text(encoding="utf-8", errors="strict")
+        stat = source_path.stat()
+        archive_payloads.append({
+            "path": source_path,
+            "source": source,
+            "prompt": prompt_preview(existing_prompt(source)),
+            "atime_ns": stat.st_atime_ns,
+            "mtime_ns": stat.st_mtime_ns,
+        })
+
+    try:
+        prepare_storage(layout)
+        write_private(
+            layout.reply,
+            rewrite_workspace_urls(strip_history(old_source), layout.workspace_root),
+        )
+        archive_metadata: dict[str, dict[str, object]] = {}
+        copied = []
+        for item in archive_payloads:
+            source_path = item["path"]
+            assert isinstance(source_path, Path)
+            target = layout.archive / source_path.name
+            write_private(
+                target,
+                rewrite_workspace_urls(strip_history(str(item["source"])), layout.workspace_root),
+            )
+            os.utime(target, ns=(int(item["atime_ns"]), int(item["mtime_ns"])))
+            archive_metadata[source_path.name] = {
+                "prompt": item["prompt"],
+                "mtime": int(item["mtime_ns"]) / 1_000_000_000,
+            }
+            copied.append(source_path.name)
+        if archive_metadata:
+            write_private(
+                layout.archive / ".metadata.json",
+                json.dumps({"version": 1, "entries": archive_metadata}, ensure_ascii=False, indent=2),
+            )
+        finalize(layout, prompt)
+        migration = {
+            "version": 1,
+            "source": str(old_output),
+            "sourceFormat": "shared" if shared else "session",
+            "sourcePreserved": True,
+            "reply": old_reply.name,
+            "archives": copied,
+            "migratedAt": datetime.now().astimezone().isoformat(timespec="seconds"),
+        }
+        write_private(marker, json.dumps(migration, ensure_ascii=False, indent=2))
+    except BaseException:
+        if layout.session_dir.exists() and is_within(layout.session_dir.resolve(), layout.data_root):
+            try:
+                shutil.rmtree(layout.session_dir)
+            except OSError:
+                pass
+        raise
+    return marker
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", choices=("path", "archive", "finalize"))
+    parser.add_argument("action", choices=("path", "archive", "finalize", "migrate", "migrate-shared"))
     parser.add_argument("--root", required=True)
+    parser.add_argument("--data-dir", default="")
     parser.add_argument(
         "--session",
         default="",
@@ -446,12 +863,20 @@ def main() -> int:
     args = parser.parse_args()
     root = Path(args.root).expanduser().resolve()
     session = current_thread_session(args.session)
+    layout = storage_layout(root, session, args.data_dir or None)
     if args.action == "path":
-        result = reply_path(root, session)
+        result = layout.reply
     elif args.action == "archive":
-        result = archive(root, session)
+        result = archive(layout)
+    elif args.action in {"migrate", "migrate-shared"}:
+        result = migrate_legacy(layout, shared=args.action == "migrate-shared")
+        print(
+            "HTML Reply migration warning: the legacy workspace output was preserved and may still be committed; "
+            "review it before manual cleanup.",
+            file=sys.stderr,
+        )
     else:
-        result = finalize(root, session, args.prompt)
+        result = finalize(layout, args.prompt)
     if result:
         print(result)
     return 0

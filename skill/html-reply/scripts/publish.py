@@ -25,8 +25,12 @@ def plain_text(source: str) -> str:
     return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", source))).strip()
 
 
-def draft_path(root: Path, session: str) -> Path:
-    return root / "output" / ".html-reply" / "drafts" / f"reply-{reply_history.safe_session(session)}.html"
+def draft_path(
+    root: Path,
+    session: str,
+    data_dir: str | Path | None = None,
+) -> Path:
+    return reply_history.storage_layout(root, session, data_dir).draft
 
 
 def fragment_metadata(fragment: str) -> tuple[str, str]:
@@ -57,50 +61,78 @@ def render_shell(skill_root: Path, title: str, fragment: str) -> str:
     )
 
 
-def publish(root: Path, requested_session: str = "", prompt: str = "") -> dict[str, str]:
+def publish(
+    root: Path,
+    requested_session: str = "",
+    prompt: str = "",
+    data_dir: str | Path | None = None,
+) -> dict[str, str]:
     session = reply_history.current_thread_session(requested_session)
-    draft = draft_path(root, session)
+    layout = reply_history.storage_layout(root, session, data_dir)
+    draft = layout.draft
     if not draft.is_file():
         raise SystemExit(f"HTML Reply publish error: missing session draft {draft}")
     fragment = draft.read_text(encoding="utf-8", errors="strict")
     title, summary = fragment_metadata(fragment)
+    if not prompt and layout.prompt_file.is_file():
+        prompt = layout.prompt_file.read_text(encoding="utf-8", errors="strict")
     page = render_shell(Path(__file__).resolve().parents[1], title, fragment)
 
-    archived = reply_history.archive(root, session)
-    reply = reply_history.reply_path(root, session)
-    reply.parent.mkdir(parents=True, exist_ok=True)
-    reply.write_text(page, encoding="utf-8")
-    reply_history.finalize(root, session, prompt)
+    reply_history.prepare_storage(layout)
+    archived = reply_history.archive(layout)
+    reply = layout.reply
+    reply_history.write_private(reply, page)
+    reply_history.finalize(layout, prompt)
 
     finalized = reply.read_text(encoding="utf-8", errors="ignore")
     if f'data-html-reply-theme="{reply_history.THEME_VERSION}"' not in finalized:
         raise SystemExit("HTML Reply publish error: final page is missing the canonical theme")
     if plain_text(summary) not in plain_text(finalized):
         raise SystemExit("HTML Reply publish error: visible summary was lost during finalization")
-    history = reply_history.history_path(root, session)
+    history = layout.history
     if not history.is_file():
         raise SystemExit("HTML Reply publish error: history index was not created")
-    return {
-        "session": session,
+    for temporary_input in (draft, layout.prompt_file):
+        try:
+            temporary_input.unlink()
+        except FileNotFoundError:
+            pass
+    result = layout.paths()
+    result.update({
         "summary": summary,
-        "draft": str(draft),
-        "reply": str(reply),
-        "history": str(history),
         "archived": str(archived) if archived else "",
-    }
+    })
+    return result
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Publish an HTML Reply body fragment")
     parser.add_argument("--root", required=True)
+    parser.add_argument("--data-dir", default="")
+    parser.add_argument(
+        "--paths",
+        action="store_true",
+        help="Resolve the temporary draft and external output paths without publishing",
+    )
     parser.add_argument(
         "--session",
         default="",
         help="Compatibility override outside Codex; must match CODEX_THREAD_ID inside Codex",
     )
-    parser.add_argument("--prompt", default="")
+    parser.add_argument(
+        "--prompt",
+        default="",
+        help="Compatibility input for non-sensitive text; normal delivery uses the temporary promptFile",
+    )
     args = parser.parse_args()
-    result = publish(Path(args.root).expanduser().resolve(), args.session, args.prompt)
+    root = Path(args.root).expanduser().resolve()
+    if args.paths:
+        session = reply_history.current_thread_session(args.session)
+        layout = reply_history.storage_layout(root, session, args.data_dir or None)
+        reply_history.ensure_private_directory(layout.draft.parent)
+        result = layout.paths()
+    else:
+        result = publish(root, args.session, args.prompt, args.data_dir or None)
     # Keep stdout ASCII-safe because Windows runners may expose a legacy
     # console encoding even when the fragment and summary contain Unicode.
     print(json.dumps(result, ensure_ascii=True))

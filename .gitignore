@@ -2,3 +2,10 @@ __pycache__/
 *.py[cod]
 .DS_Store
 .pytest_cache/
+
+# Legacy/local HTML Reply artifacts. New releases store them outside repositories.
+/output/
+
+# Maintainer-only local context and regression suite.
+/.codex/
+/tests/

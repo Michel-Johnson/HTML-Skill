@@ -14,6 +14,7 @@ from pathlib import Path
 SESSION_KEYS = ("session_id", "thread_id", "threadId", "sessionId", "conversation_id", "conversationId")
 TRANSCRIPT_ID_RE = re.compile(r"([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})", re.I)
 STABLE_FILE_RE = re.compile(r"(?:^|[/\\])(?:reply|history)-([A-Za-z0-9._-]+)\.html\b", re.I)
+PROMPT_FILE_RE = re.compile(r"(?:^|[/\\])prompt-([A-Za-z0-9._-]+)\.txt\b", re.I)
 SHARED_FILE_RE = re.compile(r"(?:^|[/\\])(?:reply|history)\.html\b", re.I)
 SESSION_STATE_RE = re.compile(
     r"(?:^|[/\\])(?:sessions[/\\]([A-Za-z0-9._-]+)\.json|"
@@ -21,6 +22,11 @@ SESSION_STATE_RE = re.compile(
     re.I,
 )
 ARCHIVE_RE = re.compile(r"(?:^|[/\\])archive[/\\]html-reply[/\\]([A-Za-z0-9._-]+)(?:[/\\]|$)", re.I)
+THREAD_PATH_RE = re.compile(r"(?:^|[/\\])threads[/\\]([A-Za-z0-9._-]+)(?:[/\\]|$)", re.I)
+NUMBERED_ARCHIVE_FILE_RE = re.compile(
+    r"(?:^|[/\\])archive[/\\](?:\.replay[/\\])?reply-\d+\.html\b",
+    re.I,
+)
 
 
 def desktop_html_enabled() -> bool:
@@ -77,9 +83,12 @@ def reply_history_session(command: str) -> str:
 
 
 def protected_identities(command: str) -> set[str]:
-    identities = set(STABLE_FILE_RE.findall(command))
+    stable_source = NUMBERED_ARCHIVE_FILE_RE.sub("", command)
+    identities = set(STABLE_FILE_RE.findall(stable_source))
+    identities.update(PROMPT_FILE_RE.findall(command))
     identities.update(match.group(1) or match.group(2) for match in SESSION_STATE_RE.finditer(command))
     identities.update(ARCHIVE_RE.findall(command))
+    identities.update(THREAD_PATH_RE.findall(command))
     helper_session = reply_history_session(command)
     if helper_session:
         identities.add(helper_session)
@@ -175,7 +184,7 @@ def main() -> int:
     if shared and current != "legacy":
         deny(
             "HTML Reply isolation guard: shared reply.html/history.html writes are forbidden. "
-            f"Use output/reply-{current or '<session-id>'}.html and its matching history page."
+            "Use the external session paths returned by publish.py --paths."
         )
         return 0
     if targets and (not current or any(target != current for target in targets)):

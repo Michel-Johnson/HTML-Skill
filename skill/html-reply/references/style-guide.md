@@ -78,16 +78,20 @@ Do not force every page into the same number of cards. Avoid dashboards, excessi
 
 ## Stable output behavior
 
-- Normal authoring writes a session-specific body fragment under `output/.html-reply/drafts/`; `publish.py` is the only normal path from that fragment to the stable page.
+- Treat `--root <workspace>` only as the project identity used to derive the workspace hash and resolve relative project resources. It is never the output parent.
+- Before authoring, run `publish.py --root <workspace> --paths`; write the session-specific body fragment only to the returned `draft` path and the current user request (without ambient UI context) to `promptFile`. Both inputs are under the system temporary directory and are deleted after successful publication. Never pass a sensitive Prompt on the command line.
 - Keep document boilerplate and the visual foundation in `assets/fragment-shell.html`. Do not spend model tokens restating the shared CSS on every turn.
-- Use one stable presentation file per session: `output/reply-<session-id>.html`. Replies within the same session refresh that file; different sessions use different files.
-- Take `<session-id>` from the current Codex process environment variable `CODEX_THREAD_ID` through `reply_history.py path --root <workspace>`. Never infer it from an open browser URL, an older reply, history, nested workspace metadata, or a hard-coded business script, and never collapse missing identity to `local`.
+- Resolve the persistent data root in this order: explicit `--data-dir`, `$HTML_REPLY_DATA_DIR`, `$CODEX_HOME/html-reply`, then `~/.codex/html-reply`. Reject any data root inside the workspace or a Git worktree. Permission failure is terminal; never fall back to the repository.
+- Store persistent files under `<data-root>/workspaces/<workspace-hash>/threads/<session-id>/`. The workspace hash comes from the canonical absolute project path, and each thread owns one stable presentation file named `reply-<session-id>.html`. Replies within the same session refresh that file; different projects and sessions remain isolated.
+- Take `<session-id>` from the current Codex process environment variable `CODEX_THREAD_ID` through `publish.py --root <workspace> --paths`. Never infer it from an open browser URL, an older reply, history, nested workspace metadata, or a hard-coded business script, and never collapse missing identity to `local`.
 - Do not embed stable `reply-<id>.html` paths in reusable report generators. Pass the current helper-resolved output path into the generator or publish a neutral staging artifact afterward.
 - Enforce the boundary in the publisher: it must reject a draft or target whose session ID differs from the current process `CODEX_THREAD_ID`.
-- Keep one searchable history entry per session: `output/history-<session-id>.html`. Rebuild it on every finalize and list the current reply before archived replies.
-- Archive every accepted or superseded response under a topic-specific archive folder.
+- Keep one searchable history entry per session: `history-<session-id>.html` in the external session directory. Rebuild it on every finalize and list the current reply before archived replies.
+- Archive every accepted or superseded response under the external session archive folder.
 - In chat, link the history index first and the current stable reply second. Never expose a raw archive file as the primary history link.
-- Keep related images under `output/assets/<topic>/` with stable descriptive names.
+- Keep related images and other Publisher-managed assets under the returned external `assets` directory with stable descriptive names.
+- The finalizer rewrites project-relative resource URLs to absolute workspace file URLs while preserving page-local links such as `href="#section"`; do not add a global `<base>` tag.
+- Migrate an old workspace `output/` only with `reply_history.py migrate --root <workspace>`. Use `migrate-shared` for the oldest shared `reply.html` format. Migration copies one source into the current valid session without overwriting external records and preserves every source file; deletion is a separate user decision.
 
 ## Prompt-aware history
 
