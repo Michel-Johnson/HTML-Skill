@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="alternate" hreflang="zh-CN" href="index.html">
+  <link rel="alternate" hreflang="en" href="index.en.html">
+  <meta name="description" content="亲手翻看 HTML Reply 生成的报告、对比、代码讲解和表单，了解怎么调用、文件存在哪里。">
+  <title>HTML Reply! — 别再让好答案困在聊天框里。</title>
+  <link rel="stylesheet" href="page.css">
+  <link rel="preload" href="fonts/CascadiaMono.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/NotoSansSC-UI.woff" as="font" type="font/woff" crossorigin>
+  <link rel="stylesheet" href="usage.css">
+  <link rel="stylesheet" href="cursor.css">
+  <link rel="stylesheet" href="codex.css">
+  <link rel="stylesheet" href="cli.css">
+  <link rel="stylesheet" href="claude.css">
+  <link rel="stylesheet" href="motion.css">
+  <script src="locale.js" defer></script>
+  <script src="../../showcase.js" defer></script>
+  <script src="motion.js" defer></script>
+  <script src="reading.js" defer></script>
+  <script src="navigation.js" defer></script>
+  <script src="preview.js" defer></script>
+  <script src="usage.js" defer></script>
+  <script src="workbench.js" defer></script>
+  <script src="cursor.js" defer></script>
+</head>
+<body>
+  <header class="wrap nav"><a class="logo" href="#top">HTML <u>Reply!</u></a><nav class="navlinks" aria-label="页面导航"><a href="#examples">看成品</a><a href="#usage">怎么用</a><a href="#storage">存在哪</a><a class="language-link" href="index.en.html" lang="en" hreflang="en" data-language-link aria-label="English version">English</a><a class="github" href="https://github.com/Michel-Johnson/HTML-Skill">GitHub ↗</a></nav></header>
+  <main>
+    <section class="wrap hero"><div><h1><span class="headline-line">别再让好答案</span><span class="headline-line"><span class="headline-accent">困在聊天框里。</span></span></h1><p>HTML Reply 是一个 Codex Skill。你明确叫它时，它会把回答做成能阅读、能交互、能留档的独立网页。</p><div class="buttons"><a class="btn orange" href="#examples">先翻翻真实成品 ↓</a><a class="btn" href="#usage">我想试试</a></div></div>
+      <div class="desk"><div class="tape" aria-hidden="true"></div><div class="note main"><div class="windowtop" aria-hidden="true"><i></i><i></i><i></i></div><div class="hero-viewport"><iframe class="hero-frame" src="../../examples/review.html" title="HTML Reply 审查报告示例" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div></div></div>
+    </section>
+
+    <section class="wrap section examples-section" aria-labelledby="examples-heading">
+      <div class="reading-track" id="examples" data-reading-track><div class="reading-pin" data-reading-pin>
+      <div class="section-head"><div><h2 id="examples-heading">先看它交出来的东西。</h2></div></div>
+      <div class="sample-book" data-demo-viewer data-reading-viewer>
+        <aside class="sample-sidebar" aria-label="示例导航">
+          <div class="sample-tabs" role="group" aria-label="选择真实输出示例" data-motion-tabs>
+            <span data-motion-indicator aria-hidden="true"></span>
+            <button type="button" data-example="review" aria-pressed="true" aria-controls="example-preview">审查报告</button>
+            <button type="button" data-example="compare" aria-pressed="false" aria-controls="example-preview">方案对比</button>
+            <button type="button" data-example="explain" aria-pressed="false" aria-controls="example-preview">概念讲解</button>
+            <button type="button" data-example="form" aria-pressed="false" aria-controls="example-preview">交互表单</button>
+            <button type="button" data-example="history" aria-pressed="false" aria-controls="example-preview">历史回看</button>
+          </div>
+          <a class="preview-open" data-example-link href="../../examples/review.html" target="_blank" rel="noopener">单独打开这页 ↗</a>
+        </aside>
+        <div class="sample-document" id="example-preview">
+          <div class="preview-stage" data-preview-stage aria-busy="false">
+            <div class="preview-pane" data-preview-pane><p class="sample-note download-notice" data-example-note hidden></p><iframe data-example-frame src="../../examples/review.html" title="HTML Reply 真实输出：审查报告" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div>
+            <div class="preview-pane" data-preview-pane inert aria-hidden="true"><p class="sample-note download-notice" data-example-note hidden></p><iframe data-example-frame title="下一份 HTML 示例" tabindex="-1" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div>
+          </div>
+          <p class="preview-error" data-preview-error role="status" hidden>新示例暂未加载，已保留当前页面，请再点一次分类。</p>
+        </div>
+      </div>
+      </div></div>
+      <aside class="theme-ticket"><div class="palette" aria-label="生成页的统一配色"><i style="--swatch:#faf9f5"></i><i style="--swatch:#efe8d6"></i><i style="--swatch:#d9a441"></i><i style="--swatch:#dce9f4"></i><i style="--swatch:#dcebd9"></i></div><div><p><strong>一个阅读主题，装下不同的回答。</strong><br>目前是统一的浅色纸张风格，不是多套皮肤。报告、表格、讲解、表单是不同的内容排版；你正在看的手账风宣传页，不是 Skill 的输出主题。</p><div class="capability-tags"><span>8 种代码语言高亮</span><span>无需 localhost</span><span>历史可搜索</span></div></div></aside>
+      <noscript><p>脚本已禁用，可直接打开：<a href="../../examples/compare.html">对比</a>、<a href="../../examples/explain.html">讲解</a>、<a href="../../examples/form.html">表单（填写后下载 JSON）</a>、<a href="../../examples/history.html">历史</a>。工作台切换需启用 JavaScript。</p></noscript>
+    </section>
+
+    <section class="usage-section" id="usage"><div class="wrap section usage-wrap">
+      <div class="section-head"><h2>在工作台里，叫它一声。</h2></div>
+      <div class="usage-player" data-usage-player data-platform="cursor" data-phase="input">
+        <aside class="usage-switcher" aria-label="选择调用演示" data-motion-tabs>
+          <span data-motion-indicator aria-hidden="true"></span>
+          <button type="button" data-usage-platform="app" aria-pressed="false" aria-controls="usage-screen">Codex App</button>
+          <button type="button" data-usage-platform="cli" aria-pressed="false" aria-controls="usage-screen">Codex 终端</button>
+          <button type="button" data-usage-platform="cursor" aria-pressed="true" aria-controls="usage-screen">Cursor App</button>
+          <button type="button" data-usage-platform="claude" aria-pressed="false" aria-controls="usage-screen">Claude Code CLI</button>
+        </aside>
+        <div class="usage-main">
+          <div class="usage-scrollbar-probe" data-usage-scrollbar-probe aria-hidden="true" inert></div>
+          <p class="usage-compatibility" data-usage-compatibility>Cursor 流程示意：原生接入尚未适配，结果使用已生成的公开 HTML 示例。</p>
+          <div id="usage-screen" data-usage-stage>
+            <svg class="usage-symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+              <symbol id="cu-arrow" viewBox="0 0 20 20"><path d="m11 5-5 5 5 5M6 10h10"/></symbol>
+              <symbol id="cu-panel" viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="12" rx="1"/><path d="M12 4v12"/></symbol>
+              <symbol id="cu-file" viewBox="0 0 20 20"><path d="M11 2H5v15h11V7l-5-5ZM11 2v5h5M3 5v14h10"/></symbol>
+              <symbol id="cu-search" viewBox="0 0 20 20"><circle cx="8" cy="8" r="5"/><path d="m12 12 5 5"/></symbol>
+              <symbol id="cu-branch" viewBox="0 0 20 20"><circle cx="6" cy="3" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="15" cy="5" r="2"/><path d="M6 5v10M15 7v2c0 3-9 3-9 5"/></symbol>
+              <symbol id="cu-chat" viewBox="0 0 20 20"><path d="M3 3h14v11H7l-4 3V3Z"/></symbol>
+              <symbol id="cu-close" viewBox="0 0 20 20"><path d="m5 5 10 10M15 5 5 15"/></symbol>
+              <symbol id="cu-plus" viewBox="0 0 20 20"><path d="M10 3v14M3 10h14"/></symbol>
+              <symbol id="cu-clock" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></symbol>
+              <symbol id="cu-play" viewBox="0 0 20 20"><path d="m5 3 11 7-11 7V3Z"/></symbol>
+              <symbol id="cu-paperclip" viewBox="0 0 20 20"><path d="m8 12 5-5a2 2 0 0 1 3 3l-7 7a4 4 0 0 1-6-6l8-8a3 3 0 0 1 5 5l-7 7a1 1 0 0 1-2-2l6-6"/></symbol>
+              <symbol id="cu-mic" viewBox="0 0 20 20"><rect x="7" y="2" width="6" height="10" rx="3"/><path d="M4 9v1a6 6 0 0 0 12 0V9M10 16v3M7 19h6"/></symbol>
+              <symbol id="cu-cube" viewBox="0 0 64 64"><path fill="#3b3b3b" d="m32 3 27 15-27 15L5 18Z"/><path fill="#303030" d="m5 18 27 15v29L5 47Z"/><path fill="#292929" d="M59 18v29L32 62V33Z"/><path fill="#171717" d="M12 21h40L32 55V33Z"/></symbol>
+            <symbol id="cu-folder" viewBox="0 0 20 20"><path d="M2 5h6l2 2h8v10H2V5ZM2 5V3h6l2 2h8v2"/></symbol><symbol id="cu-edit" viewBox="0 0 20 20"><path d="m12 3 5 5-8 8H4v-5l8-8ZM10 5l5 5M3 3H2v15h15v-1"/></symbol><symbol id="cu-globe" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><ellipse cx="10" cy="10" rx="3" ry="8"/><path d="M2 10h16"/></symbol><symbol id="cu-shield" viewBox="0 0 20 20"><path d="m10 2 6 3v5c0 4-6 8-6 8s-6-4-6-8V5l6-3Z"/></symbol></defs></svg>
+          <div class="usage-screen cli-replica" data-workbench="cli" role="group" aria-label="Codex 终端流程示意" hidden>
+            <div class="cli-titlebar"><span class="cli-elevated" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m10 2 7 3v5c0 4-7 8-7 8s-7-4-7-8V5l7-3Z"/></svg></span><span class="cli-tab"><svg class="cli-terminal-icon" viewBox="0 0 20 20" aria-hidden="true"><path fill="#3574bf" d="M4 3h14l-3 14H1Z"/><path d="m7 6 4 4-6 4m5 0h4"/></svg><span class="cli-tab-label">PowerShell</span><button type="button" class="cli-tab-close" data-demo-action="close" aria-label="关闭演示会话" title="关闭演示会话"><svg aria-hidden="true"><use href="#cu-close"/></svg></button></span><button type="button" class="cli-new-tab" data-demo-action="new-session" aria-label="新建演示会话" title="新建演示会话"><svg aria-hidden="true"><use href="#cu-plus"/></svg></button><button type="button" class="cli-tab-menu" data-demo-menu="terminal" aria-label="终端演示菜单" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></button><span class="cli-window-controls"><button type="button" data-demo-action="minimize" aria-label="最小化演示" title="最小化演示"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10"/></svg></button><button type="button" data-demo-action="maximize" aria-label="切换演示高度" title="切换演示高度"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="5" width="10" height="10"/></svg></button><button type="button" data-demo-action="close" aria-label="关闭演示" title="关闭演示"><svg aria-hidden="true"><use href="#cu-close"/></svg></button></span></div>
+            <div class="usage-workbench" data-flow-hide-on-result>
+              <div class="usage-conversation">
+                <div class="usage-stream" data-flow-scroll>
+                  <div class="cli-session" aria-label="演示会话信息">
+                    <div class="cli-session-title"><strong><span class="cli-session-prompt">&gt;_</span> OpenAI Codex</strong><span>(v0.151.0)</span></div>
+                    <dl><div><dt>model:</dt><dd><span data-demo-model-label>gpt-5.6-sol ultra</span> <span class="cli-model-help"><button type="button" class="cli-command" data-demo-menu="model" aria-label="选择 Codex 演示模型" aria-haspopup="menu" aria-expanded="false">/model</button> to change</span></dd></div><div><dt>directory:</dt><dd>~</dd></div></dl>
+                  </div>
+                  <div class="usage-review-context cli-output"><span class="cli-bullet" aria-hidden="true">•</span><div><p class="terminal-cjk">审查完成，有两处需要调整：</p><ol><li><strong class="terminal-cjk">补上空标题校验</strong><br><span class="terminal-cjk">保存前检查输入，避免出现空白书签。</span></li><li><strong class="terminal-cjk">合并重复排序逻辑</strong><br><span class="terminal-cjk">把两处相同的比较逻辑提取到一个函数。</span></li></ol></div></div>
+                  <div class="usage-sent" data-flow-sent hidden><span aria-hidden="true">›</span><p data-flow-sent-text><span class="cli-skill-token" data-skill-sent-token>$html-reply</span><span data-skill-sent-request></span></p></div>
+                  <div class="usage-working" data-flow-working hidden><span class="cli-working-mark" aria-hidden="true">◦</span><div><span data-flow-work-label>Working</span> <span class="cli-work-hint">(<span data-cli-seconds>0</span>s • esc to interrupt)</span></div></div>
+                  <div class="usage-answer cli-output" data-flow-answer hidden><span class="cli-bullet" aria-hidden="true">•</span><div><p data-terminal-copy>已整理成 HTML 审查报告。</p><p class="terminal-cjk">先修输入校验，再整理排序逻辑。</p><div class="usage-reply-links"><a href="../../examples/history.html" target="_blank" rel="noopener" class="terminal-cjk">历史总览</a><button type="button" data-flow-open><span class="terminal-cjk">当前回复</span> ↗<svg class="flow-pointer" data-flow-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></button></div></div></div>
+                <div class="usage-composer" aria-label="动画输入框，不会执行真实命令">
+                  <div class="usage-input-line" data-demo-edit role="button" tabindex="0" aria-label="编辑 Codex 演示请求"><span class="cli-prompt" aria-hidden="true">»</span><div><span class="usage-placeholder" data-flow-placeholder>Ask Codex to do anything</span><span data-flow-draft><span data-skill-query></span><span class="cli-skill-token" data-skill-draft-token hidden>$html-reply</span><span data-skill-request></span></span><span class="usage-caret" data-flow-caret hidden></span></div></div>
+                  <div class="cli-manual-editor" data-demo-editor hidden><span class="cli-prompt" aria-hidden="true">»</span><textarea data-demo-input rows="1" spellcheck="false" aria-label="Codex 演示请求，不发送到模型" placeholder="Ask Codex to do anything"></textarea></div>
+                  <div class="cli-skill-picker" data-skill-picker role="listbox" aria-label="Skill 候选" hidden><button type="button" data-skill-choice role="option" aria-selected="true" aria-label="选择 html-reply"><span aria-hidden="true">›</span><strong>html-reply</strong><span class="cli-skill-description" data-terminal-copy>按明确要求生成可刷新、带历史记录的 HTML 回复</span></button><div class="cli-skill-hint" aria-hidden="true">tab to select <span>esc to dismiss</span></div></div>
+                  <div class="usage-input-actions"><button type="button" class="cli-status-model" data-demo-menu="model" aria-label="选择 Codex 演示模型" aria-haspopup="menu" aria-expanded="false"><span data-demo-model-label>gpt-5.6-sol ultra</span></button><span class="cli-status-separator" aria-hidden="true">·</span><span class="cli-status-path">~</span><span class="usage-send" aria-hidden="true"><span data-flow-send>↵</span><span data-flow-stop hidden>esc</span><svg class="flow-pointer flow-send-pointer" data-flow-send-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></span></div>
+                </div>
+                </div>
+              </div>
+            </div>
+            <div class="cli-result-dock" data-result-dock="cli" hidden></div>
+          </div>
+          <div class="claude-replica" data-workbench="claude" role="group" aria-label="Claude Code CLI 公开流程演示，原生接入尚未适配" hidden>
+            <div class="cli-titlebar"><span class="cli-elevated" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m10 2 7 3v5c0 4-7 8-7 8s-7-4-7-8V5l7-3Z"/></svg></span><span class="cli-tab"><svg class="cli-terminal-icon" viewBox="0 0 20 20" aria-hidden="true"><path fill="#3574bf" d="M4 3h14l-3 14H1Z"/><path d="m7 6 4 4-6 4m5 0h4"/></svg><span class="cli-tab-label">Claude Code</span><button type="button" class="cli-tab-close" data-demo-action="close" aria-label="关闭 Claude 演示会话" title="关闭演示会话"><svg aria-hidden="true"><use href="#cu-close"/></svg></button></span><button type="button" class="cli-new-tab" data-demo-action="new-session" aria-label="新建 Claude 演示会话" title="新建演示会话"><svg aria-hidden="true"><use href="#cu-plus"/></svg></button><button type="button" class="cli-tab-menu" data-demo-menu="terminal" aria-label="终端演示菜单" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></button><span class="cli-window-controls"><button type="button" data-demo-action="minimize" aria-label="最小化演示" title="最小化演示"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10"/></svg></button><button type="button" data-demo-action="maximize" aria-label="切换演示高度" title="切换演示高度"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="5" width="10" height="10"/></svg></button><button type="button" data-demo-action="close" aria-label="关闭演示" title="关闭演示"><svg aria-hidden="true"><use href="#cu-close"/></svg></button></span></div>
+            <div class="claude-console" data-flow-hide-on-result>
+              <div class="claude-stream" data-flow-scroll>
+                <div class="claude-session"><span class="claude-mark" aria-hidden="true">✻</span><div><p><strong>Claude Code</strong> <span class="claude-session-version">v2.1.251</span></p><p class="claude-session-meta"><button type="button" data-demo-menu="model" aria-label="选择 Claude 演示模型" aria-haspopup="menu" aria-expanded="false"><span data-demo-model-label>Opus</span></button> · ~/bookmarks</p></div></div>
+                <div class="claude-message"><span aria-hidden="true">●</span><div><p class="terminal-cjk">审查完成，有两处需要调整：</p><ol><li><strong class="terminal-cjk">补上空标题校验</strong><br><span class="terminal-cjk">保存前检查输入，避免出现空白书签。</span></li><li><strong class="terminal-cjk">合并重复排序逻辑</strong><br><span class="terminal-cjk">把两处相同的比较逻辑提取到一个函数。</span></li></ol></div></div>
+                <div class="claude-message claude-sent" data-flow-sent hidden><span aria-hidden="true">❯</span><p data-flow-sent-text><span class="claude-skill-token" data-skill-sent-token>/html-reply</span><span data-skill-sent-request></span></p></div>
+                <div class="claude-tool" data-claude-tool hidden><span aria-hidden="true">●</span><div><p data-claude-tool-name>Skill(html-reply)</p><small data-claude-tool-detail>⎿ Loading skill…</small></div></div>
+                <div class="claude-working" data-flow-working hidden><span class="claude-spinner" aria-hidden="true">✻</span><span data-flow-work-label>Working…</span><span class="claude-work-hint">(<span data-claude-seconds>0</span>s · esc to interrupt)</span></div>
+                <div class="claude-message" data-flow-answer hidden><span aria-hidden="true">●</span><div><p data-terminal-copy>已整理成 HTML 审查报告。</p><p class="terminal-cjk">先修输入校验，再整理排序逻辑。</p><div class="claude-reply-links"><a href="../../examples/history.html" target="_blank" rel="noopener" class="terminal-cjk">历史总览</a><button type="button" data-flow-open><span class="terminal-cjk">当前回复</span> ↗<svg class="flow-pointer" data-flow-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></button></div></div></div>
+                <div class="claude-composer" aria-label="动画输入框，不会执行真实命令">
+                  <div class="claude-input-line" data-demo-edit role="button" tabindex="0" aria-label="编辑 Claude 演示请求"><span aria-hidden="true">❯</span><div><span class="claude-placeholder" data-flow-placeholder>Try "explain this codebase"</span><span data-flow-draft><span data-skill-query></span><span class="claude-skill-token" data-skill-draft-token hidden>/html-reply</span><span data-skill-request></span></span><span class="claude-caret" data-flow-caret hidden></span></div></div>
+                  <div class="claude-manual-editor" data-demo-editor hidden><span aria-hidden="true">❯</span><textarea data-demo-input rows="1" spellcheck="false" aria-label="Claude 演示请求，不执行命令" placeholder="Try &quot;explain this codebase&quot;"></textarea></div>
+                  <div class="claude-skill-picker" data-skill-picker role="listbox" aria-label="Claude Skill 候选（演示）" hidden><button type="button" data-skill-choice role="option" aria-selected="true" aria-label="选择 /html-reply"><span aria-hidden="true">❯</span><strong>/html-reply</strong><span class="claude-skill-description" data-terminal-copy>生成可阅读、带历史记录的 HTML 回复</span></button></div>
+                  <div class="claude-footer"><button type="button" class="claude-permission" data-demo-menu="permission" aria-label="选择 Claude 演示权限模式" aria-haspopup="menu" aria-expanded="false"><span data-demo-permission-label>Manual</span></button><button type="button" data-demo-menu="shortcuts" aria-label="显示终端演示快捷键" aria-haspopup="menu" aria-expanded="false">? for shortcuts</button><span class="claude-send-hint" aria-hidden="true"><span data-flow-send>enter</span><span data-flow-stop hidden>esc</span><svg class="flow-pointer flow-send-pointer" data-flow-send-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></span></div>
+                </div>
+              </div>
+            </div>
+            <div class="claude-result-dock" data-result-dock="claude" hidden></div>
+          </div>
+          <div class="cursor-replica" data-cursor-screen data-workbench="cursor" role="group" aria-label="Cursor 交互演示：菜单、文件和 Agent 均可操作">
+            <div class="cursor-titlebar">
+              <svg class="cursor-brand" aria-hidden="true"><use href="#cu-cube"/></svg>
+              <div class="cursor-menubar" role="menubar" aria-label="Cursor 菜单"><button type="button" role="menuitem" data-cursor-menu="file" aria-haspopup="menu" aria-expanded="false">File</button><button type="button" role="menuitem" data-cursor-menu="edit" aria-haspopup="menu" aria-expanded="false">Edit</button><button type="button" role="menuitem" data-cursor-menu="selection" aria-haspopup="menu" aria-expanded="false">Selection</button><button type="button" role="menuitem" data-cursor-menu="view" aria-haspopup="menu" aria-expanded="false">View</button><button type="button" role="menuitem" data-cursor-menu="go" aria-haspopup="menu" aria-expanded="false">Go</button><button type="button" role="menuitem" data-cursor-menu="run" aria-haspopup="menu" aria-expanded="false">Run</button><button type="button" role="menuitem" data-cursor-menu="terminal" aria-haspopup="menu" aria-expanded="false">Terminal</button><button type="button" role="menuitem" data-cursor-menu="help" aria-haspopup="menu" aria-expanded="false">Help</button></div>
+              <div class="cursor-navigation"><button type="button" data-cursor-action="back-file" aria-label="后退" title="后退" data-cursor-back disabled><svg aria-hidden="true"><use href="#cu-arrow"/></svg></button><button type="button" data-cursor-action="forward-file" aria-label="前进" title="前进" data-cursor-forward disabled><svg class="cursor-forward" aria-hidden="true"><use href="#cu-arrow"/></svg></button></div>
+              <span class="cursor-window-name">书签应用 — Cursor</span>
+              <div class="cursor-title-actions"><button type="button" data-cursor-action="sidebar" aria-label="切换侧栏" title="切换侧栏" aria-pressed="true"><svg aria-hidden="true"><use href="#cu-panel"/></svg></button><button type="button" data-cursor-action="agent" aria-label="切换 Agent 面板" title="切换 Agent 面板" aria-pressed="true"><svg aria-hidden="true"><use href="#cu-chat"/></svg></button><button type="button" data-cursor-action="maximize-chat" aria-label="展开 Agent" title="展开 Agent" class="cursor-agents-window" aria-pressed="false">Agents Window ↗</button></div>
+              <div class="cursor-window-controls"><button type="button" data-cursor-action="minimize" aria-label="收起演示" title="收起演示" >—</button><button type="button" data-cursor-action="maximize" aria-label="放大演示" title="放大演示" aria-pressed="false">□</button><button type="button" data-cursor-action="close-window" aria-label="关闭演示" title="关闭演示" >×</button></div>
+            </div>
+            <div class="cursor-restore" data-cursor-restore hidden><button type="button" data-cursor-action="restore" aria-label="重新打开 Cursor 演示" title="重新打开 Cursor 演示" ><svg aria-hidden="true"><use href="#cu-cube"/></svg><span>打开 Cursor 演示</span></button></div>
+            <div class="cursor-workbench">
+              <aside class="cursor-explorer" aria-label="演示项目">
+                <div class="cursor-explorer-tools"><button type="button" data-cursor-action="explorer" aria-label="资源管理器" title="资源管理器" data-cursor-view="explorer" aria-pressed="true"><svg aria-hidden="true"><use href="#cu-file"/></svg></button><button type="button" data-cursor-action="search" aria-label="搜索" title="搜索" data-cursor-view="search" aria-pressed="false"><svg aria-hidden="true"><use href="#cu-search"/></svg></button><button type="button" data-cursor-action="source" aria-label="源代码管理" title="源代码管理" data-cursor-view="source" aria-pressed="false"><svg aria-hidden="true"><use href="#cu-branch"/></svg></button><button type="button" data-cursor-action="sidebar" aria-label="收起侧栏" title="收起侧栏" ><svg aria-hidden="true"><use href="#cu-panel"/></svg></button><button type="button" data-cursor-menu="views" aria-label="更多视图" title="更多视图" aria-haspopup="menu" aria-expanded="false">⌄</button></div>
+                <div data-cursor-pane="explorer">
+                  <button type="button" data-cursor-action="folder" aria-label="展开或收起 BOOKMARKS" title="展开或收起 BOOKMARKS" class="cursor-folder-title" aria-expanded="true" aria-controls="cursor-project-files"><span data-cursor-folder-chevron>⌄</span> BOOKMARKS</button>
+                  <nav id="cursor-project-files" data-cursor-project-files aria-label="文件">
+                    <button type="button" data-cursor-action="skill-folder" aria-label="展开 .cursor 文件夹" title="展开 .cursor 文件夹" class="cursor-file-row" aria-expanded="false" aria-controls="cursor-skill-files"><span class="cursor-chevron" data-cursor-skill-chevron>›</span><span>.cursor</span></button>
+                    <div id="cursor-skill-files" class="cursor-nested-files" data-cursor-skill-files hidden><button type="button" class="cursor-file-row" data-cursor-file="skill"><span class="cursor-md">ⓘ</span><span>SKILL.md</span></button></div>
+                    <button type="button" class="cursor-file-row" data-cursor-file="bookmarks"><span class="cursor-ts">TS</span><span>bookmarks.ts</span></button>
+                    <button type="button" class="cursor-file-row" data-cursor-file="readme"><span class="cursor-md">ⓘ</span><span>README.md</span></button>
+                  </nav>
+                </div>
+                <div class="cursor-side-pane" data-cursor-pane="search" hidden><h4>SEARCH</h4><input type="search" data-cursor-search placeholder="Search" aria-label="搜索演示文件"><div data-cursor-search-results></div></div>
+                <div class="cursor-side-pane" data-cursor-pane="source" hidden><h4>SOURCE CONTROL</h4><p data-cursor-git-summary>没有未保存的更改</p><div data-cursor-changes></div></div>
+                <div class="cursor-explorer-bottom">
+                  <button type="button" data-cursor-action="outline" aria-label="展开大纲" title="展开大纲" aria-expanded="false" aria-controls="cursor-outline"><span data-cursor-outline-chevron>›</span> OUTLINE</button>
+                  <div id="cursor-outline" data-cursor-outline hidden><button type="button" data-cursor-file="bookmarks" data-cursor-line="6">normalizeTitle</button><button type="button" data-cursor-file="bookmarks" data-cursor-line="12">sortBookmarks</button></div>
+                  <button type="button" data-cursor-action="timeline" aria-label="展开文件时间线" title="展开文件时间线" aria-expanded="false" aria-controls="cursor-timeline"><span data-cursor-timeline-chevron>›</span> TIMELINE</button>
+                  <div id="cursor-timeline" data-cursor-timeline hidden><button type="button" data-cursor-file="bookmarks">本次演示 · bookmarks.ts</button></div>
+                </div>
+              </aside>
+              <div class="cursor-editor">
+                <div class="cursor-editor-workspace" data-flow-hide-on-result>
+                  <div class="cursor-welcome" data-cursor-welcome><svg class="cursor-watermark" aria-hidden="true"><use href="#cu-cube"/></svg><div class="cursor-shortcuts">
+                    <button type="button" data-cursor-action="new-agent" aria-label="新建 Agent" title="新建 Agent" ><span>New Agent</span><kbd>Ctrl + Shift + L</kbd></button>
+                    <button type="button" data-cursor-action="terminal" aria-label="切换终端面板" title="切换终端面板" ><span>Show Terminal</span><kbd>Ctrl + J</kbd></button>
+                    <button type="button" data-cursor-action="quick-open" aria-label="搜索文件" title="搜索文件" ><span>Search Files</span><kbd>Ctrl + P</kbd></button>
+                    <button type="button" data-cursor-action="open-result" aria-label="打开 HTML 示例" title="打开 HTML 示例" ><span>Open Browser</span><kbd>Ctrl + Shift + B</kbd></button>
+                    <button type="button" data-cursor-action="maximize-chat" aria-label="展开 Agent" title="展开 Agent" ><span>Maximize Chat</span><kbd>Ctrl + Alt + E</kbd></button>
+                    <button type="button" data-cursor-action="workspace" aria-label="打开演示工作区" title="打开演示工作区" ><span>Open Folder</span><kbd>Ctrl + Alt + A</kbd></button>
+                  </div></div>
+                  <div class="cursor-file-editor" data-cursor-file-editor hidden>
+                    <div class="cursor-editor-tabs"><span class="cursor-editor-tab"><span data-cursor-file-name>bookmarks.ts</span><span data-cursor-dirty hidden>●</span><button type="button" data-cursor-action="close-file" aria-label="关闭当前文件" title="关闭当前文件" ><svg aria-hidden="true"><use href="#cu-close"/></svg></button></span></div>
+                    <div class="cursor-breadcrumb">bookmarks <span>›</span> <span data-cursor-file-path>bookmarks.ts</span></div>
+                    <div class="cursor-code-area"><pre data-cursor-lines aria-hidden="true"></pre><textarea data-cursor-code aria-label="编辑演示文件，仅保存在本页" wrap="off" spellcheck="false" autocapitalize="off"></textarea></div>
+                  </div>
+                  <section class="cursor-terminal" data-cursor-terminal hidden aria-label="模拟终端，不执行真实命令">
+                    <div class="cursor-terminal-tabs"><strong>TERMINAL</strong><span>演示</span><button type="button" data-cursor-action="clear-terminal" aria-label="清空终端" title="清空终端" ><svg aria-hidden="true"><use href="#cu-close"/></svg></button><button type="button" data-cursor-action="terminal" aria-label="收起终端" title="收起终端" >⌄</button></div>
+                    <pre data-cursor-terminal-output>PowerShell · 本地流程演示，不执行系统命令。
+输入 help 查看可用示例。</pre>
+                    <label><span>PS C:\demo\bookmarks&gt;</span><input data-cursor-terminal-input aria-label="模拟终端命令" spellcheck="false" autocomplete="off"></label>
+                  </section>
+                </div>
+                <div class="cursor-preview" data-result-dock="cursor" hidden></div>
+              </div>
+              <div class="cursor-agent">
+                <div class="cursor-agent-tabs"><span class="cursor-agent-tab"><button type="button" data-cursor-action="new-agent" aria-label="新建 Agent" title="新建 Agent" ><svg aria-hidden="true"><use href="#cu-chat"/></svg><span>New Agent</span></button><button type="button" data-cursor-action="agent" aria-label="关闭 Agent 面板" title="关闭 Agent 面板" ><svg aria-hidden="true"><use href="#cu-close"/></svg></button></span><span class="cursor-agent-tools"><button type="button" data-cursor-action="play" aria-label="播放或暂停演示" title="播放或暂停演示" data-cursor-play><svg aria-hidden="true"><use href="#cu-play"/></svg></button><button type="button" data-cursor-action="new-agent" aria-label="新建 Agent" title="新建 Agent" ><svg aria-hidden="true"><use href="#cu-plus"/></svg></button><button type="button" data-cursor-menu="history" aria-label="对话历史" title="对话历史" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#cu-clock"/></svg></button><button type="button" data-cursor-menu="agent" aria-label="Agent 更多操作" title="更多操作" aria-haspopup="menu" aria-expanded="false">···</button><button type="button" data-cursor-action="maximize-chat" aria-label="展开或恢复 Agent 面板" title="展开或恢复 Agent 面板" aria-pressed="false"><svg aria-hidden="true"><use href="#cu-panel"/></svg></button></span></div>
+                <div class="cursor-thread" data-flow-scroll hidden>
+                  <div class="cursor-sent" data-flow-sent hidden><p data-flow-sent-text></p></div>
+                  <div class="cursor-working" data-flow-working hidden><span class="flow-spinner" aria-hidden="true"></span><span data-flow-work-label>正在读取 html-reply…</span><button type="button" data-flow-resume hidden>继续</button></div>
+                  <div class="cursor-answer" data-flow-answer hidden>
+                    <p>已整理成 HTML 审查报告。</p>
+                    <p>先补空标题校验，再合并重复的排序逻辑。</p>
+                    <button type="button" data-cursor-action="open-result" aria-label="打开审查报告.html" title="打开审查报告.html" class="cursor-created-file"><svg aria-hidden="true"><use href="#cu-file"/></svg><span>审查报告.html</span><span>+1</span></button>
+                    <div class="cursor-reply-links"><a href="../../examples/history.html" target="_blank" rel="noopener">历史总览</a><button type="button" data-flow-open>当前回复 ↗<svg class="flow-pointer" data-flow-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></button></div>
+                  </div>
+                </div>
+                <div class="cursor-composer" aria-label="Agent 演示输入框，不会发送真实请求">
+                  <button type="button" class="cursor-input" data-cursor-action="edit-prompt" data-cursor-animated-input aria-label="编辑演示请求"><span><span class="cursor-placeholder" data-flow-placeholder>Plan, Build, / for skills, @ for context</span><span data-flow-draft></span><span class="cursor-caret" data-flow-caret hidden></span></span></button>
+                  <textarea class="cursor-input cursor-prompt" data-cursor-prompt aria-label="演示请求，不会发送到模型" placeholder="/html-reply 把这份审查结果整理成 HTML" spellcheck="false" hidden></textarea>
+                  <div class="cursor-context-chip" data-cursor-context-chip hidden><span>@ bookmarks.ts</span><button type="button" data-cursor-action="detach" aria-label="移除文件上下文" title="移除文件上下文" >×</button></div>
+                  <div class="cursor-composer-tools"><button type="button" class="cursor-mode" data-cursor-menu="mode" aria-label="选择 Agent 模式" aria-haspopup="menu" aria-expanded="false"><span>∞</span> <span data-cursor-mode-label>Agent</span> ⌄</button><button type="button" class="cursor-model" data-cursor-menu="model" aria-label="选择演示模型" aria-haspopup="menu" aria-expanded="false"><span data-cursor-model-label>Cursor Grok 4.6 <span>High Fast</span></span> ⌄</button><span class="cursor-attachments"><button type="button" data-cursor-action="attach" aria-label="添加演示文件上下文" title="添加演示文件上下文" ><svg aria-hidden="true"><use href="#cu-paperclip"/></svg></button><button type="button" data-cursor-action="send" aria-label="发送演示请求" title="发送演示请求" class="cursor-send" data-cursor-send><span data-flow-send>↑</span><span data-flow-stop hidden>■</span><svg class="flow-pointer flow-send-pointer" data-flow-send-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></button></span></div>
+                </div>
+              </div>
+            </div>
+            <div class="cursor-statusbar"><span>&gt;&lt;</span><span>bookmarks</span><button type="button" data-cursor-action="source" aria-label="查看源代码管理" title="查看源代码管理" ><svg aria-hidden="true"><use href="#cu-branch"/></svg><span>main</span></button><span>⊗ 0　△ 0</span><span class="cursor-status-spacer"></span><span data-cursor-position>Ln 1, Col 1</span><span>UTF-8</span><span data-cursor-language>TypeScript</span><button type="button" data-cursor-action="agent" aria-label="切换 Agent 面板" title="切换 Agent 面板" ><svg aria-hidden="true"><use href="#cu-chat"/></svg></button></div>
+            <div class="cursor-popup" data-cursor-popup role="menu" aria-label="Cursor 菜单选项" hidden></div>
+            <div class="cursor-palette" data-cursor-palette role="dialog" aria-label="打开演示文件" hidden><input data-cursor-filter aria-label="按文件名查找" placeholder="Search files by name" autocomplete="off"><div data-cursor-results></div></div>
+            <div class="cursor-toast" data-cursor-toast role="status" hidden></div>
+          </div>
+          <div class="codex-replica" data-workbench="app" role="group" aria-label="Codex Windows App 调用流程演示" hidden>
+            <div class="codex-menubar"><button type="button" class="codex-icon-button" data-demo-action="sidebar" aria-label="切换侧栏" title="切换侧栏" aria-pressed="true"><svg aria-hidden="true"><use href="#cu-panel"/></svg></button><button type="button" class="codex-icon-button" data-demo-action="back" aria-label="返回" title="返回" disabled><svg aria-hidden="true"><use href="#cu-arrow"/></svg></button><button type="button" class="codex-icon-button" data-demo-action="forward" aria-label="前进" title="前进" disabled><svg class="codex-forward" aria-hidden="true"><use href="#cu-arrow"/></svg></button><button type="button" data-demo-menu="file" aria-haspopup="menu" aria-expanded="false">文件</button><button type="button" data-demo-menu="edit" aria-haspopup="menu" aria-expanded="false">编辑</button><button type="button" data-demo-menu="view" aria-haspopup="menu" aria-expanded="false">视图</button><button type="button" data-demo-menu="help" aria-haspopup="menu" aria-expanded="false">帮助</button><div class="codex-window-controls"><button type="button" data-demo-action="minimize" aria-label="最小化演示" title="最小化演示"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10"/></svg></button><button type="button" data-demo-action="maximize" aria-label="切换演示高度" title="切换演示高度"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="5" width="10" height="10"/></svg></button><button type="button" data-demo-action="close" aria-label="关闭演示" title="关闭演示"><svg aria-hidden="true"><use href="#cu-close"/></svg></button></div></div>
+            <div class="codex-layout">
+              <aside class="codex-sidebar" aria-label="Codex 演示侧栏">
+                <div class="codex-brand"><button type="button" class="codex-brand-toggle" data-demo-menu="file" aria-label="Codex 演示菜单" aria-haspopup="menu" aria-expanded="false"><strong>Codex</strong><svg class="codex-brand-chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></button><button type="button" class="codex-icon-button codex-search" data-demo-menu="search" aria-label="查找公开示例" title="查找公开示例" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#cu-search"/></svg></button><button type="button" class="codex-icon-button" data-demo-action="notifications" aria-label="演示通知" title="演示通知"><svg class="codex-notification" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 8a5 5 0 0 1 10 0v4l2 3H3l2-3V8ZM8 18h4"/><circle cx="15" cy="4" r="2.5"/></svg></button></div>
+                <div class="codex-nav">
+                  <button type="button" data-demo-action="new-session"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M9 4H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-4M11 4l3 3M8 13l-3 1 1-3 8-8a2.1 2.1 0 0 1 3 3l-9 7Z"/></svg><span>新对话</span><svg class="codex-new-shortcut" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M7 10h6M10 7v6"/></svg></button>
+                  <button type="button" data-demo-action="pull-request"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="5" cy="4" r="2"/><circle cx="5" cy="16" r="2"/><circle cx="15" cy="16" r="2"/><path d="M5 6v8M15 14V8a4 4 0 0 0-4-4M13 2l-2 2 2 2"/></svg><span>Pull Request</span></button>
+                  <button type="button" data-demo-action="scheduled"><svg aria-hidden="true"><use href="#cu-clock"/></svg><span>已安排</span></button>
+                  <button type="button" data-demo-menu="plugins" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16 14.5a7.4 7.4 0 1 1 1.4-4.4v1.3a2.1 2.1 0 0 1-4.2 0V6.5M13.2 9.5a3.1 3.1 0 1 0-6.2 0 3.1 3.1 0 0 0 6.2 0Z"/></svg><span>插件</span></button>
+                  <button type="button" data-demo-menu="help" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4" cy="10" r=".8"/><circle cx="10" cy="10" r=".8"/><circle cx="16" cy="10" r=".8"/></svg><span>更多</span></button>
+                </div>
+                <div class="codex-projects">
+                  <div class="codex-project-label">项目</div>
+                  <div class="codex-project-group">
+                    <button type="button" class="codex-project" data-demo-action="project" aria-expanded="true"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h3l2 2h5a2 2 0 0 1 2 2v1M4 8h12a1 1 0 0 1 1 1.3l-1.5 6a2 2 0 0 1-2 1.7H4a2 2 0 0 1-2-2V9a1 1 0 0 1 1-1Z"/></svg><span>书签应用</span></button>
+                    <button type="button" class="codex-selected-task" data-demo-action="conversation" aria-current="page"><span>整理审查报告</span><span class="codex-task-status" aria-hidden="true"></span></button>
+                    <button type="button" class="codex-recent-task" data-demo-file="review.html" aria-label="查看审查书签模块的 HTML"><span>审查书签模块</span></button>
+                  </div>
+                  <div class="codex-project-group">
+                    <button type="button" class="codex-project" data-demo-action="project" aria-expanded="true"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5a2 2 0 0 1 2-2h3l2 2h5a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5ZM3 8h14"/></svg><span>学习笔记</span></button>
+                    <button type="button" class="codex-recent-task" data-demo-file="explain.html" aria-label="查看理解缓存机制的 HTML"><span>理解缓存机制</span></button>
+                    <button type="button" class="codex-recent-task" data-demo-file="form.html" aria-label="查看整理学习计划的 HTML"><span>整理学习计划</span></button>
+                  </div>
+                  <div class="codex-project-group">
+                    <button type="button" class="codex-project" data-demo-action="project" aria-expanded="true"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5a2 2 0 0 1 2-2h3l2 2h5a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5ZM3 8h14"/></svg><span>个人网站</span></button>
+                    <button type="button" class="codex-recent-task" data-demo-file="compare.html" aria-label="查看比较首页方案的 HTML"><span>比较首页方案</span></button>
+                  </div>
+                </div>
+                <div class="codex-user"><button type="button" class="codex-user-account" data-demo-menu="account" aria-label="演示用户菜单" aria-haspopup="menu" aria-expanded="false"><span class="codex-avatar">M</span><span class="codex-user-name">演示用户</span></button><button type="button" class="codex-voice" data-demo-action="voice"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8v4M6 4v12M10 2v16M14 5v10M17 8v4"/></svg>语音</button><button type="button" class="codex-help codex-icon-button" data-demo-menu="help" aria-label="演示帮助" title="演示帮助" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M7.5 7a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4M10 14v.5"/></svg></button></div>
+              </aside>
+              <div class="codex-chat">
+                <div class="codex-chat-header"><span class="codex-chat-heading"><svg aria-hidden="true"><use href="#cu-folder"/></svg><span class="codex-thread-title">整理审查报告</span><button type="button" class="codex-thread-more" data-demo-menu="conversation" aria-label="对话操作" aria-haspopup="menu" aria-expanded="false">···</button></span><span class="codex-chat-actions"><button type="button" data-demo-action="share"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 13V2m-4 4 4-4 4 4M4 9v8h12V9"/></svg>分享</button><button type="button" class="codex-icon-button" data-demo-action="preview" aria-label="打开或关闭 HTML 预览" title="打开或关闭 HTML 预览"><svg aria-hidden="true"><use href="#cu-panel"/></svg></button></span></div>
+                <div class="codex-stream" data-flow-scroll>
+                  <div class="codex-thread">
+                  <div class="codex-user-message"><p>帮我审查这个书签应用，列出需要修改的地方。</p></div>
+                  <div class="codex-context"><p>审查完成。有两处值得调整：</p><ol class="codex-findings"><li><strong>补上空标题校验</strong><p>在保存前检查输入，避免生成空白书签。</p></li><li><strong>合并重复排序逻辑</strong><p>提取一个比较函数，让列表共用同一套排序。</p></li></ol></div>
+                  <div class="codex-message-actions"><button type="button" class="codex-icon-button" data-demo-action="copy" aria-label="复制审查摘要" title="复制审查摘要"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="7" y="7" width="10" height="11" rx="2"/><path d="M13 7V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg></button></div>
+                  <div class="codex-sent" data-flow-sent hidden><p data-flow-sent-text><span class="codex-skill-token" data-skill-sent-token><svg aria-hidden="true"><use href="#cu-file"/></svg>HTML Reply</span><span data-skill-sent-request></span></p></div>
+                  <div class="codex-working" data-flow-working hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 5 5 5-5 5"/></svg><span data-flow-work-label>正在读取 html-reply…</span></div>
+                  <div class="codex-answer" data-flow-answer hidden><p>已整理成 HTML 审查报告。先补上空标题校验，再合并重复的排序逻辑。</p><div class="codex-reply-links"><a href="../../examples/history.html" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#cu-globe"/></svg>历史总览</a><button type="button" data-flow-open><svg aria-hidden="true"><use href="#cu-file"/></svg>当前回复 ↗<svg class="flow-pointer" data-flow-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></button></div></div>
+                  </div>
+                </div>
+                <div class="codex-composer" aria-label="动画输入框，不会发送真实请求">
+                  <div class="codex-skill-picker" data-skill-picker role="listbox" aria-label="Skill 候选" hidden><button type="button" data-skill-choice role="option" aria-selected="true" aria-label="选择 HTML Reply"><svg aria-hidden="true"><use href="#cu-file"/></svg><strong>HTML Reply</strong><span class="codex-skill-description">按明确要求生成可刷新、带历史记录的 HTML 回复</span><span class="codex-skill-scope">个人</span></button></div>
+                  <div class="codex-input" data-demo-edit role="button" tabindex="0" aria-label="编辑演示请求"><span class="codex-placeholder" data-flow-placeholder>随心输入</span><span data-flow-draft><span data-skill-query></span><span class="codex-skill-token" data-skill-draft-token hidden><svg aria-hidden="true"><use href="#cu-file"/></svg><span data-skill-label></span></span><span data-skill-request></span></span><span class="codex-caret" data-flow-caret hidden></span></div>
+                  <div class="codex-manual-editor" data-demo-editor hidden><span class="codex-skill-token" data-demo-bound-token hidden><svg aria-hidden="true"><use href="#cu-file"/></svg>HTML Reply</span><textarea data-demo-input rows="1" spellcheck="false" aria-label="Codex App 演示请求，不发送到模型" placeholder="随心输入"></textarea></div>
+                  <div class="codex-attachment" data-demo-attachment hidden><span>bookmarks.ts</span><button type="button" data-demo-action="detach" aria-label="移除演示附件">×</button></div>
+                  <div class="codex-composer-tools"><button type="button" class="codex-tool" data-demo-menu="attach" aria-label="添加演示上下文" title="添加演示上下文" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#cu-plus"/></svg></button><button type="button" class="codex-permission" data-demo-menu="permission" aria-label="演示权限" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#cu-shield"/></svg><span class="codex-permission-label" data-demo-permission-label>权限</span><svg class="codex-down" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></button><button type="button" class="codex-model" data-demo-menu="model" aria-label="演示模型与推理强度" aria-haspopup="menu" aria-expanded="false"><span data-demo-model-label>5.6 Sol</span><span class="codex-effort" data-demo-effort>Ultra</span><svg class="codex-down" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></button><button type="button" class="codex-tool" data-demo-action="voice" aria-label="演示语音输入" title="演示语音输入"><svg aria-hidden="true"><use href="#cu-mic"/></svg></button><button type="button" class="codex-send" data-demo-action="send" aria-label="发送演示请求" title="发送演示请求"><span data-flow-send><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 15V4m-5 5 5-5 5 5"/></svg><svg class="codex-idle-voice" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 8v4M7 4v12M10 6v8M13 3v14M16 7v6"/></svg></span><span data-flow-stop hidden><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="6" y="6" width="8" height="8" rx="1" fill="currentColor" stroke="none"/></svg></span><svg class="flow-pointer flow-send-pointer" data-flow-send-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></button></div>
+                </div>
+                <div class="codex-environment"><button type="button" data-demo-action="local"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="3" width="16" height="11" rx="1"/><path d="M10 14v3M6 17h8"/></svg>本地</button><button type="button" data-demo-menu="branch" aria-label="演示分支" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#cu-branch"/></svg> main⌄</button></div>
+              </div>
+              <div class="codex-browser" data-result-dock="app" hidden></div>
+            </div>
+          </div>
+          <section class="usage-result" data-usage-result aria-label="生成后的公开 HTML 示例" hidden>
+            <div class="usage-result-tab"><div class="usage-browser-tab"><svg aria-hidden="true"><use href="#cu-globe"/></svg><span data-usage-result-title>审查报告.html</span><button type="button" class="usage-browser-close" data-usage-close aria-label="关闭预览，返回对话" title="关闭预览"><svg aria-hidden="true"><use href="#cu-close"/></svg></button></div><button type="button" class="usage-browser-new" data-usage-preview-menu aria-label="选择其他公开示例" title="选择其他公开示例" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#cu-plus"/></svg></button>
+              <div class="usage-preview-menu" data-usage-file-menu role="menu" aria-label="公开示例" hidden><button type="button" role="menuitem" data-usage-file="review.html">审查报告</button><button type="button" role="menuitem" data-usage-file="compare.html">方案对比</button><button type="button" role="menuitem" data-usage-file="explain.html">理解缓存</button><button type="button" role="menuitem" data-usage-file="form.html">学习计划</button><button type="button" role="menuitem" data-usage-file="history.html">历史总览</button></div>
+            </div>
+            <div class="usage-result-toolbar"><button type="button" data-usage-back aria-label="返回演示对话">← 返回</button><button class="codex-browser-action" type="button" data-usage-forward disabled aria-label="没有可前进的页面"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></button><button class="codex-browser-action" type="button" data-usage-refresh aria-label="刷新当前 HTML 示例"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16 8a6 6 0 1 0 0 5M16 3v5h-5"/></svg></button><span class="usage-result-address" aria-hidden="true">审查报告.html</span><a href="../../examples/review.html" target="_blank" rel="noopener" aria-label="在独立页面打开审查报告">单独打开 ↗</a></div>
+            <div class="usage-result-viewport"><iframe data-usage-frame data-src="../../examples/review.html" title="HTML Reply 生成的真实审查报告（公开虚构示例）" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div>
+          </section>
+          </div>
+          <div class="usage-controls">
+            <div class="usage-chapters" role="group" aria-label="跳转演示步骤">
+              <button type="button" data-usage-step="0" aria-current="step">输入请求</button>
+              <button type="button" data-usage-step="1">发送请求</button>
+              <button type="button" data-usage-step="2">生成 HTML</button>
+              <button type="button" data-usage-step="3">打开结果</button>
+            </div>
+            <div class="usage-playback"><button type="button" data-usage-toggle aria-label="播放调用演示">播放</button><button type="button" data-usage-replay>重播 ↻</button></div>
+          </div>
+          <div class="usage-progress" aria-hidden="true"><div data-usage-progress></div></div>
+          <p class="usage-load-feedback" data-usage-load-feedback role="status" hidden><span data-usage-load-message>正在打开公开示例…</span> <button type="button" data-usage-retry hidden>重试</button> <a data-usage-fallback href="../../examples/review.html" target="_blank" rel="noopener">单独打开 ↗</a></p>
+          <p class="usage-a11y-status" data-usage-status role="status">演示：在 Cursor Agent 输入框中输入 /html-reply 和你的请求。</p>
+          <noscript><p>启用 JavaScript 可播放调用演示。在 Codex 输入 <code>$html-reply 把这份审查结果整理成 HTML，先给结论，再列修改建议。</code>，发送后打开「当前回复」。</p></noscript>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="privacy" id="storage"><div class="wrap">
+      <div class="privacy-head"><div><h2>你的记录，默认留在本机。</h2></div><p>不是塞进每个项目。所有项目共用一个用户数据目录，里面再按项目和会话分开。</p></div>
+      <div class="privacy-grid">
+        <div class="folder"><span class="folder-tag">不在你的 repo 里 :)</span><div data-tabs><div class="os-tabs" role="tablist" aria-label="存储系统"><button id="path-tab-win" type="button" role="tab" aria-controls="path-win" aria-selected="true">Windows</button><button id="path-tab-unix" type="button" role="tab" aria-controls="path-unix" aria-selected="false" tabindex="-1">macOS / Linux</button></div><p class="root" id="path-win" role="tabpanel" aria-labelledby="path-tab-win">%USERPROFILE%\.codex\html-reply\</p><p class="root" id="path-unix" role="tabpanel" aria-labelledby="path-tab-unix" hidden>~/.codex/html-reply/</p></div>
+<pre>└─ workspaces/
+   └─ &lt;项目指纹&gt;/
+      └─ threads/
+         └─ &lt;会话 ID&gt;/
+            ├─ reply-&lt;ID&gt;.html
+            ├─ history-&lt;ID&gt;.html
+            ├─ archive/  ← 旧回复
+            ├─ assets/   ← 页面资源
+            └─ session.json</pre><p>上面是默认位置。项目指纹来自绝对路径，移动项目后会生成新的项目分组；自定义设置会改变根目录。</p></div>
+        <div class="safety-notes">
+          <article><span class="check">✓</span><div><h3>普通提交，不会顺手带走记录</h3><p>数据位于仓库外，不依赖 .gitignore。发布器拒绝 Git 工作树内的数据目录；不可写就报错，不退回项目里。</p></div></article>
+          <article><span class="check">!</span><div><h3>但它不是加密保险箱</h3><p>HTML 是普通文件。提问摘要会过滤常见密码与密钥，但正文、代码和图片不会全面自动脱敏。分享之前，还是要自己看一眼。</p></div></article>
+          <article><span class="check">↓</span><div><h3>表单答案去浏览器的下载位置</h3><p>表单草稿会尝试写入浏览器本地存储；JSON 由浏览器下载，不在左边的历史目录里。需要手动把答案文件交给助手。</p></div></article>
+          <article><span class="check">i</span><div><h3>文件本地保存，模型不一定离线</h3><p>页面没有内置上传接口，但生成时仍使用工作台的模型服务。“本地 HTML”不代表整段对话只在本机处理。</p></div></article>
+        </div>
+      </div>
+    </div></section>
+    <div class="wrap last-note"><p>让下一份好答案，有个好读的地方。</p><a class="btn orange" href="#usage">看看如何调用 ↑</a></div>
+  </main>
+  <footer class="wrap foot"><span>HTML Reply · 手账版</span><a href="index.en.html" lang="en" hreflang="en" data-language-link>English version</a><a href="https://github.com/Michel-Johnson/HTML-Skill">源码在这里 ↗</a></footer>
+</body>
+</html>

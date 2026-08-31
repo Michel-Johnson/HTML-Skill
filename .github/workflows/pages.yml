@@ -1,0 +1,57 @@
+name: Publish website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/pages.yml"
+      - "docs/showcase/pages.html"
+      - "docs/showcase/showcase.js"
+      - "docs/showcase/variants/05-maker-sketchbook/**"
+      - "docs/showcase/examples/*.html"
+      - "docs/showcase/examples/en/*.html"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Configure Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - name: Package the public website
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "_site/variants" "_site/examples/en"
+          cp -R "docs/showcase/variants/05-maker-sketchbook" "_site/variants/"
+          cp "docs/showcase/showcase.js" "_site/"
+          cp "docs/showcase/pages.html" "_site/index.html"
+          for page in review compare explain form history; do
+            cp "docs/showcase/examples/$page.html" "_site/examples/"
+            cp "docs/showcase/examples/en/$page.html" "_site/examples/en/"
+          done
+          touch "_site/.nojekyll"
+      - name: Upload website
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: "_site"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

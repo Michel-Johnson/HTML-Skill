@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta name="html-reply-demo" content="虚构公开示例；由仓库 Publisher 生成，仅替换路径与演示身份。">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>回复历史总览</title>
+  <style>
+    :root{--paper:#faf9f5;--paper2:#efe8d6;--ink:#4f4a3c;--muted:#8a8271;--line:#4f4a3c;--accent:#d9a441;--blue:#dce9f4;--green:#dcebd9}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:18px;line-height:1.6}
+    main{width:calc(100% - 48px);margin:24px auto 56px}header{padding:42px 44px;border:2px solid var(--line);border-left:12px solid var(--accent);background:var(--paper2)}
+    h1{margin:0 0 8px;font-size:clamp(36px,5vw,62px);line-height:1.1}header p{margin:0;font-size:20px}.tools{display:flex;gap:12px;margin:22px 0}
+    input{width:100%;min-height:56px;padding:12px 17px;border:2px solid var(--line);border-radius:5px;background:#fff;color:var(--ink);font:600 20px/1.4 inherit}input::placeholder{color:#756f62;opacity:1}
+    .entries{display:grid;gap:12px}.entry{padding:20px 22px;border:2px solid var(--line);border-radius:5px;background:#fff}.entry.current{border-left:10px solid var(--accent);background:var(--green)}
+    .entry div{display:flex;align-items:baseline;justify-content:space-between;gap:20px}.entry a{color:var(--ink);font-size:23px;font-weight:800;text-decoration:none}.entry a:hover{text-decoration:underline}
+    time{flex:none;color:#756f62;font-size:18px;font-weight:700}.entry p{margin:7px 0 0;color:#756f62;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .empty{display:none;padding:28px;border:2px solid var(--line);background:var(--blue);font-size:20px;font-weight:750}
+    @media(max-width:700px){main{width:calc(100% - 24px);margin:12px auto 32px}header{padding:28px 22px}.entry div{display:block}time{display:block;margin-top:5px}}
+  </style>
+</head>
+<body data-html-reply-theme="soft-bauhaus-v1">
+  <main>
+    <header><h1>回复历史总览</h1><p>共 4 条。输入标题、问题关键词或时间即可快速查找。</p></header>
+    <div class="tools"><input id="history-search" type="search" placeholder="搜索标题、Prompt 或时间…" aria-label="搜索历史回复"></div>
+    <section class="entries" id="history-entries"><article class="entry current" data-search="学习计划 $html-reply 把虚构的学习计划整理成可填写的选项，演示本地表单导出。 当前回复"><div><a href="form.html">学习计划</a><time>当前回复</time></div><p>$html-reply 把虚构的学习计划整理成可填写的选项，演示本地表单导出。</p></article><article class="entry" data-search="理解缓存 $html-reply 用读书卡片的例子，简单解释缓存是怎么工作的。 2026-08-30 12:54"><div><a href="explain.html">理解缓存</a><time>2026-08-30 12:54</time></div><p>$html-reply 用读书卡片的例子，简单解释缓存是怎么工作的。</p></article><article class="entry" data-search="方案对比 $html-reply 用表格对比三种保存学习笔记的方法，给出简单的选择建议。 2026-08-30 12:54"><div><a href="compare.html">方案对比</a><time>2026-08-30 12:54</time></div><p>$html-reply 用表格对比三种保存学习笔记的方法，给出简单的选择建议。</p></article><article class="entry" data-search="审查结果 $html-reply 请审查虚构的书签应用，列出两个问题和一个修改示例。 2026-08-30 12:54"><div><a href="review.html">审查结果</a><time>2026-08-30 12:54</time></div><p>$html-reply 请审查虚构的书签应用，列出两个问题和一个修改示例。</p></article></section>
+    <p class="empty" id="history-empty">没有找到匹配的回复。</p>
+  </main>
+  <script type="application/json" id="html-reply-history-index-data">{"workspaceId": "public-showcase", "session": "public-demo", "count": 4, "currentPath": "form.html"}</script>
+  <script>(()=>{const input=document.getElementById('history-search');const rows=[...document.querySelectorAll('.entry')];const empty=document.getElementById('history-empty');input.addEventListener('input',()=>{const q=input.value.trim().toLocaleLowerCase();let shown=0;rows.forEach(row=>{const ok=!q||row.dataset.search.toLocaleLowerCase().includes(q);row.hidden=!ok;if(ok)shown++});empty.style.display=shown?'none':'block'})})();</script>
+<script id="showcase-preview-bridge">
+// 仅为宣传页的沙箱预览提供尺寸与受控导航；不读取表单值，不修改生成主题。
+(() => {
+  if (window.parent === window) return;
+  const files = new Set(['review.html', 'compare.html', 'explain.html', 'form.html', 'history.html']);
+  let navigationToken = '';
+  window.addEventListener('message', event => {
+    if (event.source !== window.parent || event.data?.type !== 'html-reply-preview:connect') return;
+    if (typeof event.data.token !== 'string' || !event.data.token || event.data.token.length > 80) return;
+    navigationToken = event.data.token;
+  });
+  document.addEventListener('click', event => {
+    if (!navigationToken || event.defaultPrevented || event.button !== 0 ||
+        event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    const link = event.target.closest?.('a[href]');
+    const file = link?.getAttribute('href');
+    if (!files.has(file) || link.hasAttribute('download')) return;
+    event.preventDefault();
+    document.getElementById('hr-history-backdrop')?.classList.remove('open');
+    window.parent.postMessage({type: 'html-reply-preview:navigate', token: navigationToken, file}, '*');
+  });
+  const main = document.querySelector('main');
+  if (!main) return;
+  let requestId = '';
+  let pending = false;
+  function report() {
+    if (!requestId || pending) return;
+    pending = true;
+    requestAnimationFrame(() => {
+      pending = false;
+      // 不用 documentElement.scrollHeight，避免把上次 iframe 高度当成内容高度。
+      const margin = parseFloat(getComputedStyle(main).marginBottom) || 0;
+      const height = Math.ceil(main.getBoundingClientRect().bottom + window.scrollY + margin);
+      window.parent.postMessage({
+        type: 'html-reply-preview:size', requestId,
+        width: window.innerWidth, height,
+        file: window.location.pathname.split('/').pop()
+      }, '*');
+    });
+  }
+  window.addEventListener('message', event => {
+    if (event.source !== window.parent || event.data?.type !== 'html-reply-preview:measure') return;
+    if (typeof event.data.requestId !== 'string') return;
+    requestId = event.data.requestId;
+    report();
+  });
+  new ResizeObserver(report).observe(main);
+  window.addEventListener('resize', report);
+  document.fonts?.ready.then(report);
+})();
+</script>
+</body>
+</html>

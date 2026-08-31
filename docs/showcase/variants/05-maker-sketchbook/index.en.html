@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="alternate" hreflang="zh-CN" href="index.html">
+  <link rel="alternate" hreflang="en" href="index.en.html">
+  <meta name="description" content="Explore HTML Reply reports, comparisons, code walkthroughs, and interactive forms. See how to call the Skill and where your files are stored.">
+  <title>HTML Reply! — Give great answers a page of their own.</title>
+  <link rel="stylesheet" href="page.css">
+  <link rel="preload" href="fonts/CascadiaMono.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="usage.css">
+  <link rel="stylesheet" href="cursor.css">
+  <link rel="stylesheet" href="codex.css">
+  <link rel="stylesheet" href="cli.css">
+  <link rel="stylesheet" href="claude.css">
+  <link rel="stylesheet" href="motion.css">
+  <script src="locale.js" defer></script>
+  <script src="../../showcase.js" defer></script>
+  <script src="motion.js" defer></script>
+  <script src="reading.js" defer></script>
+  <script src="navigation.js" defer></script>
+  <script src="preview.js" defer></script>
+  <script src="usage.js" defer></script>
+  <script src="workbench.js" defer></script>
+  <script src="cursor.js" defer></script>
+</head>
+<body id="top">
+  <header class="wrap nav"><a class="logo" href="#top">HTML <u>Reply!</u></a><nav class="navlinks" aria-label="Page navigation"><a href="#examples">Examples</a><a href="#usage">How it works</a><a href="#storage">Storage</a><a class="language-link" href="index.html" lang="en" hreflang="zh-CN" data-language-link aria-label="Switch to the Chinese version">Chinese</a><a class="github" href="https://github.com/Michel-Johnson/HTML-Skill">GitHub ↗</a></nav></header>
+  <main>
+    <section class="wrap hero"><div><h1><span class="headline-line">Great answers.</span><span class="headline-line"><span class="headline-accent">Beyond the chat.</span></span></h1><p>HTML Reply is a Codex Skill. When you explicitly ask for it, it turns an answer into a standalone page you can read, interact with, and keep.</p><div class="buttons"><a class="btn orange" href="#examples">Explore the examples ↓</a><a class="btn" href="#usage">See how it works</a></div></div>
+      <div class="desk"><div class="tape" aria-hidden="true"></div><div class="note main"><div class="windowtop" aria-hidden="true"><i></i><i></i><i></i></div><div class="hero-viewport"><iframe class="hero-frame" src="../../examples/en/review.html" title="HTML Reply review report example" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div></div></div>
+    </section>
+
+    <section class="wrap section examples-section" aria-labelledby="examples-heading">
+      <div class="reading-track" id="examples" data-reading-track><div class="reading-pin" data-reading-pin>
+      <div class="section-head"><div><h2 id="examples-heading">See what it makes.</h2></div></div>
+      <div class="sample-book" data-demo-viewer data-reading-viewer>
+        <aside class="sample-sidebar" aria-label="Example navigation">
+          <div class="sample-tabs" role="group" aria-label="Choose an HTML output example" data-motion-tabs>
+            <span data-motion-indicator aria-hidden="true"></span>
+            <button type="button" data-example="review" aria-pressed="true" aria-controls="example-preview">Review report</button>
+            <button type="button" data-example="compare" aria-pressed="false" aria-controls="example-preview">Option comparison</button>
+            <button type="button" data-example="explain" aria-pressed="false" aria-controls="example-preview">Concept walkthrough</button>
+            <button type="button" data-example="form" aria-pressed="false" aria-controls="example-preview">Interactive form</button>
+            <button type="button" data-example="history" aria-pressed="false" aria-controls="example-preview">Reply history</button>
+          </div>
+          <a class="preview-open" data-example-link href="../../examples/en/review.html" target="_blank" rel="noopener">Open this page ↗</a>
+        </aside>
+        <div class="sample-document" id="example-preview">
+          <div class="preview-stage" data-preview-stage aria-busy="false">
+            <div class="preview-pane" data-preview-pane><p class="sample-note download-notice" data-example-note hidden></p><iframe data-example-frame src="../../examples/en/review.html" title="HTML Reply output: review report" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div>
+            <div class="preview-pane" data-preview-pane inert aria-hidden="true"><p class="sample-note download-notice" data-example-note hidden></p><iframe data-example-frame title="Next HTML example" tabindex="-1" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div>
+          </div>
+          <p class="preview-error" data-preview-error role="status" hidden>This example has not loaded. Your current page is still here. Select the example again to retry.</p>
+        </div>
+      </div>
+      </div></div>
+      <aside class="theme-ticket"><div class="palette" aria-label="Shared color palette for generated pages"><i style="--swatch:#faf9f5"></i><i style="--swatch:#efe8d6"></i><i style="--swatch:#d9a441"></i><i style="--swatch:#dce9f4"></i><i style="--swatch:#dcebd9"></i></div><div><p><strong>One reading theme. Many kinds of answers.</strong><br>Generated pages share a light, paper-like theme. Reports, tables, explanations, and forms use different layouts, not different skins. This sketchbook-style showcase is separate from the Skill’s output theme.</p><div class="capability-tags"><span>Syntax highlighting for 8 languages</span><span>No localhost required</span><span>Searchable history</span></div></div></aside>
+      <noscript><p>JavaScript is disabled. Open an example directly: <a href="../../examples/en/compare.html">comparison</a>, <a href="../../examples/en/explain.html">walkthrough</a>, <a href="../../examples/en/form.html">form (downloads answers as JSON)</a>, <a href="../../examples/en/history.html">history</a>. Enable JavaScript to switch workbench demos.</p></noscript>
+    </section>
+
+    <section class="usage-section" id="usage"><div class="wrap section usage-wrap">
+      <div class="section-head"><h2>Call it from your workspace.</h2></div>
+      <div class="usage-player" data-usage-player data-platform="cursor" data-phase="input">
+        <aside class="usage-switcher" aria-label="Choose a workbench demo" data-motion-tabs>
+          <span data-motion-indicator aria-hidden="true"></span>
+          <button type="button" data-usage-platform="app" aria-pressed="false" aria-controls="usage-screen">Codex App</button>
+          <button type="button" data-usage-platform="cli" aria-pressed="false" aria-controls="usage-screen">Codex CLI</button>
+          <button type="button" data-usage-platform="cursor" aria-pressed="true" aria-controls="usage-screen">Cursor App</button>
+          <button type="button" data-usage-platform="claude" aria-pressed="false" aria-controls="usage-screen">Claude Code CLI</button>
+        </aside>
+        <div class="usage-main">
+          <div class="usage-scrollbar-probe" data-usage-scrollbar-probe aria-hidden="true" inert></div>
+          <p class="usage-compatibility" data-usage-compatibility>Cursor workflow demo. Native integration is not yet supported; results are pre-generated public HTML examples.</p>
+          <div id="usage-screen" data-usage-stage>
+            <svg class="usage-symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+              <symbol id="cu-arrow" viewBox="0 0 20 20"><path d="m11 5-5 5 5 5M6 10h10"/></symbol>
+              <symbol id="cu-panel" viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="12" rx="1"/><path d="M12 4v12"/></symbol>
+              <symbol id="cu-file" viewBox="0 0 20 20"><path d="M11 2H5v15h11V7l-5-5ZM11 2v5h5M3 5v14h10"/></symbol>
+              <symbol id="cu-search" viewBox="0 0 20 20"><circle cx="8" cy="8" r="5"/><path d="m12 12 5 5"/></symbol>
+              <symbol id="cu-branch" viewBox="0 0 20 20"><circle cx="6" cy="3" r="2"/><circle cx="6" cy="17" r="2"/><circle cx="15" cy="5" r="2"/><path d="M6 5v10M15 7v2c0 3-9 3-9 5"/></symbol>
+              <symbol id="cu-chat" viewBox="0 0 20 20"><path d="M3 3h14v11H7l-4 3V3Z"/></symbol>
+              <symbol id="cu-close" viewBox="0 0 20 20"><path d="m5 5 10 10M15 5 5 15"/></symbol>
+              <symbol id="cu-plus" viewBox="0 0 20 20"><path d="M10 3v14M3 10h14"/></symbol>
+              <symbol id="cu-clock" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></symbol>
+              <symbol id="cu-play" viewBox="0 0 20 20"><path d="m5 3 11 7-11 7V3Z"/></symbol>
+              <symbol id="cu-paperclip" viewBox="0 0 20 20"><path d="m8 12 5-5a2 2 0 0 1 3 3l-7 7a4 4 0 0 1-6-6l8-8a3 3 0 0 1 5 5l-7 7a1 1 0 0 1-2-2l6-6"/></symbol>
+              <symbol id="cu-mic" viewBox="0 0 20 20"><rect x="7" y="2" width="6" height="10" rx="3"/><path d="M4 9v1a6 6 0 0 0 12 0V9M10 16v3M7 19h6"/></symbol>
+              <symbol id="cu-cube" viewBox="0 0 64 64"><path fill="#3b3b3b" d="m32 3 27 15-27 15L5 18Z"/><path fill="#303030" d="m5 18 27 15v29L5 47Z"/><path fill="#292929" d="M59 18v29L32 62V33Z"/><path fill="#171717" d="M12 21h40L32 55V33Z"/></symbol>
+            <symbol id="cu-folder" viewBox="0 0 20 20"><path d="M2 5h6l2 2h8v10H2V5ZM2 5V3h6l2 2h8v2"/></symbol><symbol id="cu-edit" viewBox="0 0 20 20"><path d="m12 3 5 5-8 8H4v-5l8-8ZM10 5l5 5M3 3H2v15h15v-1"/></symbol><symbol id="cu-globe" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><ellipse cx="10" cy="10" rx="3" ry="8"/><path d="M2 10h16"/></symbol><symbol id="cu-shield" viewBox="0 0 20 20"><path d="m10 2 6 3v5c0 4-6 8-6 8s-6-4-6-8V5l6-3Z"/></symbol></defs></svg>
+          <div class="usage-screen cli-replica" data-workbench="cli" role="group" aria-label="Codex CLI workflow demo" hidden>
+            <div class="cli-titlebar"><span class="cli-elevated" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m10 2 7 3v5c0 4-7 8-7 8s-7-4-7-8V5l7-3Z"/></svg></span><span class="cli-tab"><svg class="cli-terminal-icon" viewBox="0 0 20 20" aria-hidden="true"><path fill="#3574bf" d="M4 3h14l-3 14H1Z"/><path d="m7 6 4 4-6 4m5 0h4"/></svg><span class="cli-tab-label">PowerShell</span><button type="button" class="cli-tab-close" data-demo-action="close" aria-label="Close demo session" title="Close demo session"><svg aria-hidden="true"><use href="#cu-close"/></svg></button></span><button type="button" class="cli-new-tab" data-demo-action="new-session" aria-label="New demo session" title="New demo session"><svg aria-hidden="true"><use href="#cu-plus"/></svg></button><button type="button" class="cli-tab-menu" data-demo-menu="terminal" aria-label="Terminal demo menu" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></button><span class="cli-window-controls"><button type="button" data-demo-action="minimize" aria-label="Minimize demo" title="Minimize demo"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10"/></svg></button><button type="button" data-demo-action="maximize" aria-label="Toggle demo height" title="Toggle demo height"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="5" width="10" height="10"/></svg></button><button type="button" data-demo-action="close" aria-label="Close demo" title="Close demo"><svg aria-hidden="true"><use href="#cu-close"/></svg></button></span></div>
+            <div class="usage-workbench" data-flow-hide-on-result>
+              <div class="usage-conversation">
+                <div class="usage-stream" data-flow-scroll>
+                  <div class="cli-session" aria-label="Demo session information">
+                    <div class="cli-session-title"><strong><span class="cli-session-prompt">&gt;_</span> OpenAI Codex</strong><span>(v0.151.0)</span></div>
+                    <dl><div><dt>model:</dt><dd><span data-demo-model-label>gpt-5.6-sol ultra</span> <span class="cli-model-help"><button type="button" class="cli-command" data-demo-menu="model" aria-label="Choose a Codex demo model" aria-haspopup="menu" aria-expanded="false">/model</button> to change</span></dd></div><div><dt>directory:</dt><dd>~</dd></div></dl>
+                  </div>
+                  <div class="usage-review-context cli-output"><span class="cli-bullet" aria-hidden="true">•</span><div><p>Review complete. Two changes to make:</p><ol><li><strong>Validate empty titles</strong><br><span>Check the input before saving to avoid blank bookmarks.</span></li><li><strong>Deduplicate the sorting logic</strong><br><span>Extract the repeated comparison into a shared function.</span></li></ol></div></div>
+                  <div class="usage-sent" data-flow-sent hidden><span aria-hidden="true">›</span><p data-flow-sent-text><span class="cli-skill-token" data-skill-sent-token>$html-reply</span><span data-skill-sent-request></span></p></div>
+                  <div class="usage-working" data-flow-working hidden><span class="cli-working-mark" aria-hidden="true">◦</span><div><span data-flow-work-label>Working</span> <span class="cli-work-hint">(<span data-cli-seconds>0</span>s • esc to interrupt)</span></div></div>
+                  <div class="usage-answer cli-output" data-flow-answer hidden><span class="cli-bullet" aria-hidden="true">•</span><div><p data-terminal-copy>The HTML review report is ready.</p><p>Fix input validation first, then clean up the sorting logic.</p><div class="usage-reply-links"><a href="../../examples/en/history.html" target="_blank" rel="noopener">All replies</a><button type="button" data-flow-open><span>Current reply</span> ↗<svg class="flow-pointer" data-flow-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></button></div></div></div>
+                <div class="usage-composer" aria-label="Animated input; no real commands are executed">
+                  <div class="usage-input-line" data-demo-edit role="button" tabindex="0" aria-label="Edit the Codex demo request"><span class="cli-prompt" aria-hidden="true">»</span><div><span class="usage-placeholder" data-flow-placeholder>Ask Codex to do anything</span><span data-flow-draft><span data-skill-query></span><span class="cli-skill-token" data-skill-draft-token hidden>$html-reply</span><span data-skill-request></span></span><span class="usage-caret" data-flow-caret hidden></span></div></div>
+                  <div class="cli-manual-editor" data-demo-editor hidden><span class="cli-prompt" aria-hidden="true">»</span><textarea data-demo-input rows="1" spellcheck="false" aria-label="Codex demo request; not sent to a model" placeholder="Ask Codex to do anything"></textarea></div>
+                  <div class="cli-skill-picker" data-skill-picker role="listbox" aria-label="Skill suggestions" hidden><button type="button" data-skill-choice role="option" aria-selected="true" aria-label="Select html-reply"><span aria-hidden="true">›</span><strong>html-reply</strong><span class="cli-skill-description" data-terminal-copy>Create refreshable HTML replies with history when explicitly requested</span></button><div class="cli-skill-hint" aria-hidden="true">tab to select <span>esc to dismiss</span></div></div>
+                  <div class="usage-input-actions"><button type="button" class="cli-status-model" data-demo-menu="model" aria-label="Choose a Codex demo model" aria-haspopup="menu" aria-expanded="false"><span data-demo-model-label>gpt-5.6-sol ultra</span></button><span class="cli-status-separator" aria-hidden="true">·</span><span class="cli-status-path">~</span><span class="usage-send" aria-hidden="true"><span data-flow-send>↵</span><span data-flow-stop hidden>esc</span><svg class="flow-pointer flow-send-pointer" data-flow-send-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></span></div>
+                </div>
+                </div>
+              </div>
+            </div>
+            <div class="cli-result-dock" data-result-dock="cli" hidden></div>
+          </div>
+          <div class="claude-replica" data-workbench="claude" role="group" aria-label="Claude Code CLI public workflow demo; native integration is not yet supported" hidden>
+            <div class="cli-titlebar"><span class="cli-elevated" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="m10 2 7 3v5c0 4-7 8-7 8s-7-4-7-8V5l7-3Z"/></svg></span><span class="cli-tab"><svg class="cli-terminal-icon" viewBox="0 0 20 20" aria-hidden="true"><path fill="#3574bf" d="M4 3h14l-3 14H1Z"/><path d="m7 6 4 4-6 4m5 0h4"/></svg><span class="cli-tab-label">Claude Code</span><button type="button" class="cli-tab-close" data-demo-action="close" aria-label="Close Claude demo session" title="Close demo session"><svg aria-hidden="true"><use href="#cu-close"/></svg></button></span><button type="button" class="cli-new-tab" data-demo-action="new-session" aria-label="New Claude demo session" title="New demo session"><svg aria-hidden="true"><use href="#cu-plus"/></svg></button><button type="button" class="cli-tab-menu" data-demo-menu="terminal" aria-label="Terminal demo menu" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></button><span class="cli-window-controls"><button type="button" data-demo-action="minimize" aria-label="Minimize demo" title="Minimize demo"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10"/></svg></button><button type="button" data-demo-action="maximize" aria-label="Toggle demo height" title="Toggle demo height"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="5" width="10" height="10"/></svg></button><button type="button" data-demo-action="close" aria-label="Close demo" title="Close demo"><svg aria-hidden="true"><use href="#cu-close"/></svg></button></span></div>
+            <div class="claude-console" data-flow-hide-on-result>
+              <div class="claude-stream" data-flow-scroll>
+                <div class="claude-session"><span class="claude-mark" aria-hidden="true">✻</span><div><p><strong>Claude Code</strong> <span class="claude-session-version">v2.1.251</span></p><p class="claude-session-meta"><button type="button" data-demo-menu="model" aria-label="Choose a Claude demo model" aria-haspopup="menu" aria-expanded="false"><span data-demo-model-label>Opus</span></button> · ~/bookmarks</p></div></div>
+                <div class="claude-message"><span aria-hidden="true">●</span><div><p>Review complete. Two changes to make:</p><ol><li><strong>Validate empty titles</strong><br><span>Check the input before saving to avoid blank bookmarks.</span></li><li><strong>Deduplicate the sorting logic</strong><br><span>Extract the repeated comparison into a shared function.</span></li></ol></div></div>
+                <div class="claude-message claude-sent" data-flow-sent hidden><span aria-hidden="true">❯</span><p data-flow-sent-text><span class="claude-skill-token" data-skill-sent-token>/html-reply</span><span data-skill-sent-request></span></p></div>
+                <div class="claude-tool" data-claude-tool hidden><span aria-hidden="true">●</span><div><p data-claude-tool-name>Skill(html-reply)</p><small data-claude-tool-detail>⎿ Loading skill…</small></div></div>
+                <div class="claude-working" data-flow-working hidden><span class="claude-spinner" aria-hidden="true">✻</span><span data-flow-work-label>Working…</span><span class="claude-work-hint">(<span data-claude-seconds>0</span>s · esc to interrupt)</span></div>
+                <div class="claude-message" data-flow-answer hidden><span aria-hidden="true">●</span><div><p data-terminal-copy>The HTML review report is ready.</p><p>Fix input validation first, then clean up the sorting logic.</p><div class="claude-reply-links"><a href="../../examples/en/history.html" target="_blank" rel="noopener">All replies</a><button type="button" data-flow-open><span>Current reply</span> ↗<svg class="flow-pointer" data-flow-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></button></div></div></div>
+                <div class="claude-composer" aria-label="Animated input; no real commands are executed">
+                  <div class="claude-input-line" data-demo-edit role="button" tabindex="0" aria-label="Edit the Claude demo request"><span aria-hidden="true">❯</span><div><span class="claude-placeholder" data-flow-placeholder>Try "explain this codebase"</span><span data-flow-draft><span data-skill-query></span><span class="claude-skill-token" data-skill-draft-token hidden>/html-reply</span><span data-skill-request></span></span><span class="claude-caret" data-flow-caret hidden></span></div></div>
+                  <div class="claude-manual-editor" data-demo-editor hidden><span aria-hidden="true">❯</span><textarea data-demo-input rows="1" spellcheck="false" aria-label="Claude demo request; no commands are executed" placeholder="Try &quot;explain this codebase&quot;"></textarea></div>
+                  <div class="claude-skill-picker" data-skill-picker role="listbox" aria-label="Claude Skill suggestions (demo)" hidden><button type="button" data-skill-choice role="option" aria-selected="true" aria-label="Select /html-reply"><span aria-hidden="true">❯</span><strong>/html-reply</strong><span class="claude-skill-description" data-terminal-copy>Create readable HTML replies with history</span></button></div>
+                  <div class="claude-footer"><button type="button" class="claude-permission" data-demo-menu="permission" aria-label="Choose a Claude demo permission mode" aria-haspopup="menu" aria-expanded="false"><span data-demo-permission-label>Manual</span></button><button type="button" data-demo-menu="shortcuts" aria-label="Show terminal demo shortcuts" aria-haspopup="menu" aria-expanded="false">? for shortcuts</button><span class="claude-send-hint" aria-hidden="true"><span data-flow-send>enter</span><span data-flow-stop hidden>esc</span><svg class="flow-pointer flow-send-pointer" data-flow-send-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></span></div>
+                </div>
+              </div>
+            </div>
+            <div class="claude-result-dock" data-result-dock="claude" hidden></div>
+          </div>
+          <div class="cursor-replica" data-cursor-screen data-workbench="cursor" role="group" aria-label="Interactive Cursor demo with working menus, files, and Agent controls">
+            <div class="cursor-titlebar">
+              <svg class="cursor-brand" aria-hidden="true"><use href="#cu-cube"/></svg>
+              <div class="cursor-menubar" role="menubar" aria-label="Cursor menu"><button type="button" role="menuitem" data-cursor-menu="file" aria-haspopup="menu" aria-expanded="false">File</button><button type="button" role="menuitem" data-cursor-menu="edit" aria-haspopup="menu" aria-expanded="false">Edit</button><button type="button" role="menuitem" data-cursor-menu="selection" aria-haspopup="menu" aria-expanded="false">Selection</button><button type="button" role="menuitem" data-cursor-menu="view" aria-haspopup="menu" aria-expanded="false">View</button><button type="button" role="menuitem" data-cursor-menu="go" aria-haspopup="menu" aria-expanded="false">Go</button><button type="button" role="menuitem" data-cursor-menu="run" aria-haspopup="menu" aria-expanded="false">Run</button><button type="button" role="menuitem" data-cursor-menu="terminal" aria-haspopup="menu" aria-expanded="false">Terminal</button><button type="button" role="menuitem" data-cursor-menu="help" aria-haspopup="menu" aria-expanded="false">Help</button></div>
+              <div class="cursor-navigation"><button type="button" data-cursor-action="back-file" aria-label="Go back" title="Go back" data-cursor-back disabled><svg aria-hidden="true"><use href="#cu-arrow"/></svg></button><button type="button" data-cursor-action="forward-file" aria-label="Go forward" title="Go forward" data-cursor-forward disabled><svg class="cursor-forward" aria-hidden="true"><use href="#cu-arrow"/></svg></button></div>
+              <span class="cursor-window-name">Bookmarks — Cursor</span>
+              <div class="cursor-title-actions"><button type="button" data-cursor-action="sidebar" aria-label="Toggle sidebar" title="Toggle sidebar" aria-pressed="true"><svg aria-hidden="true"><use href="#cu-panel"/></svg></button><button type="button" data-cursor-action="agent" aria-label="Toggle Agent panel" title="Toggle Agent panel" aria-pressed="true"><svg aria-hidden="true"><use href="#cu-chat"/></svg></button><button type="button" data-cursor-action="maximize-chat" aria-label="Expand Agent" title="Expand Agent" class="cursor-agents-window" aria-pressed="false">Agents Window ↗</button></div>
+              <div class="cursor-window-controls"><button type="button" data-cursor-action="minimize" aria-label="Collapse demo" title="Collapse demo" >—</button><button type="button" data-cursor-action="maximize" aria-label="Expand demo" title="Expand demo" aria-pressed="false">□</button><button type="button" data-cursor-action="close-window" aria-label="Close demo" title="Close demo" >×</button></div>
+            </div>
+            <div class="cursor-restore" data-cursor-restore hidden><button type="button" data-cursor-action="restore" aria-label="Reopen Cursor demo" title="Reopen Cursor demo" ><svg aria-hidden="true"><use href="#cu-cube"/></svg><span>Open Cursor demo</span></button></div>
+            <div class="cursor-workbench">
+              <aside class="cursor-explorer" aria-label="Demo project">
+                <div class="cursor-explorer-tools"><button type="button" data-cursor-action="explorer" aria-label="Explorer" title="Explorer" data-cursor-view="explorer" aria-pressed="true"><svg aria-hidden="true"><use href="#cu-file"/></svg></button><button type="button" data-cursor-action="search" aria-label="Search" title="Search" data-cursor-view="search" aria-pressed="false"><svg aria-hidden="true"><use href="#cu-search"/></svg></button><button type="button" data-cursor-action="source" aria-label="Source Control" title="Source Control" data-cursor-view="source" aria-pressed="false"><svg aria-hidden="true"><use href="#cu-branch"/></svg></button><button type="button" data-cursor-action="sidebar" aria-label="Collapse sidebar" title="Collapse sidebar" ><svg aria-hidden="true"><use href="#cu-panel"/></svg></button><button type="button" data-cursor-menu="views" aria-label="More views" title="More views" aria-haspopup="menu" aria-expanded="false">⌄</button></div>
+                <div data-cursor-pane="explorer">
+                  <button type="button" data-cursor-action="folder" aria-label="Expand or collapse BOOKMARKS" title="Expand or collapse BOOKMARKS" class="cursor-folder-title" aria-expanded="true" aria-controls="cursor-project-files"><span data-cursor-folder-chevron>⌄</span> BOOKMARKS</button>
+                  <nav id="cursor-project-files" data-cursor-project-files aria-label="File">
+                    <button type="button" data-cursor-action="skill-folder" aria-label="Expand .cursor folder" title="Expand .cursor folder" class="cursor-file-row" aria-expanded="false" aria-controls="cursor-skill-files"><span class="cursor-chevron" data-cursor-skill-chevron>›</span><span>.cursor</span></button>
+                    <div id="cursor-skill-files" class="cursor-nested-files" data-cursor-skill-files hidden><button type="button" class="cursor-file-row" data-cursor-file="skill"><span class="cursor-md">ⓘ</span><span>SKILL.md</span></button></div>
+                    <button type="button" class="cursor-file-row" data-cursor-file="bookmarks"><span class="cursor-ts">TS</span><span>bookmarks.ts</span></button>
+                    <button type="button" class="cursor-file-row" data-cursor-file="readme"><span class="cursor-md">ⓘ</span><span>README.md</span></button>
+                  </nav>
+                </div>
+                <div class="cursor-side-pane" data-cursor-pane="search" hidden><h4>SEARCH</h4><input type="search" data-cursor-search placeholder="Search" aria-label="Search demo files"><div data-cursor-search-results></div></div>
+                <div class="cursor-side-pane" data-cursor-pane="source" hidden><h4>SOURCE CONTROL</h4><p data-cursor-git-summary>No unsaved changes</p><div data-cursor-changes></div></div>
+                <div class="cursor-explorer-bottom">
+                  <button type="button" data-cursor-action="outline" aria-label="Expand outline" title="Expand outline" aria-expanded="false" aria-controls="cursor-outline"><span data-cursor-outline-chevron>›</span> OUTLINE</button>
+                  <div id="cursor-outline" data-cursor-outline hidden><button type="button" data-cursor-file="bookmarks" data-cursor-line="6">normalizeTitle</button><button type="button" data-cursor-file="bookmarks" data-cursor-line="12">sortBookmarks</button></div>
+                  <button type="button" data-cursor-action="timeline" aria-label="Expand file timeline" title="Expand file timeline" aria-expanded="false" aria-controls="cursor-timeline"><span data-cursor-timeline-chevron>›</span> TIMELINE</button>
+                  <div id="cursor-timeline" data-cursor-timeline hidden><button type="button" data-cursor-file="bookmarks">This demo · bookmarks.ts</button></div>
+                </div>
+              </aside>
+              <div class="cursor-editor">
+                <div class="cursor-editor-workspace" data-flow-hide-on-result>
+                  <div class="cursor-welcome" data-cursor-welcome><svg class="cursor-watermark" aria-hidden="true"><use href="#cu-cube"/></svg><div class="cursor-shortcuts">
+                    <button type="button" data-cursor-action="new-agent" aria-label="New Agent" title="New Agent" ><span>New Agent</span><kbd>Ctrl + Shift + L</kbd></button>
+                    <button type="button" data-cursor-action="terminal" aria-label="Toggle terminal panel" title="Toggle terminal panel" ><span>Show Terminal</span><kbd>Ctrl + J</kbd></button>
+                    <button type="button" data-cursor-action="quick-open" aria-label="Search files" title="Search files" ><span>Search Files</span><kbd>Ctrl + P</kbd></button>
+                    <button type="button" data-cursor-action="open-result" aria-label="Open HTML example" title="Open HTML example" ><span>Open Browser</span><kbd>Ctrl + Shift + B</kbd></button>
+                    <button type="button" data-cursor-action="maximize-chat" aria-label="Expand Agent" title="Expand Agent" ><span>Maximize Chat</span><kbd>Ctrl + Alt + E</kbd></button>
+                    <button type="button" data-cursor-action="workspace" aria-label="Open demo workspace" title="Open demo workspace" ><span>Open Folder</span><kbd>Ctrl + Alt + A</kbd></button>
+                  </div></div>
+                  <div class="cursor-file-editor" data-cursor-file-editor hidden>
+                    <div class="cursor-editor-tabs"><span class="cursor-editor-tab"><span data-cursor-file-name>bookmarks.ts</span><span data-cursor-dirty hidden>●</span><button type="button" data-cursor-action="close-file" aria-label="Close current file" title="Close current file" ><svg aria-hidden="true"><use href="#cu-close"/></svg></button></span></div>
+                    <div class="cursor-breadcrumb">bookmarks <span>›</span> <span data-cursor-file-path>bookmarks.ts</span></div>
+                    <div class="cursor-code-area"><pre data-cursor-lines aria-hidden="true"></pre><textarea data-cursor-code aria-label="Edit demo file; changes stay on this page" wrap="off" spellcheck="false" autocapitalize="off"></textarea></div>
+                  </div>
+                  <section class="cursor-terminal" data-cursor-terminal hidden aria-label="Simulated terminal; no real commands are executed">
+                    <div class="cursor-terminal-tabs"><strong>TERMINAL</strong><span>Demo</span><button type="button" data-cursor-action="clear-terminal" aria-label="Clear terminal" title="Clear terminal" ><svg aria-hidden="true"><use href="#cu-close"/></svg></button><button type="button" data-cursor-action="terminal" aria-label="Collapse terminal" title="Collapse terminal" >⌄</button></div>
+                    <pre data-cursor-terminal-output>PowerShell · Local demo. No system commands are executed.
+Type help to see the available examples.</pre>
+                    <label><span>PS C:\demo\bookmarks&gt;</span><input data-cursor-terminal-input aria-label="Simulated terminal command" spellcheck="false" autocomplete="off"></label>
+                  </section>
+                </div>
+                <div class="cursor-preview" data-result-dock="cursor" hidden></div>
+              </div>
+              <div class="cursor-agent">
+                <div class="cursor-agent-tabs"><span class="cursor-agent-tab"><button type="button" data-cursor-action="new-agent" aria-label="New Agent" title="New Agent" ><svg aria-hidden="true"><use href="#cu-chat"/></svg><span>New Agent</span></button><button type="button" data-cursor-action="agent" aria-label="Close Agent panel" title="Close Agent panel" ><svg aria-hidden="true"><use href="#cu-close"/></svg></button></span><span class="cursor-agent-tools"><button type="button" data-cursor-action="play" aria-label="Play or pause demo" title="Play or pause demo" data-cursor-play><svg aria-hidden="true"><use href="#cu-play"/></svg></button><button type="button" data-cursor-action="new-agent" aria-label="New Agent" title="New Agent" ><svg aria-hidden="true"><use href="#cu-plus"/></svg></button><button type="button" data-cursor-menu="history" aria-label="Conversation history" title="Conversation history" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#cu-clock"/></svg></button><button type="button" data-cursor-menu="agent" aria-label="More Agent actions" title="More actions" aria-haspopup="menu" aria-expanded="false">···</button><button type="button" data-cursor-action="maximize-chat" aria-label="Expand or restore Agent panel" title="Expand or restore Agent panel" aria-pressed="false"><svg aria-hidden="true"><use href="#cu-panel"/></svg></button></span></div>
+                <div class="cursor-thread" data-flow-scroll hidden>
+                  <div class="cursor-sent" data-flow-sent hidden><p data-flow-sent-text></p></div>
+                  <div class="cursor-working" data-flow-working hidden><span class="flow-spinner" aria-hidden="true"></span><span data-flow-work-label>Reading html-reply…</span><button type="button" data-flow-resume hidden>Resume</button></div>
+                  <div class="cursor-answer" data-flow-answer hidden>
+                    <p>The HTML review report is ready.</p>
+                    <p>Validate empty titles first, then deduplicate the sorting logic.</p>
+                    <button type="button" data-cursor-action="open-result" aria-label="Open Review report.html" title="Open Review report.html" class="cursor-created-file"><svg aria-hidden="true"><use href="#cu-file"/></svg><span>Review report.html</span><span>+1</span></button>
+                    <div class="cursor-reply-links"><a href="../../examples/en/history.html" target="_blank" rel="noopener">All replies</a><button type="button" data-flow-open>Current reply ↗<svg class="flow-pointer" data-flow-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></button></div>
+                  </div>
+                </div>
+                <div class="cursor-composer" aria-label="Agent demo input; no real requests are sent">
+                  <button type="button" class="cursor-input" data-cursor-action="edit-prompt" data-cursor-animated-input aria-label="Edit demo request"><span><span class="cursor-placeholder" data-flow-placeholder>Plan, Build, / for skills, @ for context</span><span data-flow-draft></span><span class="cursor-caret" data-flow-caret hidden></span></span></button>
+                  <textarea class="cursor-input cursor-prompt" data-cursor-prompt aria-label="Demo request; not sent to a model" placeholder="/html-reply Turn this review into HTML" spellcheck="false" hidden></textarea>
+                  <div class="cursor-context-chip" data-cursor-context-chip hidden><span>@ bookmarks.ts</span><button type="button" data-cursor-action="detach" aria-label="Remove file context" title="Remove file context" >×</button></div>
+                  <div class="cursor-composer-tools"><button type="button" class="cursor-mode" data-cursor-menu="mode" aria-label="Choose Agent mode" aria-haspopup="menu" aria-expanded="false"><span>∞</span> <span data-cursor-mode-label>Agent</span> ⌄</button><button type="button" class="cursor-model" data-cursor-menu="model" aria-label="Choose demo model" aria-haspopup="menu" aria-expanded="false"><span data-cursor-model-label>Cursor Grok 4.6 <span>High Fast</span></span> ⌄</button><span class="cursor-attachments"><button type="button" data-cursor-action="attach" aria-label="Add demo file context" title="Add demo file context" ><svg aria-hidden="true"><use href="#cu-paperclip"/></svg></button><button type="button" data-cursor-action="send" aria-label="Send demo request" title="Send demo request" class="cursor-send" data-cursor-send><span data-flow-send>↑</span><span data-flow-stop hidden>■</span><svg class="flow-pointer flow-send-pointer" data-flow-send-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></button></span></div>
+                </div>
+              </div>
+            </div>
+            <div class="cursor-statusbar"><span>&gt;&lt;</span><span>bookmarks</span><button type="button" data-cursor-action="source" aria-label="Show Source Control" title="Show Source Control" ><svg aria-hidden="true"><use href="#cu-branch"/></svg><span>main</span></button><span>⊗ 0　△ 0</span><span class="cursor-status-spacer"></span><span data-cursor-position>Ln 1, Col 1</span><span>UTF-8</span><span data-cursor-language>TypeScript</span><button type="button" data-cursor-action="agent" aria-label="Toggle Agent panel" title="Toggle Agent panel" ><svg aria-hidden="true"><use href="#cu-chat"/></svg></button></div>
+            <div class="cursor-popup" data-cursor-popup role="menu" aria-label="Cursor menu options" hidden></div>
+            <div class="cursor-palette" data-cursor-palette role="dialog" aria-label="Open demo file" hidden><input data-cursor-filter aria-label="Search by file name" placeholder="Search files by name" autocomplete="off"><div data-cursor-results></div></div>
+            <div class="cursor-toast" data-cursor-toast role="status" hidden></div>
+          </div>
+          <div class="codex-replica" data-workbench="app" role="group" aria-label="Codex Windows App workflow demo" hidden>
+            <div class="codex-menubar"><button type="button" class="codex-icon-button" data-demo-action="sidebar" aria-label="Toggle sidebar" title="Toggle sidebar" aria-pressed="true"><svg aria-hidden="true"><use href="#cu-panel"/></svg></button><button type="button" class="codex-icon-button" data-demo-action="back" aria-label="Back" title="Back" disabled><svg aria-hidden="true"><use href="#cu-arrow"/></svg></button><button type="button" class="codex-icon-button" data-demo-action="forward" aria-label="Go forward" title="Go forward" disabled><svg class="codex-forward" aria-hidden="true"><use href="#cu-arrow"/></svg></button><button type="button" data-demo-menu="file" aria-haspopup="menu" aria-expanded="false">File</button><button type="button" data-demo-menu="edit" aria-haspopup="menu" aria-expanded="false">Edit</button><button type="button" data-demo-menu="view" aria-haspopup="menu" aria-expanded="false">View</button><button type="button" data-demo-menu="help" aria-haspopup="menu" aria-expanded="false">Help</button><div class="codex-window-controls"><button type="button" data-demo-action="minimize" aria-label="Minimize demo" title="Minimize demo"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10"/></svg></button><button type="button" data-demo-action="maximize" aria-label="Toggle demo height" title="Toggle demo height"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="5" width="10" height="10"/></svg></button><button type="button" data-demo-action="close" aria-label="Close demo" title="Close demo"><svg aria-hidden="true"><use href="#cu-close"/></svg></button></div></div>
+            <div class="codex-layout">
+              <aside class="codex-sidebar" aria-label="Codex demo sidebar">
+                <div class="codex-brand"><button type="button" class="codex-brand-toggle" data-demo-menu="file" aria-label="Codex demo menu" aria-haspopup="menu" aria-expanded="false"><strong>Codex</strong><svg class="codex-brand-chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></button><button type="button" class="codex-icon-button codex-search" data-demo-menu="search" aria-label="Find public examples" title="Find public examples" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#cu-search"/></svg></button><button type="button" class="codex-icon-button" data-demo-action="notifications" aria-label="Demo notifications" title="Demo notifications"><svg class="codex-notification" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 8a5 5 0 0 1 10 0v4l2 3H3l2-3V8ZM8 18h4"/><circle cx="15" cy="4" r="2.5"/></svg></button></div>
+                <div class="codex-nav">
+                  <button type="button" data-demo-action="new-session"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M9 4H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-4M11 4l3 3M8 13l-3 1 1-3 8-8a2.1 2.1 0 0 1 3 3l-9 7Z"/></svg><span>New thread</span><svg class="codex-new-shortcut" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M7 10h6M10 7v6"/></svg></button>
+                  <button type="button" data-demo-action="pull-request"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="5" cy="4" r="2"/><circle cx="5" cy="16" r="2"/><circle cx="15" cy="16" r="2"/><path d="M5 6v8M15 14V8a4 4 0 0 0-4-4M13 2l-2 2 2 2"/></svg><span>Pull Request</span></button>
+                  <button type="button" data-demo-action="scheduled"><svg aria-hidden="true"><use href="#cu-clock"/></svg><span>Scheduled</span></button>
+                  <button type="button" data-demo-menu="plugins" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16 14.5a7.4 7.4 0 1 1 1.4-4.4v1.3a2.1 2.1 0 0 1-4.2 0V6.5M13.2 9.5a3.1 3.1 0 1 0-6.2 0 3.1 3.1 0 0 0 6.2 0Z"/></svg><span>Plugins</span></button>
+                  <button type="button" data-demo-menu="help" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4" cy="10" r=".8"/><circle cx="10" cy="10" r=".8"/><circle cx="16" cy="10" r=".8"/></svg><span>More</span></button>
+                </div>
+                <div class="codex-projects">
+                  <div class="codex-project-label">Projects</div>
+                  <div class="codex-project-group">
+                    <button type="button" class="codex-project" data-demo-action="project" aria-expanded="true"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h3l2 2h5a2 2 0 0 1 2 2v1M4 8h12a1 1 0 0 1 1 1.3l-1.5 6a2 2 0 0 1-2 1.7H4a2 2 0 0 1-2-2V9a1 1 0 0 1 1-1Z"/></svg><span>Bookmarks</span></button>
+                    <button type="button" class="codex-selected-task" data-demo-action="conversation" aria-current="page"><span>Prepare review report</span><span class="codex-task-status" aria-hidden="true"></span></button>
+                    <button type="button" class="codex-recent-task" data-demo-file="review.html" aria-label="Open the bookmark review HTML"><span>Review bookmarks</span></button>
+                  </div>
+                  <div class="codex-project-group">
+                    <button type="button" class="codex-project" data-demo-action="project" aria-expanded="true"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5a2 2 0 0 1 2-2h3l2 2h5a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5ZM3 8h14"/></svg><span>Study notes</span></button>
+                    <button type="button" class="codex-recent-task" data-demo-file="explain.html" aria-label="Open the caching walkthrough HTML"><span>Understand caching</span></button>
+                    <button type="button" class="codex-recent-task" data-demo-file="form.html" aria-label="Open the learning plan HTML"><span>Plan a learning session</span></button>
+                  </div>
+                  <div class="codex-project-group">
+                    <button type="button" class="codex-project" data-demo-action="project" aria-expanded="true"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5a2 2 0 0 1 2-2h3l2 2h5a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5ZM3 8h14"/></svg><span>Personal site</span></button>
+                    <button type="button" class="codex-recent-task" data-demo-file="compare.html" aria-label="Open the comparison HTML"><span>Compare homepage options</span></button>
+                  </div>
+                </div>
+                <div class="codex-user"><button type="button" class="codex-user-account" data-demo-menu="account" aria-label="Demo user menu" aria-haspopup="menu" aria-expanded="false"><span class="codex-avatar">M</span><span class="codex-user-name">Demo user</span></button><button type="button" class="codex-voice" data-demo-action="voice"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8v4M6 4v12M10 2v16M14 5v10M17 8v4"/></svg>Voice</button><button type="button" class="codex-help codex-icon-button" data-demo-menu="help" aria-label="Demo help" title="Demo help" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M7.5 7a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4M10 14v.5"/></svg></button></div>
+              </aside>
+              <div class="codex-chat">
+                <div class="codex-chat-header"><span class="codex-chat-heading"><svg aria-hidden="true"><use href="#cu-folder"/></svg><span class="codex-thread-title">Prepare review report</span><button type="button" class="codex-thread-more" data-demo-menu="conversation" aria-label="Conversation actions" aria-haspopup="menu" aria-expanded="false">···</button></span><span class="codex-chat-actions"><button type="button" data-demo-action="share"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 13V2m-4 4 4-4 4 4M4 9v8h12V9"/></svg>Share</button><button type="button" class="codex-icon-button" data-demo-action="preview" aria-label="Open or close HTML preview" title="Open or close HTML preview"><svg aria-hidden="true"><use href="#cu-panel"/></svg></button></span></div>
+                <div class="codex-stream" data-flow-scroll>
+                  <div class="codex-thread">
+                  <div class="codex-user-message"><p>Review this bookmark app and list what needs to change.</p></div>
+                  <div class="codex-context"><p>Review complete. Two changes to make:</p><ol class="codex-findings"><li><strong>Validate empty titles</strong><p>Validate the input before saving to avoid blank bookmarks.</p></li><li><strong>Deduplicate the sorting logic</strong><p>Extract a comparison function so both lists share the same sorting logic.</p></li></ol></div>
+                  <div class="codex-message-actions"><button type="button" class="codex-icon-button" data-demo-action="copy" aria-label="Copy review summary" title="Copy review summary"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="7" y="7" width="10" height="11" rx="2"/><path d="M13 7V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg></button></div>
+                  <div class="codex-sent" data-flow-sent hidden><p data-flow-sent-text><span class="codex-skill-token" data-skill-sent-token><svg aria-hidden="true"><use href="#cu-file"/></svg>HTML Reply</span><span data-skill-sent-request></span></p></div>
+                  <div class="codex-working" data-flow-working hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 5 5 5-5 5"/></svg><span data-flow-work-label>Reading html-reply…</span></div>
+                  <div class="codex-answer" data-flow-answer hidden><p>The HTML review report is ready. Validate empty titles first, then deduplicate the sorting logic.</p><div class="codex-reply-links"><a href="../../examples/en/history.html" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#cu-globe"/></svg>All replies</a><button type="button" data-flow-open><svg aria-hidden="true"><use href="#cu-file"/></svg>Current reply ↗<svg class="flow-pointer" data-flow-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></button></div></div>
+                  </div>
+                </div>
+                <div class="codex-composer" aria-label="Animated input; no real requests are sent">
+                  <div class="codex-skill-picker" data-skill-picker role="listbox" aria-label="Skill suggestions" hidden><button type="button" data-skill-choice role="option" aria-selected="true" aria-label="Select HTML Reply"><svg aria-hidden="true"><use href="#cu-file"/></svg><strong>HTML Reply</strong><span class="codex-skill-description">Create refreshable HTML replies with history when explicitly requested</span><span class="codex-skill-scope">Personal</span></button></div>
+                  <div class="codex-input" data-demo-edit role="button" tabindex="0" aria-label="Edit demo request"><span class="codex-placeholder" data-flow-placeholder>Ask anything</span><span data-flow-draft><span data-skill-query></span><span class="codex-skill-token" data-skill-draft-token hidden><svg aria-hidden="true"><use href="#cu-file"/></svg><span data-skill-label></span></span><span data-skill-request></span></span><span class="codex-caret" data-flow-caret hidden></span></div>
+                  <div class="codex-manual-editor" data-demo-editor hidden><span class="codex-skill-token" data-demo-bound-token hidden><svg aria-hidden="true"><use href="#cu-file"/></svg>HTML Reply</span><textarea data-demo-input rows="1" spellcheck="false" aria-label="Codex App demo request; not sent to a model" placeholder="Ask anything"></textarea></div>
+                  <div class="codex-attachment" data-demo-attachment hidden><span>bookmarks.ts</span><button type="button" data-demo-action="detach" aria-label="Remove demo attachment">×</button></div>
+                  <div class="codex-composer-tools"><button type="button" class="codex-tool" data-demo-menu="attach" aria-label="Add demo context" title="Add demo context" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#cu-plus"/></svg></button><button type="button" class="codex-permission" data-demo-menu="permission" aria-label="Demo permissions" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#cu-shield"/></svg><span class="codex-permission-label" data-demo-permission-label>Permissions</span><svg class="codex-down" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></button><button type="button" class="codex-model" data-demo-menu="model" aria-label="Demo model and reasoning effort" aria-haspopup="menu" aria-expanded="false"><span data-demo-model-label>5.6 Sol</span><span class="codex-effort" data-demo-effort>Ultra</span><svg class="codex-down" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></button><button type="button" class="codex-tool" data-demo-action="voice" aria-label="Demo voice input" title="Demo voice input"><svg aria-hidden="true"><use href="#cu-mic"/></svg></button><button type="button" class="codex-send" data-demo-action="send" aria-label="Send demo request" title="Send demo request"><span data-flow-send><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 15V4m-5 5 5-5 5 5"/></svg><svg class="codex-idle-voice" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 8v4M7 4v12M10 6v8M13 3v14M16 7v6"/></svg></span><span data-flow-stop hidden><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="6" y="6" width="8" height="8" rx="1" fill="currentColor" stroke="none"/></svg></span><svg class="flow-pointer flow-send-pointer" data-flow-send-pointer viewBox="0 0 24 28" aria-hidden="true"><path d="M3 2 20 17 12 18 8 25Z"/></svg></button></div>
+                </div>
+                <div class="codex-environment"><button type="button" data-demo-action="local"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="3" width="16" height="11" rx="1"/><path d="M10 14v3M6 17h8"/></svg>Local</button><button type="button" data-demo-menu="branch" aria-label="Demo branch" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#cu-branch"/></svg> main⌄</button></div>
+              </div>
+              <div class="codex-browser" data-result-dock="app" hidden></div>
+            </div>
+          </div>
+          <section class="usage-result" data-usage-result aria-label="Generated public HTML example" hidden>
+            <div class="usage-result-tab"><div class="usage-browser-tab"><svg aria-hidden="true"><use href="#cu-globe"/></svg><span data-usage-result-title>Review report.html</span><button type="button" class="usage-browser-close" data-usage-close aria-label="Close preview and return to the conversation" title="Close preview"><svg aria-hidden="true"><use href="#cu-close"/></svg></button></div><button type="button" class="usage-browser-new" data-usage-preview-menu aria-label="Choose another public example" title="Choose another public example" aria-haspopup="menu" aria-expanded="false"><svg aria-hidden="true"><use href="#cu-plus"/></svg></button>
+              <div class="usage-preview-menu" data-usage-file-menu role="menu" aria-label="Public examples" hidden><button type="button" role="menuitem" data-usage-file="review.html">Review report</button><button type="button" role="menuitem" data-usage-file="compare.html">Option comparison</button><button type="button" role="menuitem" data-usage-file="explain.html">Understanding caching</button><button type="button" role="menuitem" data-usage-file="form.html">Learning plan</button><button type="button" role="menuitem" data-usage-file="history.html">All replies</button></div>
+            </div>
+            <div class="usage-result-toolbar"><button type="button" data-usage-back aria-label="Back to the demo conversation">← Back</button><button class="codex-browser-action" type="button" data-usage-forward disabled aria-label="No page to go forward to"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></button><button class="codex-browser-action" type="button" data-usage-refresh aria-label="Reload the current HTML example"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16 8a6 6 0 1 0 0 5M16 3v5h-5"/></svg></button><span class="usage-result-address" aria-hidden="true">Review report.html</span><a href="../../examples/en/review.html" target="_blank" rel="noopener" aria-label="Open the review report in a new tab">Open in a new tab ↗</a></div>
+            <div class="usage-result-viewport"><iframe data-usage-frame data-src="../../examples/en/review.html" title="HTML Reply review report (fictional public example)" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div>
+          </section>
+          </div>
+          <div class="usage-controls">
+            <div class="usage-chapters" role="group" aria-label="Jump to a demo step">
+              <button type="button" data-usage-step="0" aria-current="step">Write a request</button>
+              <button type="button" data-usage-step="1">Send request</button>
+              <button type="button" data-usage-step="2">Generate HTML</button>
+              <button type="button" data-usage-step="3">Open result</button>
+            </div>
+            <div class="usage-playback"><button type="button" data-usage-toggle aria-label="Play the workflow demo">Play</button><button type="button" data-usage-replay>Replay ↻</button></div>
+          </div>
+          <div class="usage-progress" aria-hidden="true"><div data-usage-progress></div></div>
+          <p class="usage-load-feedback" data-usage-load-feedback role="status" hidden><span data-usage-load-message>Opening the public example…</span> <button type="button" data-usage-retry hidden>Retry</button> <a data-usage-fallback href="../../examples/en/review.html" target="_blank" rel="noopener">Open in a new tab ↗</a></p>
+          <p class="usage-a11y-status" data-usage-status role="status">Demo: type /html-reply and your request in the Cursor Agent input.</p>
+          <noscript><p>Enable JavaScript to play the demo. In Codex, type  <code>$html-reply Turn this review into HTML. Start with the conclusion, then list the suggested changes.</code>, send it, then open “Current reply”.</p></noscript>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="privacy" id="storage"><div class="wrap">
+      <div class="privacy-head"><div><h2>Your history stays on your device.</h2></div><p>One user data directory, outside your projects. Inside, files are grouped by workspace and conversation.</p></div>
+      <div class="privacy-grid">
+        <div class="folder"><span class="folder-tag">Outside your repo :)</span><div data-tabs><div class="os-tabs" role="tablist" aria-label="Storage location by operating system"><button id="path-tab-win" type="button" role="tab" aria-controls="path-win" aria-selected="true">Windows</button><button id="path-tab-unix" type="button" role="tab" aria-controls="path-unix" aria-selected="false" tabindex="-1">macOS / Linux</button></div><p class="root" id="path-win" role="tabpanel" aria-labelledby="path-tab-win">%USERPROFILE%\.codex\html-reply\</p><p class="root" id="path-unix" role="tabpanel" aria-labelledby="path-tab-unix" hidden>~/.codex/html-reply/</p></div>
+<pre>└─ workspaces/
+   └─ &lt;workspace-fingerprint&gt;/
+      └─ threads/
+         └─ &lt;thread-id&gt;/
+            ├─ reply-&lt;ID&gt;.html
+            ├─ history-&lt;ID&gt;.html
+            ├─ archive/  ← older replies
+            ├─ assets/   ← page assets
+            └─ session.json</pre><p>This is the default location. Workspace fingerprints come from absolute paths, so moving a project creates a new group. Custom settings can change the root directory.</p></div>
+        <div class="safety-notes">
+          <article><span class="check">✓</span><div><h3>Your commits leave your history behind</h3><p>Data lives outside the repository, without relying on .gitignore. The publisher rejects data directories inside Git worktrees. If it cannot write there, it reports an error instead of falling back to the project.</p></div></article>
+          <article><span class="check">!</span><div><h3>Local does not mean encrypted</h3><p>HTML pages are ordinary files. Prompt summaries filter common passwords and keys, but the body, code, and images are not fully redacted automatically. Review a page before sharing it.</p></div></article>
+          <article><span class="check">↓</span><div><h3>Form answers go to your downloads</h3><p>Forms try to keep drafts in browser storage. Your browser downloads the JSON answers separately from the history directory shown here. You need to give the answer file to your assistant yourself.</p></div></article>
+          <article><span class="check">i</span><div><h3>Local files do not mean an offline model</h3><p>The page has no built-in upload endpoint, but generation still uses your workbench’s model service. Local HTML does not mean the entire conversation is processed on your device.</p></div></article>
+        </div>
+      </div>
+    </div></section>
+    <div class="wrap last-note"><p>Give your next great answer a page of its own.</p><a class="btn orange" href="#usage">See how to use it ↑</a></div>
+  </main>
+  <footer class="wrap foot"><span>HTML Reply · Sketchbook edition</span><a href="index.html" hreflang="zh-CN" data-language-link>Chinese version</a><a href="https://github.com/Michel-Johnson/HTML-Skill">View source ↗</a></footer>
+</body>
+</html>

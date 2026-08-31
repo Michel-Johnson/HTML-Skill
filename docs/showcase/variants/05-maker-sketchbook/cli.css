@@ -1,0 +1,96 @@
+/* 固定参照：用户提供的1103×614原生终端截图；CSS像素保持原字号，不缩放工作台。 */
+@font-face {
+  font-family: "Showcase Cascadia Mono";
+  src: url("./fonts/CascadiaMono.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+}
+.cli-replica { --cli-row: 19px; --cli-cell: 9px; --cli-gutter: 18px; height: 614px; min-width: 0; display: flex; flex-direction: column; overflow: hidden; border: 0; border-radius: 8px; background: #0c0c0c; color: #ccc; box-shadow: none; font: 400 16px/var(--cli-row) "Showcase Cascadia Mono", "Cascadia Mono", "Cascadia Code", Consolas, "Microsoft YaHei UI", monospace; font-variant-ligatures: none; font-variant-numeric: tabular-nums; font-kerning: none; font-synthesis: none; letter-spacing: calc(var(--cli-cell) - 1ch); text-align: left; }
+.cli-titlebar { display: flex; align-items: center; height: 37px; gap: 0; background: #2e2e2e; color: #eee; font: 12px/1 "Segoe UI", sans-serif; letter-spacing: normal; flex: none; }
+.cli-titlebar button { display: grid; place-items: center; align-self: stretch; flex: none; padding: 0; border: 0; border-radius: 0; background: none; color: inherit; font: inherit; }
+.cli-titlebar button:hover { background: #ffffff16; }
+.cli-titlebar button[data-demo-action="close"]:hover { background: #c42b1c; color: #fff; }
+.cli-titlebar button svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.2; }
+.cli-elevated { display: grid; place-items: center; width: 29px; flex: none; color: #aaa; }
+.cli-elevated svg { width: 16px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.2; }
+.cli-tab { display: flex; align-items: center; gap: 8px; align-self: stretch; flex: 0 1 240px; min-width: 0; width: 240px; max-width: 48%; margin-top: 5px; padding: 0 9px; background: #0c0c0c; border-radius: 8px 8px 0 0; font-weight: 600; }
+.cli-terminal-icon { width: 18px; height: 18px; flex: none; fill: none; stroke: #fff; stroke-width: 1.3; }
+.cli-terminal-icon path:first-child { stroke: none; }
+.cli-tab-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cli-titlebar .cli-tab-close { align-self: center; margin-left: auto; width: 28px; height: 28px; border-radius: 4px; color: #ddd; }
+.cli-new-tab { width: 38px; text-align: center; font-size: 19px; font-weight: 300; }
+.cli-tab-menu { width: 25px; border-left: 1px solid #ffffff14; text-align: center; font-size: 13px; color: #ccc; }
+.cli-window-controls { margin-left: auto; display: flex; align-self: stretch; align-items: center; }
+.cli-window-controls button { width: 46px; }
+.cli-replica .usage-workbench { display: flex; flex: 1; min-height: 0; }
+.cli-replica .usage-conversation { padding: 17px 6px 0; min-width: 0; min-height: 0; display: flex; width: 100%; }
+.cli-replica .usage-stream { display: flex; flex-direction: column; min-width: 0; min-height: 0; flex: 1; overflow: auto; padding-bottom: 24px; scrollbar-width: thin; scrollbar-color: #555 transparent; }
+.cli-replica .usage-stream > * { flex: none; }
+/* x=10，y=54；2px边框+上下17px内距+四行19px=97px。 */
+.cli-session { width: min(calc(100% - 8px), 452px); margin: 0 0 26px 4px; padding: 8px 12px 9px; border: 2px solid #666; border-radius: 5px; }
+.cli-session-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--cli-cell); }
+.cli-session-title strong { color: #eee; font-weight: 700; }
+.cli-session-title > span, .cli-session-prompt { color: #666; }
+.cli-session dl { margin: var(--cli-row) 0 0; }
+.cli-session dl > div { display: grid; grid-template-columns: 99px minmax(0, 1fr); }
+.cli-session dt { color: #666; }
+.cli-session dd { margin: 0; white-space: nowrap; }
+.cli-session .cli-model-help { color: #666; margin-left: calc(var(--cli-cell) * 2); }
+.cli-command { color: #3a96dd; }
+.cli-session button, .cli-replica .usage-input-actions button { border: 0; padding: 0; background: none; font: inherit; letter-spacing: inherit; }
+.cli-session button:hover, .cli-replica .usage-input-actions button:hover { text-decoration: underline; text-underline-offset: 3px; }
+.cli-skill-token { color: #61d6d6; }
+.cli-output { display: grid; grid-template-columns: var(--cli-gutter) minmax(0, 1fr); gap: 0; padding: 0; }
+.cli-bullet { color: #666; }
+.cli-output p { margin: 0 0 var(--cli-row); }
+.cli-output ol { padding-left: calc(var(--cli-cell) * 3); margin: 0; }
+.cli-output li { margin: 0 0 var(--cli-row); padding: 0; }
+.cli-output li:last-child { margin-bottom: 0; }
+.cli-output li::marker { font: inherit; font-variant-numeric: tabular-nums; }
+.cli-output strong { font-weight: 600; color: #eee; }
+/* 终端的全角字符占两格；不要将校准拉丁字宽的负字距套到中文上。 */
+.terminal-cjk { letter-spacing: calc(var(--cli-cell) * 2 - 1em); }
+/* 原生输入是无底色的一行终端文本，模型/目录状态紧随其后。 */
+.cli-replica .usage-composer { position: relative; margin-top: calc(var(--cli-row) * 2); }
+.cli-replica .usage-input-line { display: grid; grid-template-columns: var(--cli-gutter) minmax(0, 1fr); align-items: baseline; gap: 0; min-height: var(--cli-row); padding: 0; background: transparent; line-height: var(--cli-row); overflow-wrap: anywhere; }
+.cli-replica .usage-input-line > div { min-width: 0; }
+.cli-manual-editor { display: grid; grid-template-columns: var(--cli-gutter) minmax(0, 1fr); align-items: baseline; }
+.cli-prompt { color: #881798; font-weight: 600; }
+.cli-replica .usage-placeholder { color: #666; }
+.cli-replica .usage-caret { display: inline-block; height: 18px; width: 1px; background: #ccc; vertical-align: -3px; animation: usage-caret 1s steps(1) infinite; }
+.cli-replica .usage-input-actions { display: flex; align-items: center; justify-content: flex-start; gap: var(--cli-cell); margin-top: var(--cli-row); padding: 0 0 0 var(--cli-gutter); color: #666; font-size: inherit; line-height: var(--cli-row); }
+.cli-status-model { color: #f6e2b7; white-space: nowrap; }
+.cli-status-path { color: #abdfa7; }
+.cli-skill-picker { margin-top: 8px; }
+.cli-skill-picker button { display: flex; align-items: baseline; gap: var(--cli-cell); width: 100%; padding: 0 var(--cli-gutter) 0 0; border: 0; color: #61d6d6; background: #242424; font: inherit; letter-spacing: inherit; line-height: var(--cli-row); text-align: left; }
+.cli-skill-picker button > span:first-child { width: var(--cli-gutter); flex: none; margin-right: calc(var(--cli-cell) * -1); }
+.cli-skill-picker strong { font-weight: 600; white-space: nowrap; }
+.cli-skill-description { color: #999; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cli-skill-hint { display: flex; gap: calc(var(--cli-cell) * 3); padding: var(--cli-row) 0 0 var(--cli-gutter); color: #666; font-size: inherit; }
+.cli-replica:has([data-skill-picker]:not([hidden])) .usage-input-actions { display: none; }
+.cli-skill-picker button:hover, .cli-replica[data-skill-phase="choosing"] .cli-skill-picker button { background: #383838; }
+.cli-replica .usage-send { display: none; }
+/* CLI使用Enter发送，不演示鼠标点击一个并不存在的发送按钮。 */
+.cli-replica .flow-send-pointer { display: none; }
+.cli-replica .usage-sent { display: grid; grid-template-columns: var(--cli-gutter) minmax(0, 1fr); gap: 0; margin: calc(var(--cli-row) * 2) 0 0; padding: 0; background: transparent; }
+.cli-replica .usage-sent > span { color: #666; }
+.cli-replica .usage-sent p { margin: 0; overflow-wrap: anywhere; }
+.cli-replica .usage-working { display: grid; grid-template-columns: var(--cli-gutter) minmax(0, 1fr); align-items: baseline; gap: 0; margin: var(--cli-row) 0 0; padding: 0; color: #ccc; }
+.cli-working-mark { display: inline-block; color: #666; animation: cli-thinking 1.2s steps(4) infinite; }
+.cli-work-hint { color: #666; white-space: nowrap; }
+.cli-replica .usage-answer { margin-top: var(--cli-row); }
+.cli-replica .usage-reply-links { display: flex; align-items: center; flex-wrap: wrap; gap: calc(var(--cli-cell) * 2); margin: 0; }
+.cli-replica .usage-reply-links a, .cli-replica .usage-reply-links button { color: #61d6d6; }
+.cli-replica .usage-reply-links button { position: relative; border: 0; padding: 0; background: none; font: inherit; letter-spacing: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.cli-result-dock { display: flex; flex: 1; min-height: 0; }
+.usage-player[data-running="false"] .cli-working-mark { animation-play-state: paused; }
+@keyframes cli-thinking { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+@media (max-width: 700px) { .cli-window-controls button { width: 31px; } }
+@media (max-width: 500px) {
+  .cli-session dd { white-space: normal; overflow-wrap: anywhere; }
+  .cli-session .cli-model-help { display: block; margin-left: 0; }
+  .cli-replica .usage-input-actions { flex-wrap: wrap; row-gap: 0; }
+  .cli-skill-hint { flex-wrap: wrap; column-gap: calc(var(--cli-cell) * 2); }
+}
+@media (prefers-reduced-motion: reduce) { .cli-working-mark { animation: none; } }

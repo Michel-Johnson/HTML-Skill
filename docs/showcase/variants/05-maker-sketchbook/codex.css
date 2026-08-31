@@ -1,0 +1,213 @@
+/* 对照用户a5e98c75同屏截图：真实App在左，旧复刻在右。 */
+/* 中文与拉丁文分别匹配；字重由区域和语义决定，不把侧栏字重扩散到正文。 */
+@font-face {
+  font-family: "Codex UI CJK";
+  src: url("./fonts/NotoSansSC-UI.woff") format("woff");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: block;
+  unicode-range: U+2E80-9FFF, U+F900-FAFF, U+FF00-FFEF;
+}
+/* 仅重绘公开界面；不复制本机对话、用户名、配置或打包资源。 */
+/* 菜单与会话分别定字号；正文行高沿原生Markdown的1.625，不继承宣传页排版。 */
+.codex-replica {
+  --cx-bg: #181818; --cx-sidebar: #1a2227; --cx-line: #ffffff15; --cx-muted: #b5b5b5; --cx-dim: #798184;
+  --cx-control: #2a2a2a; --cx-menu: #363636; --cx-skill: #ad7bf9;
+  --cx-selected: #2c3336; --cx-tab: #242424;
+  --cx-content: 768px; --cx-inset: 16px; --cx-text-inset: 14px; --cx-side-width: 232px; --cx-chat-pane: 375px;
+  --cx-preview-offset: calc(var(--cx-side-width) + var(--cx-chat-pane));
+  --cx-chat-size: 14px; --cx-chat-line: 23px;
+  display: flex; flex-direction: column; width: 100%; height: 800px; min-width: 0; overflow: hidden;
+  border: 0; border-radius: 8px; color: #e4e4e4; background: linear-gradient(180deg, var(--cx-sidebar), #1a2226 10%, #1a2226 55%, #1a2225 60%, #1a2324 70%, #1b231f 80%, #1b231a 90%, #1c231a);
+  font: 400 14px/21px "Codex UI CJK", "Segoe UI", "Noto Sans SC", sans-serif;
+  font-variation-settings: normal; font-synthesis: none;
+  letter-spacing: normal; text-align: left; box-shadow: none;
+}
+:where(.codex-replica) button { border: 0; padding: 0; background: none; color: inherit; font: inherit; font-variation-settings: inherit; text-align: inherit; }
+.codex-replica button:disabled { opacity: .4; cursor: default; }
+.codex-icon-button { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 5px; flex: none; }
+.codex-icon-button:hover, .codex-menubar > button:hover, .codex-composer-tools button:not(.codex-send):hover { background: #ffffff0d; }
+/* 原生侧栏中文偏实，聊天正文保持常规；可变字体的normal才能响应strong字重。 */
+.codex-menubar, .codex-sidebar { font-variation-settings: "wght" 600; }
+.codex-chat { font-variation-settings: normal; font-weight: 400; }
+.codex-replica svg { display: inline-block; width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; }
+.codex-menubar { display: flex; align-items: center; gap: 0; height: 35px; padding-left: 0; color: #979fa1; flex: none; }
+.codex-menubar > button { height: 35px; padding-inline: 11px; font-size: 14px; }
+.codex-menubar > .codex-icon-button { width: 32px; padding: 0; }
+.codex-forward { rotate: 180deg; }
+.codex-window-controls { margin-left: auto; height: 35px; display: flex; align-items: center; color: var(--cx-muted); }
+.codex-window-controls button { display: grid; place-items: center; width: 46px; height: 35px; }
+.codex-window-controls button:hover { background: #ffffff16; }
+.codex-window-controls button[data-demo-action="close"]:hover { background: #c42b1c; color: #fff; }
+.codex-window-controls svg { width: 14px; height: 14px; }
+.codex-layout { display: grid; grid-template-columns: var(--cx-side-width) minmax(0, 1fr); flex: 1; min-height: 0; }
+.codex-sidebar { display: flex; flex-direction: column; min-width: 0; min-height: 0; padding: 0 8px 0 0; color: #dddedf; }
+.codex-brand { display: flex; align-items: center; gap: 4px; height: 48px; padding: 0 8px; flex: none; }
+.codex-brand strong { color: #dddedf; font-size: 18px; font-weight: 700; letter-spacing: -.6px; }
+.codex-brand-toggle { display: inline-flex; align-items: center; gap: 4px; }
+.codex-brand svg { color: var(--cx-dim); }
+.codex-brand .codex-brand-chevron { width: 12px; height: 12px; margin-top: 3px; }
+.codex-brand .codex-search { margin-left: auto; }
+.codex-brand .codex-notification { margin-left: 0; }
+.codex-notification circle { fill: #3a8cff; stroke: var(--cx-sidebar); stroke-width: 1px; }
+.codex-nav { display: grid; gap: 0; flex: none; }
+.codex-nav > button { display: flex; align-items: center; gap: 8px; height: 31px; padding-inline: 8px; border-radius: 6px; font-weight: 400; }
+.codex-nav > button:hover, .codex-recent-task:hover, .codex-project:hover { background: #ffffff08; }
+.codex-nav > button > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.codex-nav svg { color: #cdcdcd; }
+.codex-nav .codex-new-shortcut { margin-left: auto; width: 14px; height: 14px; color: var(--cx-dim); }
+.codex-projects { flex: 1; min-height: 0; padding-right: 16px; overflow: auto; scrollbar-width: thin; scrollbar-color: #ffffff10 transparent; }
+.codex-project-label { margin: 16px 8px 8px; color: var(--cx-dim); font-size: 14px; }
+.codex-project-group { margin-bottom: 16px; }
+.codex-project { display: flex; align-items: center; gap: 8px; width: 100%; height: 31px; min-width: 0; padding: 5px 8px; border-radius: 6px; color: #dddedf; font-weight: 400; }
+.codex-project svg { width: 16px; height: 16px; color: var(--cx-muted); }
+.codex-project > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* 同屏真实界面的名称从32px起始，选中背景从侧栏左缘开始。 */
+.codex-selected-task, .codex-recent-task { display: flex; align-items: center; gap: 8px; width: 100%; height: 31px; min-width: 0; padding: 5px 12px 5px 32px; border-radius: 8px; color: #dddedf; font-weight: 400; }
+.codex-selected-task { background: var(--cx-selected); }
+.codex-selected-task > span:first-child, .codex-recent-task > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.codex-task-status { display: none; width: 12px; height: 12px; margin-left: auto; flex: none; }
+.usage-player[data-phase="working"] .codex-task-status { display: block; border: 1.5px solid #a0acac; border-top-color: transparent; border-radius: 50%; animation: usage-spin 1s linear infinite; }
+.codex-user { display: flex; align-items: center; gap: 8px; min-height: 44px; margin-top: auto; padding: 10px 8px; border-top: 1px solid #ffffff0a; color: #dce2df; flex: none; }
+.codex-user-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.codex-user-account { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.codex-avatar { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #d8dec2; color: #56644c; font-size: 11px; flex: none; }
+.codex-voice { display: flex; align-items: center; gap: 4px; margin-left: auto; white-space: nowrap; color: #9ba59f; }
+.codex-voice svg { width: 14px; height: 14px; }
+.codex-user .codex-help { width: 20px; height: 24px; margin-left: 4px; color: #9ba59f; }
+.codex-help svg { width: 14px; height: 14px; }
+.codex-chat { min-width: 0; min-height: 0; display: flex; flex-direction: column; background: var(--cx-bg); border-top-left-radius: 16px; border-left: 1px solid #ffffff15; overflow: hidden; container: codex-chat / inline-size; }
+.codex-chat-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 46px; padding: 0 16px; border-bottom: 1px solid var(--cx-line); flex: none; }
+.codex-chat-heading { display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 600; }
+.codex-thread-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.codex-thread-more { margin-left: 4px; color: #999; flex: none; font-weight: 400; }
+.codex-chat-heading > svg { color: #aaa; }
+.codex-chat-actions { display: flex; align-items: center; gap: 18px; color: #b0b0b0; font-size: 12px; white-space: nowrap; flex: none; }
+.codex-chat-actions > button { display: flex; align-items: center; gap: 6px; }
+.codex-stream { flex: 1; min-height: 0; overflow: auto; padding: 32px 0 24px; scrollbar-width: thin; scrollbar-color: #454545 transparent; }
+/* 同屏参照的回复内距32px，输入文字内距30px，二者不是同一个起点。 */
+.codex-thread { display: flow-root; width: 100%; max-width: var(--cx-content); min-width: 0; padding-inline: 32px; margin-inline: auto; font-size: var(--cx-chat-size); line-height: var(--cx-chat-line); }
+.codex-user-message, .codex-sent { width: fit-content; max-width: 90%; margin: 0 0 28px auto; padding: 10px 16px; background: #272727; border-radius: 18px; overflow-wrap: anywhere; }
+.codex-user-message p, .codex-sent p { margin: 0; }
+.codex-context p { margin: 0 0 16px; }
+.codex-context, .codex-answer { overflow-wrap: anywhere; }
+.codex-replica[data-demo-new-session="true"] .codex-user-message, .codex-replica[data-demo-new-session="true"] .codex-context, .codex-replica[data-demo-new-session="true"] .codex-message-actions { display: none; }
+.codex-findings { margin: 16px 0 0; padding-left: var(--cx-chat-line); }
+.codex-findings li { padding-left: 6px; margin-bottom: 16px; }
+.codex-findings li:last-child { margin-bottom: 0; }
+.codex-findings li::marker { font-weight: 400; font-variant-numeric: tabular-nums; }
+.codex-findings strong { color: #ececec; font-weight: 600; }
+.codex-findings p { color: #d0d0d0; margin: 4px 0 0; }
+.codex-message-actions { display: flex; color: #8b8b8b; margin: 18px 0 24px; }
+.codex-message-actions svg { width: 14px; height: 14px; }
+.codex-message-actions .codex-icon-button { width: 20px; height: 20px; margin: -3px; }
+.codex-sent { margin-top: 28px; }
+.codex-working { display: flex; align-items: center; gap: 6px; color: #999; margin-block: 24px; font-size: var(--cx-chat-size); line-height: 24px; }
+.codex-working svg { width: 14px; height: 14px; }
+.codex-working [data-flow-work-label] { animation: codex-working-pulse 1.6s ease-in-out infinite; }
+.codex-answer p { margin: 0 0 16px; }
+.codex-reply-links { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; padding-bottom: 12px; }
+.codex-reply-links a, .codex-reply-links button { display: inline-flex; align-items: center; gap: 5px; color: #4b8ddd; font: inherit; font-variation-settings: inherit; text-decoration: none; }
+.codex-reply-links a:hover, .codex-reply-links button:hover { text-decoration: underline; text-underline-offset: 3px; }
+.codex-reply-links button { position: relative; border: 0; padding: 0; background: none; }
+.codex-reply-links svg:not(.flow-pointer) { width: 14px; height: 14px; }
+.codex-composer { position: relative; width: calc(100% - var(--cx-inset) * 2); max-width: calc(var(--cx-content) - var(--cx-inset) * 2); margin: 12px auto 0; padding: 12px var(--cx-text-inset); border: 0; border-radius: 20px; background: var(--cx-control); box-shadow: inset 0 0 1px #ffffff1a; flex: none; }
+.codex-input { min-height: 42px; padding: 2px 0 8px; font-size: var(--cx-chat-size); line-height: 22px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.codex-placeholder { color: #707070; }
+.codex-caret { display: inline-block; width: 1px; height: 18px; vertical-align: -3px; background: #ddd; animation: usage-caret 1s steps(1) infinite; }
+.codex-composer-tools { display: flex; align-items: center; gap: 4px; height: 28px; margin-top: 4px; font-size: 12px; color: #b5b5b5; }
+.codex-tool { display: grid; place-items: center; width: 28px; height: 28px; flex: none; }
+.codex-permission { display: flex; align-items: center; gap: 5px; padding: 4px 6px; color: #d09b76; }
+.codex-permission svg { width: 13px; height: 13px; }
+.codex-model { display: flex; align-items: center; gap: 4px; margin-left: auto; padding: 4px 6px; white-space: nowrap; color: #dedede; }
+.codex-model .codex-effort { color: var(--cx-skill); }
+.codex-replica .codex-down { width: 11px; height: 11px; color: #9b9b9b; }
+.codex-send { position: relative; display: grid; place-items: center; width: 28px; height: 28px; margin-left: 4px; border-radius: 50%; background: #f0f0f0; color: #191919; flex: none; }
+.codex-send > span { display: flex; }
+.codex-send svg { width: 18px; height: 18px; }
+.codex-send .codex-idle-voice { display: none; }
+.codex-replica[data-skill-phase="idle"] .codex-send [data-flow-send] > svg:not(.codex-idle-voice) { display: none; }
+.codex-replica[data-skill-phase="idle"] .codex-send .codex-idle-voice { display: block; }
+.codex-environment { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: calc(100% - var(--cx-inset) * 2); max-width: calc(var(--cx-content) - var(--cx-inset) * 2); margin: 0 auto; padding: 8px 8px 12px; color: #939393; font-size: 12px; }
+.codex-environment > button { display: flex; align-items: center; gap: 6px; }
+.codex-manual-editor { display: flex; align-items: baseline; gap: 4px; min-height: 42px; padding: 2px 0 8px; }
+.codex-manual-editor textarea { min-height: 32px; flex: 1; line-height: 22px; }
+.codex-attachment { display: flex; align-items: center; gap: 8px; width: fit-content; margin: 2px 0 8px; padding: 2px 6px; border: 1px solid var(--cx-line); border-radius: 5px; color: #b5b5b5; font-size: 12px; }
+.codex-attachment button { width: 18px; height: 18px; }
+.codex-replica[data-demo-sidebar="hidden"] .codex-sidebar { display: none; }
+.codex-replica[data-demo-sidebar="hidden"] { --cx-preview-offset: var(--cx-chat-pane); }
+.codex-replica[data-demo-sidebar="hidden"] .codex-layout { grid-template-columns: minmax(0, 1fr); }
+[data-phase="result"] .codex-replica[data-demo-sidebar="hidden"] .codex-layout { grid-template-columns: var(--cx-chat-pane) minmax(0, 1fr); }
+.codex-environment svg { width: 13px; height: 13px; }
+.codex-browser { display: flex; min-width: 0; min-height: 0; border-left: 1px solid #343434; }
+/* 仅App采用原生浏览器的标签和地址栏，Cursor/CLI继续使用原来的预览外观。 */
+.codex-browser-action { display: none; }
+.usage-player[data-platform="app"] .usage-result { font-family: "Codex UI CJK", "Segoe UI", sans-serif; font-weight: 400; font-variation-settings: normal; }
+.usage-player[data-platform="app"] .usage-result-tab { height: 46px; min-height: 46px; padding: 8px; gap: 8px; border-bottom: 0; background: #181818; }
+.usage-player[data-platform="app"] .usage-browser-tab { height: 30px; min-width: 0; width: 172px; padding: 0 4px 0 10px; border-radius: 10px; background: var(--cx-tab); }
+.usage-player[data-platform="app"] .usage-browser-close { width: 22px; height: 22px; }
+.usage-player[data-platform="app"] .usage-browser-close svg { width: 12px; height: 12px; }
+.usage-player[data-platform="app"] .usage-result-toolbar { height: 40px; min-height: 40px; padding: 4px 10px; gap: 8px; background: #181818; border-color: #ffffff15; }
+.usage-player[data-platform="app"] .usage-result-toolbar [data-usage-back] { width: 24px; height: 28px; font-size: 0; }
+.usage-player[data-platform="app"] .usage-result-toolbar [data-usage-back]::before { content: "←"; font: 18px "Segoe UI", sans-serif; color: #888; }
+.usage-player[data-platform="app"] .codex-browser-action { display: grid; place-items: center; width: 24px; height: 28px; padding: 0; flex: none; }
+.codex-browser-action svg { width: 16px; height: 16px; fill: none; stroke: #999; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.codex-browser-action:disabled { opacity: .35; cursor: default; }
+.usage-player[data-platform="app"] .usage-result-address { background: transparent; text-align: center; color: #ddd; font-size: 12px; }
+.usage-player[data-platform="app"] .usage-result-toolbar > a { font-size: 0; }
+.usage-player[data-platform="app"] .usage-result-toolbar > a::after { content: "↗"; font: 17px "Segoe UI", sans-serif; }
+[data-phase="send"] .codex-send { box-shadow: 0 0 0 5px #ffffff12; }
+[data-phase="result"] .codex-layout { grid-template-columns: var(--cx-side-width) var(--cx-chat-pane) minmax(0, 1fr); }
+[data-phase="result"] .codex-stream { padding-top: 20px; }
+.usage-player[data-running="false"] .codex-caret, .usage-player[data-running="false"] .codex-working [data-flow-work-label], .usage-player[data-running="false"] .codex-task-status { animation-play-state: paused; }
+@keyframes codex-working-pulse { 50% { color: #e0e0e0; } }
+@container (max-width: 1100px) {
+  .codex-replica { --cx-preview-offset: var(--cx-side-width); }
+  .codex-replica[data-demo-sidebar="hidden"] { --cx-preview-offset: 0px; }
+  [data-phase="result"] .codex-replica[data-demo-sidebar="hidden"] .codex-layout { grid-template-columns: minmax(0, 1fr); }
+  [data-phase="result"] .codex-layout { grid-template-columns: var(--cx-side-width) minmax(0, 1fr); }
+  [data-phase="result"] .codex-chat { display: none; }
+}
+@container codex-chat (max-width: 440px) {
+  .codex-permission-label, .codex-permission .codex-down, .codex-environment { display: none; }
+  .codex-composer { margin-bottom: 16px; }
+  .codex-model { padding-inline: 2px; }
+}
+@container (max-width: 700px) {
+  .codex-replica { --cx-inset: 16px; --cx-preview-offset: 0px; }
+  .codex-layout, [data-phase="result"] .codex-layout { grid-template-columns: minmax(0, 1fr); }
+  .codex-sidebar { display: none; }
+  .codex-replica[data-demo-sidebar="shown"] .codex-sidebar { display: flex; position: absolute; z-index: 12; top: 35px; bottom: 0; left: 0; width: var(--cx-side-width); max-width: calc(100% - 44px); border-right: 1px solid var(--cx-line); background: linear-gradient(180deg, #1a2227, #1c231a); }
+  .codex-stream { padding-top: 24px; }
+  .codex-menubar > button { padding-inline: 7px; }
+  .codex-menubar > button[data-demo-menu="view"], .codex-menubar > button[data-demo-menu="help"] { display: none; }
+  .codex-window-controls button { width: 32px; }
+  .codex-chat-actions { gap: 12px; }
+}
+@container (max-width: 360px) {
+  .codex-thread { padding-inline: 24px; }
+  .codex-menubar > button[data-demo-action="back"], .codex-menubar > button[data-demo-action="forward"] { display: none; }
+  .codex-manual-editor { flex-wrap: wrap; }
+  .codex-manual-editor textarea { flex-basis: 100%; }
+}
+@media (max-width: 1000px) { .codex-replica { height: 690px; } }
+@media (max-width: 480px) {
+  .codex-replica { height: 560px; --cx-inset: 12px; --cx-text-inset: 14px; }
+  .codex-composer { padding-block: 10px; border-radius: 20px; }
+  .codex-permission { padding-inline: 3px; gap: 3px; }
+  .codex-model { padding-inline: 3px; }
+  .codex-composer-tools { gap: 2px; }
+  .codex-chat-actions > button[data-demo-action="share"] { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .codex-caret, .codex-working [data-flow-work-label], .usage-player .codex-task-status { animation: none; } }
+/* Skill候选与选中引用沿用原生输入器位置，不把命令当成普通文字播放。 */
+.codex-skill-picker { position: absolute; z-index: 5; left: 0; bottom: calc(100% + 8px); width: 100%; padding: 5px; border: 1px solid #ffffff1f; border-radius: 12px; background: var(--cx-menu); box-shadow: 0 12px 32px #0006; }
+.codex-skill-picker button { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 38px; padding: 8px; border: 0; border-radius: 7px; background: #ffffff0d; color: #eee; font: inherit; font-variation-settings: inherit; text-align: left; }
+.codex-skill-picker strong { flex: none; font-weight: 500; }
+.codex-skill-picker svg { width: 14px; height: 14px; }
+.codex-skill-description { min-width: 0; flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--cx-muted); }
+.codex-skill-scope { margin-left: auto; flex: none; color: var(--cx-muted); font-size: 12px; }
+.codex-skill-picker button:hover, .codex-replica[data-skill-phase="choosing"] .codex-skill-picker button { background: #ffffff1f; }
+.codex-skill-token { display: inline-flex; align-items: baseline; gap: 3px; vertical-align: baseline; color: var(--cx-skill); font-weight: 500; white-space: nowrap; }
+.codex-skill-token svg { width: 1em; height: 1em; align-self: center; }
+@container (max-width: 480px) { .codex-skill-picker button { flex-wrap: wrap; column-gap: 7px; row-gap: 3px; } .codex-skill-description { order: 1; flex-basis: 100%; padding-left: 21px; } }

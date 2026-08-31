@@ -1,0 +1,13 @@
+/* 共享选中底板；脚本不可用时仍保留原有按钮选中态。 */
+[data-motion-tabs] { position: relative; isolation: isolate; }
+[data-motion-indicator] { position: absolute; top: 0; left: 0; z-index: -1; pointer-events: none; visibility: hidden; border: 2px solid var(--line); background: var(--yellow); box-shadow: 3px 3px 0 var(--line); }
+[data-motion-ready="true"] > [data-motion-indicator] { visibility: visible; }
+[data-motion-tabs][data-motion-ready="true"] > button[aria-pressed="true"] { background: transparent; border-color: transparent; box-shadow: none; }
+[data-motion-tabs] > button { position: relative; transition: color 180ms ease, background-color 180ms ease; }
+.sample-tabs button:after { visibility: visible; opacity: 0; transform: translateX(-5px); transition: opacity 180ms ease, transform 240ms ease; }
+.sample-tabs button[aria-pressed="true"]:after { opacity: 1; transform: translateX(0); }
+.sample-tabs button:focus-visible, .usage-switcher button:focus-visible { outline-width: 2px; outline-offset: 5px; }
+.usage-controls button { transition: color 180ms ease, border-color 180ms ease; }
+@media (prefers-reduced-motion: reduce) {
+  [data-motion-tabs] > button, .sample-tabs button:after, .usage-controls button { transition: none; }
+}
