@@ -1,8 +1,8 @@
 /* 播放器与公开HTML预览；各工作台的外观保持独立。 */
 .usage-wrap { width: min(1640px, calc(100% - 48px)); }
-.usage-player { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
-.usage-switcher { display: flex; flex-direction: row; flex-wrap: wrap; justify-self: start; width: max-content; max-width: 100%; gap: 12px; padding: 4px 6px 6px 0; }
-.usage-switcher button { min-width: 154px; padding: 12px 26px; border: 2px solid transparent; background: transparent; color: var(--ink); text-align: center; font-size: 17px; font-weight: 750; }
+.usage-player { display: grid; grid-template-columns: clamp(154px, 14vw, 190px) minmax(0, 1fr); align-items: start; gap: 20px; }
+.usage-switcher { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; justify-self: stretch; width: 100%; max-width: 100%; gap: 12px; padding: 4px 4px 6px 0; }
+.usage-switcher button { width: 100%; min-width: 0; padding: 12px 16px; border: 2px solid transparent; background: transparent; color: var(--ink); text-align: left; font-size: 17px; font-weight: 750; }
 .usage-switcher button:hover { background: #fff1b8; }
 .usage-switcher button[aria-pressed="true"] { border-color: var(--line); background: var(--yellow); box-shadow: 3px 3px 0 var(--line); }
 .usage-main { min-width: 0; container-type: inline-size; }
@@ -81,13 +81,14 @@
 @keyframes usage-caret { 50% { opacity: 0; } }
 @keyframes usage-spin { to { transform: rotate(360deg); } }
 @media (max-width: 1000px) {
-  .usage-switcher { justify-self: stretch; width: auto; }
-  .usage-switcher button { flex: 1; min-width: 120px; }
+  .usage-player { grid-template-columns: 144px minmax(0, 1fr); gap: 14px; }
+  .usage-switcher { width: 100%; }
 }
 @media (max-width: 700px) {
   .usage-wrap { width: calc(100% - 24px); }
-  .usage-switcher { gap: 8px; }
-  .usage-switcher button { font-size: 16px; min-width: 0; padding: 10px; }
+  .usage-player { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .usage-switcher { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding-right: 0; }
+  .usage-switcher button { font-size: 16px; min-width: 0; padding: 10px; text-align: center; }
 }
 @media (max-width: 480px) {
   .usage-switcher { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }

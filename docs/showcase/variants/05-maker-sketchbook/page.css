@@ -127,9 +127,9 @@ html[data-site-pages="ready"] .usage-wrap{
 }
 html[data-site-pages="ready"] .usage-section .section-head{flex:none;margin-bottom:4px}
 html[data-site-pages="ready"] .usage-section .section-head h2{font-size:clamp(24px,2.6vw,34px)}
-html[data-site-pages="ready"] .usage-player{display:grid;grid-template-rows:auto minmax(0,1fr);flex:1;gap:7px;min-height:0}
-html[data-site-pages="ready"] .usage-switcher{gap:7px;padding-bottom:2px}
-html[data-site-pages="ready"] .usage-switcher button{min-width:132px;padding:7px 18px;font-size:14px}
+html[data-site-pages="ready"] .usage-player{display:grid;grid-template-columns:clamp(140px,13vw,176px) minmax(0,1fr);grid-template-rows:minmax(0,1fr);align-items:stretch;flex:1;gap:12px;min-height:0}
+html[data-site-pages="ready"] .usage-switcher{align-self:start;gap:7px;padding:0 4px 0 0}
+html[data-site-pages="ready"] .usage-switcher button{min-width:0;padding:9px 12px;font-size:14px;text-align:left}
 html[data-site-pages="ready"] .usage-main{display:flex;flex-direction:column;min-height:0}
 html[data-site-pages="ready"] .usage-compatibility{flex:none;margin-bottom:7px;padding:7px 12px;font-size:13px;line-height:1.45}
 html[data-site-pages="ready"] [data-usage-stage]{display:grid;flex:1;min-height:0}
@@ -179,8 +179,9 @@ html[data-site-pages="ready"] .foot{padding:10px 0 0}
   html[data-site-pages="ready"] .theme-page .theme-ticket{grid-template-columns:1fr;padding:18px;gap:14px}
   html[data-site-pages="ready"] .usage-wrap{width:calc(100% - 16px);padding-top:4px}
   html[data-site-pages="ready"] .usage-section .section-head{display:none}
-  html[data-site-pages="ready"] .usage-switcher{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;gap:4px}
-  html[data-site-pages="ready"] .usage-switcher button{min-width:0;padding:6px 3px;font-size:11px}
+  html[data-site-pages="ready"] .usage-player{grid-template-columns:118px minmax(0,1fr);gap:7px}
+  html[data-site-pages="ready"] .usage-switcher{display:grid;grid-template-columns:minmax(0,1fr);width:100%;gap:4px;padding-right:3px}
+  html[data-site-pages="ready"] .usage-switcher button{min-width:0;padding:7px 6px;font-size:11px;text-align:left}
   html[data-site-pages="ready"] .usage-compatibility{margin-bottom:4px;padding:5px 8px;font-size:10px}
   html[data-site-pages="ready"] .usage-controls{margin-top:4px}
   html[data-site-pages="ready"] .usage-controls button{font-size:11px}
@@ -203,6 +204,12 @@ html[data-site-pages="ready"] .foot{padding:10px 0 0}
   html[data-site-pages="ready"] .last-note .btn{padding:6px 8px;font-size:11px;white-space:nowrap}
   html[data-site-pages="ready"] .foot{padding-top:5px;font-size:9px;gap:8px}
   html[data-site-pages="ready"] .site-pager{bottom:7px}
+}
+
+@media(max-width:700px){
+  html[data-site-pages="ready"] .usage-player{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:4px}
+  html[data-site-pages="ready"] .usage-switcher{grid-template-columns:repeat(4,minmax(0,1fr));padding-right:0}
+  html[data-site-pages="ready"] .usage-switcher button{padding:6px 3px;text-align:center}
 }
 
 @media(max-height:680px) and (min-width:861px){
