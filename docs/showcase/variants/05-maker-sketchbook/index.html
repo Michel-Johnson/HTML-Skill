@@ -7,7 +7,7 @@
   <link rel="alternate" hreflang="en" href="index.en.html">
   <meta name="description" content="亲手翻看 HTML Reply 生成的报告、对比、代码讲解和表单，了解怎么调用、文件存在哪里。">
   <title>HTML Reply! — 别再让好答案困在聊天框里。</title>
-  <link rel="stylesheet" href="page.css">
+  <link rel="stylesheet" href="page.css?v=fullpage-1">
   <link rel="preload" href="fonts/CascadiaMono.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/NotoSansSC-UI.woff" as="font" type="font/woff" crossorigin>
   <link rel="stylesheet" href="usage.css">
@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="claude.css">
   <link rel="stylesheet" href="motion.css">
   <script src="locale.js" defer></script>
+  <script src="site-pages.js?v=fullpage-1" defer></script>
   <script src="../../showcase.js" defer></script>
   <script src="motion.js" defer></script>
   <script src="reading.js" defer></script>
@@ -28,13 +29,13 @@
 </head>
 <body>
   <header class="wrap nav"><a class="logo" href="#top">HTML <u>Reply!</u></a><nav class="navlinks" aria-label="页面导航"><a href="#examples">看成品</a><a href="#usage">怎么用</a><a href="#storage">存在哪</a><a class="language-link" href="index.en.html" lang="en" hreflang="en" data-language-link aria-label="English version">English</a><a class="github" href="https://github.com/Michel-Johnson/HTML-Skill">GitHub ↗</a></nav></header>
-  <main>
-    <section class="wrap hero"><div><h1><span class="headline-line">别再让好答案</span><span class="headline-line"><span class="headline-accent">困在聊天框里。</span></span></h1><p>HTML Reply 是一个 Codex Skill。你明确叫它时，它会把回答做成能阅读、能交互、能留档的独立网页。</p><div class="buttons"><a class="btn orange" href="#examples">先翻翻真实成品 ↓</a><a class="btn" href="#usage">我想试试</a></div></div>
+  <main data-site-pages>
+    <section class="wrap hero" id="top" data-site-page data-site-label="开场"><div><h1><span class="headline-line">别再让好答案</span><span class="headline-line"><span class="headline-accent">困在聊天框里。</span></span></h1><p>HTML Reply 是一个 Codex Skill。你明确叫它时，它会把回答做成能阅读、能交互、能留档的独立网页。</p><div class="buttons"><a class="btn orange" href="#examples">先翻翻真实成品 ↓</a><a class="btn" href="#usage">我想试试</a></div></div>
       <div class="desk"><div class="tape" aria-hidden="true"></div><div class="note main"><div class="windowtop" aria-hidden="true"><i></i><i></i><i></i></div><div class="hero-viewport"><iframe class="hero-frame" src="../../examples/review.html" title="HTML Reply 审查报告示例" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div></div></div>
     </section>
 
-    <section class="wrap section examples-section" aria-labelledby="examples-heading">
-      <div class="reading-track" id="examples" data-reading-track><div class="reading-pin" data-reading-pin>
+    <section class="wrap section examples-section" id="examples" data-site-page data-site-label="真实成品" aria-labelledby="examples-heading">
+      <div class="reading-track" data-reading-track><div class="reading-pin" data-reading-pin>
       <div class="section-head"><div><h2 id="examples-heading">先看它交出来的东西。</h2></div></div>
       <div class="sample-book" data-demo-viewer data-reading-viewer>
         <aside class="sample-sidebar" aria-label="示例导航">
@@ -53,20 +54,19 @@
             <div class="preview-pane" data-preview-pane><p class="sample-note download-notice" data-example-note hidden></p><iframe data-example-frame src="../../examples/review.html" title="HTML Reply 真实输出：审查报告" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div>
             <div class="preview-pane" data-preview-pane inert aria-hidden="true"><p class="sample-note download-notice" data-example-note hidden></p><iframe data-example-frame title="下一份 HTML 示例" tabindex="-1" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div>
           </div>
-          <nav class="reading-pager" data-reading-pager aria-label="HTML 示例翻页">
-            <button type="button" data-reading-prev disabled>← 上一页</button>
-            <span data-reading-status role="status" aria-live="polite">第 1 / 1 页</span>
-            <button type="button" data-reading-next disabled>下一页 →</button>
-          </nav>
           <p class="preview-error" data-preview-error role="status" hidden>新示例暂未加载，已保留当前页面，请再点一次分类。</p>
         </div>
       </div>
       </div></div>
-      <aside class="theme-ticket"><div class="palette" aria-label="生成页的统一配色"><i style="--swatch:#faf9f5"></i><i style="--swatch:#efe8d6"></i><i style="--swatch:#d9a441"></i><i style="--swatch:#dce9f4"></i><i style="--swatch:#dcebd9"></i></div><div><p><strong>一个阅读主题，装下不同的回答。</strong><br>目前是统一的浅色纸张风格，不是多套皮肤。报告、表格、讲解、表单是不同的内容排版；你正在看的手账风宣传页，不是 Skill 的输出主题。</p><div class="capability-tags"><span>8 种代码语言高亮</span><span>无需 localhost</span><span>历史可搜索</span></div></div></aside>
       <noscript><p>脚本已禁用，可直接打开：<a href="../../examples/compare.html">对比</a>、<a href="../../examples/explain.html">讲解</a>、<a href="../../examples/form.html">表单（填写后下载 JSON）</a>、<a href="../../examples/history.html">历史</a>。工作台切换需启用 JavaScript。</p></noscript>
     </section>
 
-    <section class="usage-section" id="usage"><div class="wrap section usage-wrap">
+    <section class="wrap section theme-page" id="theme" data-site-page data-site-label="阅读主题" aria-labelledby="theme-heading">
+      <div class="section-head"><h2 id="theme-heading">一个阅读主题，装下不同的回答。</h2></div>
+      <aside class="theme-ticket"><div class="palette" aria-label="生成页的统一配色"><i style="--swatch:#faf9f5"></i><i style="--swatch:#efe8d6"></i><i style="--swatch:#d9a441"></i><i style="--swatch:#dce9f4"></i><i style="--swatch:#dcebd9"></i></div><div><p>目前是统一的浅色纸张风格，不是多套皮肤。报告、表格、讲解、表单是不同的内容排版；你正在看的手账风宣传页，不是 Skill 的输出主题。</p><div class="capability-tags"><span>8 种代码语言高亮</span><span>无需 localhost</span><span>历史可搜索</span></div></div></aside>
+    </section>
+
+    <section class="usage-section" id="usage" data-site-page data-site-label="工作台"><div class="wrap section usage-wrap">
       <div class="section-head"><h2>在工作台里，叫它一声。</h2></div>
       <div class="usage-player" data-usage-player data-platform="cursor" data-phase="input">
         <aside class="usage-switcher" aria-label="选择调用演示" data-motion-tabs>
@@ -297,9 +297,9 @@
           <noscript><p>启用 JavaScript 可播放调用演示。在 Codex 输入 <code>$html-reply 把这份审查结果整理成 HTML，先给结论，再列修改建议。</code>，发送后打开「当前回复」。</p></noscript>
         </div>
       </div>
-    </div></section>
+    </section>
 
-    <section class="privacy" id="storage"><div class="wrap">
+    <section class="privacy storage-page" id="storage" data-site-page data-site-label="存储位置"><div class="wrap">
       <div class="privacy-head"><div><h2>你的记录，默认留在本机。</h2></div><p>不是塞进每个项目。所有项目共用一个用户数据目录，里面再按项目和会话分开。</p></div>
       <div class="privacy-grid">
         <div class="folder"><span class="folder-tag">不在你的 repo 里 :)</span><div data-tabs><div class="os-tabs" role="tablist" aria-label="存储系统"><button id="path-tab-win" type="button" role="tab" aria-controls="path-win" aria-selected="true">Windows</button><button id="path-tab-unix" type="button" role="tab" aria-controls="path-unix" aria-selected="false" tabindex="-1">macOS / Linux</button></div><p class="root" id="path-win" role="tabpanel" aria-labelledby="path-tab-win">%USERPROFILE%\.codex\html-reply\</p><p class="root" id="path-unix" role="tabpanel" aria-labelledby="path-tab-unix" hidden>~/.codex/html-reply/</p></div>
@@ -311,17 +311,27 @@
             ├─ history-&lt;ID&gt;.html
             ├─ archive/  ← 旧回复
             ├─ assets/   ← 页面资源
-            └─ session.json</pre><p>上面是默认位置。项目指纹来自绝对路径，移动项目后会生成新的项目分组；自定义设置会改变根目录。</p></div>
-        <div class="safety-notes">
+             └─ session.json</pre><p>上面是默认位置。项目指纹来自绝对路径，移动项目后会生成新的项目分组；自定义设置会改变根目录。</p></div>
+      </div>
+    </div></section>
+
+    <section class="privacy safety-page" id="safety" data-site-page data-site-label="安全边界"><div class="wrap">
+      <div class="privacy-head"><div><h2>分享之前，再看清边界。</h2></div><p>页面留在本机，不等于自动加密、全面脱敏或模型完全离线。</p></div>
+      <div class="safety-notes">
           <article><span class="check">✓</span><div><h3>普通提交，不会顺手带走记录</h3><p>数据位于仓库外，不依赖 .gitignore。发布器拒绝 Git 工作树内的数据目录；不可写就报错，不退回项目里。</p></div></article>
           <article><span class="check">!</span><div><h3>但它不是加密保险箱</h3><p>HTML 是普通文件。提问摘要会过滤常见密码与密钥，但正文、代码和图片不会全面自动脱敏。分享之前，还是要自己看一眼。</p></div></article>
           <article><span class="check">↓</span><div><h3>表单答案去浏览器的下载位置</h3><p>表单草稿会尝试写入浏览器本地存储；JSON 由浏览器下载，不在左边的历史目录里。需要手动把答案文件交给助手。</p></div></article>
           <article><span class="check">i</span><div><h3>文件本地保存，模型不一定离线</h3><p>页面没有内置上传接口，但生成时仍使用工作台的模型服务。“本地 HTML”不代表整段对话只在本机处理。</p></div></article>
-        </div>
       </div>
-    </div></section>
-    <div class="wrap last-note"><p>让下一份好答案，有个好读的地方。</p><a class="btn orange" href="#usage">看看如何调用 ↑</a></div>
+      <div class="last-note"><p>让下一份好答案，有个好读的地方。</p><a class="btn orange" href="#usage">看看如何调用 ↑</a></div>
+      <footer class="foot"><span>HTML Reply · 手账版</span><a href="index.en.html" lang="en" hreflang="en" data-language-link>English version</a><a href="https://github.com/Michel-Johnson/HTML-Skill">源码在这里 ↗</a></footer>
+      </div>
+    </section>
   </main>
-  <footer class="wrap foot"><span>HTML Reply · 手账版</span><a href="index.en.html" lang="en" hreflang="en" data-language-link>English version</a><a href="https://github.com/Michel-Johnson/HTML-Skill">源码在这里 ↗</a></footer>
+  <nav class="site-pager" data-site-pager aria-label="整页导航">
+    <button type="button" data-site-prev aria-label="上一页">← 上一页</button>
+    <div class="site-page-status"><strong data-site-label>开场</strong><span data-site-status role="status" aria-live="polite">第 1 / 6 页</span></div>
+    <button type="button" data-site-next aria-label="下一页">下一页 →</button>
+  </nav>
 </body>
 </html>

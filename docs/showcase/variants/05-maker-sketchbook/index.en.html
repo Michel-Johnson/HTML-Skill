@@ -7,7 +7,7 @@
   <link rel="alternate" hreflang="en" href="index.en.html">
   <meta name="description" content="Explore HTML Reply reports, comparisons, code walkthroughs, and interactive forms. See how to call the Skill and where your files are stored.">
   <title>HTML Reply! — Give great answers a page of their own.</title>
-  <link rel="stylesheet" href="page.css">
+  <link rel="stylesheet" href="page.css?v=fullpage-1">
   <link rel="preload" href="fonts/CascadiaMono.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="usage.css">
   <link rel="stylesheet" href="cursor.css">
@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="claude.css">
   <link rel="stylesheet" href="motion.css">
   <script src="locale.js" defer></script>
+  <script src="site-pages.js?v=fullpage-1" defer></script>
   <script src="../../showcase.js" defer></script>
   <script src="motion.js" defer></script>
   <script src="reading.js" defer></script>
@@ -25,15 +26,15 @@
   <script src="workbench.js" defer></script>
   <script src="cursor.js" defer></script>
 </head>
-<body id="top">
+<body>
   <header class="wrap nav"><a class="logo" href="#top">HTML <u>Reply!</u></a><nav class="navlinks" aria-label="Page navigation"><a href="#examples">Examples</a><a href="#usage">How it works</a><a href="#storage">Storage</a><a class="language-link" href="index.html" lang="en" hreflang="zh-CN" data-language-link aria-label="Switch to the Chinese version">Chinese</a><a class="github" href="https://github.com/Michel-Johnson/HTML-Skill">GitHub ↗</a></nav></header>
-  <main>
-    <section class="wrap hero"><div><h1><span class="headline-line">Great answers.</span><span class="headline-line"><span class="headline-accent">Beyond the chat.</span></span></h1><p>HTML Reply is a Codex Skill. When you explicitly ask for it, it turns an answer into a standalone page you can read, interact with, and keep.</p><div class="buttons"><a class="btn orange" href="#examples">Explore the examples ↓</a><a class="btn" href="#usage">See how it works</a></div></div>
+  <main data-site-pages>
+    <section class="wrap hero" id="top" data-site-page data-site-label="Intro"><div><h1><span class="headline-line">Great answers.</span><span class="headline-line"><span class="headline-accent">Beyond the chat.</span></span></h1><p>HTML Reply is a Codex Skill. When you explicitly ask for it, it turns an answer into a standalone page you can read, interact with, and keep.</p><div class="buttons"><a class="btn orange" href="#examples">Explore the examples ↓</a><a class="btn" href="#usage">See how it works</a></div></div>
       <div class="desk"><div class="tape" aria-hidden="true"></div><div class="note main"><div class="windowtop" aria-hidden="true"><i></i><i></i><i></i></div><div class="hero-viewport"><iframe class="hero-frame" src="../../examples/en/review.html" title="HTML Reply review report example" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div></div></div>
     </section>
 
-    <section class="wrap section examples-section" aria-labelledby="examples-heading">
-      <div class="reading-track" id="examples" data-reading-track><div class="reading-pin" data-reading-pin>
+    <section class="wrap section examples-section" id="examples" data-site-page data-site-label="Examples" aria-labelledby="examples-heading">
+      <div class="reading-track" data-reading-track><div class="reading-pin" data-reading-pin>
       <div class="section-head"><div><h2 id="examples-heading">See what it makes.</h2></div></div>
       <div class="sample-book" data-demo-viewer data-reading-viewer>
         <aside class="sample-sidebar" aria-label="Example navigation">
@@ -52,20 +53,19 @@
             <div class="preview-pane" data-preview-pane><p class="sample-note download-notice" data-example-note hidden></p><iframe data-example-frame src="../../examples/en/review.html" title="HTML Reply output: review report" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div>
             <div class="preview-pane" data-preview-pane inert aria-hidden="true"><p class="sample-note download-notice" data-example-note hidden></p><iframe data-example-frame title="Next HTML example" tabindex="-1" sandbox="allow-scripts allow-downloads" referrerpolicy="no-referrer"></iframe></div>
           </div>
-          <nav class="reading-pager" data-reading-pager aria-label="Turn pages in this HTML example">
-            <button type="button" data-reading-prev disabled>← Previous</button>
-            <span data-reading-status role="status" aria-live="polite">Page 1 of 1</span>
-            <button type="button" data-reading-next disabled>Next →</button>
-          </nav>
           <p class="preview-error" data-preview-error role="status" hidden>This example has not loaded. Your current page is still here. Select the example again to retry.</p>
         </div>
       </div>
       </div></div>
-      <aside class="theme-ticket"><div class="palette" aria-label="Shared color palette for generated pages"><i style="--swatch:#faf9f5"></i><i style="--swatch:#efe8d6"></i><i style="--swatch:#d9a441"></i><i style="--swatch:#dce9f4"></i><i style="--swatch:#dcebd9"></i></div><div><p><strong>One reading theme. Many kinds of answers.</strong><br>Generated pages share a light, paper-like theme. Reports, tables, explanations, and forms use different layouts, not different skins. This sketchbook-style showcase is separate from the Skill’s output theme.</p><div class="capability-tags"><span>Syntax highlighting for 8 languages</span><span>No localhost required</span><span>Searchable history</span></div></div></aside>
       <noscript><p>JavaScript is disabled. Open an example directly: <a href="../../examples/en/compare.html">comparison</a>, <a href="../../examples/en/explain.html">walkthrough</a>, <a href="../../examples/en/form.html">form (downloads answers as JSON)</a>, <a href="../../examples/en/history.html">history</a>. Enable JavaScript to switch workbench demos.</p></noscript>
     </section>
 
-    <section class="usage-section" id="usage"><div class="wrap section usage-wrap">
+    <section class="wrap section theme-page" id="theme" data-site-page data-site-label="Reading theme" aria-labelledby="theme-heading">
+      <div class="section-head"><h2 id="theme-heading">One reading theme. Many kinds of answers.</h2></div>
+      <aside class="theme-ticket"><div class="palette" aria-label="Shared color palette for generated pages"><i style="--swatch:#faf9f5"></i><i style="--swatch:#efe8d6"></i><i style="--swatch:#d9a441"></i><i style="--swatch:#dce9f4"></i><i style="--swatch:#dcebd9"></i></div><div><p>Generated pages share a light, paper-like theme. Reports, tables, explanations, and forms use different layouts, not different skins. This sketchbook-style showcase is separate from the Skill’s output theme.</p><div class="capability-tags"><span>Syntax highlighting for 8 languages</span><span>No localhost required</span><span>Searchable history</span></div></div></aside>
+    </section>
+
+    <section class="usage-section" id="usage" data-site-page data-site-label="Workbenches"><div class="wrap section usage-wrap">
       <div class="section-head"><h2>Call it from your workspace.</h2></div>
       <div class="usage-player" data-usage-player data-platform="cursor" data-phase="input">
         <aside class="usage-switcher" aria-label="Choose a workbench demo" data-motion-tabs>
@@ -298,7 +298,7 @@ Type help to see the available examples.</pre>
       </div>
     </div></section>
 
-    <section class="privacy" id="storage"><div class="wrap">
+    <section class="privacy storage-page" id="storage" data-site-page data-site-label="Storage"><div class="wrap">
       <div class="privacy-head"><div><h2>Your history stays on your device.</h2></div><p>One user data directory, outside your projects. Inside, files are grouped by workspace and conversation.</p></div>
       <div class="privacy-grid">
         <div class="folder"><span class="folder-tag">Outside your repo :)</span><div data-tabs><div class="os-tabs" role="tablist" aria-label="Storage location by operating system"><button id="path-tab-win" type="button" role="tab" aria-controls="path-win" aria-selected="true">Windows</button><button id="path-tab-unix" type="button" role="tab" aria-controls="path-unix" aria-selected="false" tabindex="-1">macOS / Linux</button></div><p class="root" id="path-win" role="tabpanel" aria-labelledby="path-tab-win">%USERPROFILE%\.codex\html-reply\</p><p class="root" id="path-unix" role="tabpanel" aria-labelledby="path-tab-unix" hidden>~/.codex/html-reply/</p></div>
@@ -310,17 +310,27 @@ Type help to see the available examples.</pre>
             ├─ history-&lt;ID&gt;.html
             ├─ archive/  ← older replies
             ├─ assets/   ← page assets
-            └─ session.json</pre><p>This is the default location. Workspace fingerprints come from absolute paths, so moving a project creates a new group. Custom settings can change the root directory.</p></div>
-        <div class="safety-notes">
+             └─ session.json</pre><p>This is the default location. Workspace fingerprints come from absolute paths, so moving a project creates a new group. Custom settings can change the root directory.</p></div>
+      </div>
+    </div></section>
+
+    <section class="privacy safety-page" id="safety" data-site-page data-site-label="Safety"><div class="wrap">
+      <div class="privacy-head"><div><h2>Know the boundaries before you share.</h2></div><p>Staying on your device does not automatically mean encrypted, fully redacted, or completely offline.</p></div>
+      <div class="safety-notes">
           <article><span class="check">✓</span><div><h3>Your commits leave your history behind</h3><p>Data lives outside the repository, without relying on .gitignore. The publisher rejects data directories inside Git worktrees. If it cannot write there, it reports an error instead of falling back to the project.</p></div></article>
           <article><span class="check">!</span><div><h3>Local does not mean encrypted</h3><p>HTML pages are ordinary files. Prompt summaries filter common passwords and keys, but the body, code, and images are not fully redacted automatically. Review a page before sharing it.</p></div></article>
           <article><span class="check">↓</span><div><h3>Form answers go to your downloads</h3><p>Forms try to keep drafts in browser storage. Your browser downloads the JSON answers separately from the history directory shown here. You need to give the answer file to your assistant yourself.</p></div></article>
           <article><span class="check">i</span><div><h3>Local files do not mean an offline model</h3><p>The page has no built-in upload endpoint, but generation still uses your workbench’s model service. Local HTML does not mean the entire conversation is processed on your device.</p></div></article>
-        </div>
       </div>
-    </div></section>
-    <div class="wrap last-note"><p>Give your next great answer a page of its own.</p><a class="btn orange" href="#usage">See how to use it ↑</a></div>
+      <div class="last-note"><p>Give your next great answer a page of its own.</p><a class="btn orange" href="#usage">See how to use it ↑</a></div>
+      <footer class="foot"><span>HTML Reply · Sketchbook edition</span><a href="index.html" hreflang="zh-CN" data-language-link>Chinese version</a><a href="https://github.com/Michel-Johnson/HTML-Skill">View source ↗</a></footer>
+      </div>
+    </section>
   </main>
-  <footer class="wrap foot"><span>HTML Reply · Sketchbook edition</span><a href="index.html" hreflang="zh-CN" data-language-link>Chinese version</a><a href="https://github.com/Michel-Johnson/HTML-Skill">View source ↗</a></footer>
+  <nav class="site-pager" data-site-pager aria-label="Full-page navigation">
+    <button type="button" data-site-prev aria-label="Previous page">← Previous</button>
+    <div class="site-page-status"><strong data-site-label>Intro</strong><span data-site-status role="status" aria-live="polite">Page 1 of 6</span></div>
+    <button type="button" data-site-next aria-label="Next page">Next →</button>
+  </nav>
 </body>
 </html>
