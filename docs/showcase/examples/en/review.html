@@ -101,9 +101,12 @@ form.addEventListener('submit',event=>{event.preventDefault();exportAnswers()});
       // 不用 documentElement.scrollHeight，避免把上次 iframe 高度当成内容高度。
       const margin = parseFloat(getComputedStyle(main).marginBottom) || 0;
       const height = Math.ceil(main.getBoundingClientRect().bottom + window.scrollY + margin);
+      const breaks = [...new Set([...main.children, ...main.querySelectorAll('fieldset,.entries > .entry')]
+        .map(element => Math.max(0, Math.round(element.getBoundingClientRect().top + window.scrollY)))
+        .filter(value => value > 0 && value < height))];
       window.parent.postMessage({
         type: 'html-reply-preview:size', requestId,
-        width: window.innerWidth, height,
+        width: window.innerWidth, height, breaks,
         file: window.location.pathname.split('/').pop()
       }, '*');
     });

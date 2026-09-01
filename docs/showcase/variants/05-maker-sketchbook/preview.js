@@ -13,7 +13,7 @@
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const slots = [...stage.querySelectorAll('[data-preview-pane]')].map(pane => ({
     pane, frame: pane.querySelector('iframe'), note: pane.querySelector('[data-example-note]'),
-    file: '', expected: null, ready: false, requestId: '', width: 0
+    file: '', expected: null, ready: false, requestId: '', width: 0, breaks: []
   }));
   let active = slots[0];
   active.file = 'review';
@@ -27,10 +27,13 @@
 
   const urlFor = key => exampleUrl(key + '.html');
   const busy = value => stage.setAttribute('aria-busy', String(value));
-  const heightOf = slot => Math.ceil(slot.pane.getBoundingClientRect().height);
+  // 分页会给pane补足视口高度；实际文档高度只取提醒和iframe，避免短页继承上一页的min-height。
+  const heightOf = slot => Math.ceil(slot.frame.getBoundingClientRect().height + (slot.note.hidden ? 0 : slot.note.getBoundingClientRect().height));
   const sizeStage = (slot, restart = false) => {
     const height = heightOf(slot);
-    if (reading) reading.setContent(slot.pane, height, restart);
+    const noteHeight = slot.note.hidden ? 0 : slot.note.getBoundingClientRect().height;
+    const breaks = slot.breaks.map(value => value + noteHeight);
+    if (reading) reading.setContent(slot.pane, height, restart, breaks);
     else stage.style.height = height + 'px';
   };
   const selectButton = key => buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.example === key)));
@@ -184,6 +187,9 @@
     const navigated = slot.file !== key;
     slot.file = key;
     slot.width = data.width;
+    slot.breaks = Array.isArray(data.breaks) ? [...new Set(data.breaks
+      .filter(value => Number.isFinite(value) && value > 0 && value < data.height)
+      .map(value => Math.round(value)))].sort((a, b) => a - b) : [];
     slot.frame.style.height = Math.ceil(data.height) + 2 + 'px';
     slot.ready = true;
     prepare(slot, key);

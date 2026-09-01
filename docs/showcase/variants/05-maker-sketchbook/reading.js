@@ -1,73 +1,135 @@
-// 阅读段只推进HTML；sticky负责固定外框，正文读完后由原生页面滚动自然释放。
+// 阅读段使用离散整屏翻页；外页只负责进入或离开示例区，不再按scrollY连续推进正文。
 (() => {
   'use strict';
   const track = document.querySelector('[data-reading-track]');
   const pin = track?.querySelector('[data-reading-pin]');
   const stage = track?.querySelector('[data-preview-stage]');
-  if (!pin || !stage) return;
+  const pager = track?.querySelector('[data-reading-pager]');
+  const previous = pager?.querySelector('[data-reading-prev]');
+  const next = pager?.querySelector('[data-reading-next]');
+  const status = pager?.querySelector('[data-reading-status]');
+  if (!pin || !stage || !previous || !next || !status) return;
 
   const panes = [...stage.querySelectorAll('[data-preview-pane]')];
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const english = document.documentElement.lang.toLowerCase().startsWith('en');
   const inset = 24;
+  const minimumPageHeight = 240;
   let pane = null;
   let contentHeight = 0;
-  let start = 0;
-  let range = 0;
-  let pinned = false;
-  let paint = null;
+  let page = 0;
+  let pages = 1;
+  let pageHeight = 0;
+  let pageOffsets = [0];
+  let semanticBreaks = [];
+  let fitted = false;
+  let initialized = false;
+  let resizeFrame = null;
+  let motionTimer = null;
 
-  const offset = () => Math.max(0, Math.min(range, window.scrollY - start));
-  const reading = () => pinned && window.scrollY >= start && window.scrollY <= start + range;
-  const movePage = top => window.scrollTo({top, left: window.scrollX, behavior: 'instant'});
+  const pageLabel = () => english ? `Page ${page + 1} of ${pages}` : `第 ${page + 1} / ${pages} 页`;
 
-  function render() {
+  function updateControls() {
+    previous.disabled = page === 0;
+    next.disabled = page >= pages - 1;
+    previous.setAttribute('aria-disabled', String(previous.disabled));
+    next.setAttribute('aria-disabled', String(next.disabled));
+    status.textContent = pageLabel();
+  }
+
+  function offsetFor(index) {
+    return pageOffsets[index] ?? 0;
+  }
+
+  function render(animate = false) {
     if (!pane) return;
-    // 独立translate不覆盖分类切换的水平transform动画。
-    pane.style.translate = pinned ? `0 ${-offset()}px` : '';
+    clearTimeout(motionTimer);
+    panes.forEach(item => item.removeAttribute('data-page-motion'));
+    if (animate && !reduced.matches) {
+      pane.setAttribute('data-page-motion', 'true');
+      motionTimer = setTimeout(() => pane?.removeAttribute('data-page-motion'), 240);
+    }
+    pane.style.translate = `0 ${-offsetFor(page)}px`;
+    updateControls();
+  }
+
+  function alignViewer() {
+    const rect = pin.getBoundingClientRect();
+    const availableBottom = window.innerHeight - inset;
+    if (rect.top >= inset - 2 && rect.bottom <= availableBottom + 2) return;
+    const top = window.scrollY + rect.top - inset;
+    window.scrollTo({top, left: window.scrollX, behavior: reduced.matches ? 'auto' : 'smooth'});
   }
 
   function layout() {
-    if (!pane) return;
-    const keepPosition = reading();
-    const previousOffset = offset();
-    const chromeHeight = stage.getBoundingClientRect().top - pin.getBoundingClientRect().top;
-    const viewport = Math.floor(window.innerHeight - inset * 2 - chromeHeight - 2);
-    // 极矮窗口中不强行固定，避免把导航或正文挤出可用区域。
-    pinned = viewport >= 240;
-    track.dataset.readingPinned = String(pinned);
-    stage.style.height = (pinned ? viewport : contentHeight) + 'px';
-    const pinHeight = Math.ceil(pin.getBoundingClientRect().height);
-    if (pinned && pinHeight > window.innerHeight - inset * 2 + 1) {
-      pinned = false;
-      track.dataset.readingPinned = 'false';
-      stage.style.height = contentHeight + 'px';
+    if (!pane || !contentHeight) return;
+    const currentStageHeight = Math.max(1, stage.getBoundingClientRect().height);
+    const fixedHeight = Math.max(0, pin.getBoundingClientRect().height - currentStageHeight);
+    const available = Math.floor(window.innerHeight - inset * 2 - fixedHeight);
+    fitted = available >= minimumPageHeight;
+    pageHeight = fitted ? available : minimumPageHeight;
+    stage.style.height = pageHeight + 'px';
+    panes.forEach(item => { item.style.minHeight = Math.max(contentHeight, pageHeight) + 'px'; });
+    const candidates = [...new Set(semanticBreaks
+      .filter(value => value > 0 && value < contentHeight - 16)
+      .map(value => Math.round(value)))].sort((a, b) => a - b);
+    pageOffsets = [0];
+    let current = 0;
+    while (contentHeight - current > pageHeight + 1) {
+      const minimum = current + pageHeight * .55;
+      const target = current + pageHeight;
+      const ceiling = current + pageHeight * 1.15;
+      const before = candidates.filter(value => value >= minimum && value <= target).at(-1);
+      const after = candidates.find(value => value > target && value <= ceiling);
+      const offset = before ?? after ?? Math.min(target, contentHeight - 1);
+      if (offset <= current + 1) break;
+      pageOffsets.push(offset);
+      current = offset;
     }
-    range = pinned ? Math.max(0, contentHeight - viewport) : 0;
-    start = track.getBoundingClientRect().top + window.scrollY - inset;
-    track.style.height = pinned ? pinHeight + range + 'px' : '';
-    if (!pinned) panes.forEach(item => { item.style.translate = ''; });
-    // 仅尺寸变化时保住当前阅读位置；普通滚动绝不拦截或改写scrollY。
-    if (keepPosition && pinned) {
-      const next = start + Math.min(previousOffset, range);
-      if (Math.abs(next - window.scrollY) > 1) movePage(next);
-    }
-    render();
+    pages = pageOffsets.length;
+    page = Math.min(page, pages - 1);
+    track.dataset.readingPaged = 'true';
+    track.dataset.readingFitted = String(fitted);
+    render(false);
+  }
+
+  function turn(delta) {
+    const target = Math.max(0, Math.min(pages - 1, page + delta));
+    if (target === page) return;
+    page = target;
+    alignViewer();
+    render(true);
   }
 
   window.ShowcaseReading = {
-    get pinned() { return pinned; },
-    setContent(nextPane, height, restart = false) {
-      // 新页就绪才复位；旧页保留原阅读位移，继续完成水平滑出。
-      if (restart && reading()) movePage(start);
+    // preview.js沿用此能力判断，含义改为当前阅读区已适配视口。
+    get pinned() { return fitted; },
+    get page() { return page; },
+    get pages() { return pages; },
+    setContent(nextPane, height, restart = false, breaks = []) {
+      const changed = pane !== nextPane;
       pane = nextPane;
-      contentHeight = height;
+      contentHeight = Math.max(1, Math.ceil(height));
+      semanticBreaks = Array.isArray(breaks) ? breaks : [];
+      if (restart || changed) page = 0;
       layout();
+      if (restart || (!initialized && location.hash === '#examples')) requestAnimationFrame(alignViewer);
+      initialized = true;
     }
   };
 
-  window.addEventListener('scroll', () => {
-    if (paint === null) paint = requestAnimationFrame(() => { paint = null; render(); });
-  }, {passive: true});
-  window.addEventListener('resize', layout);
+  previous.addEventListener('click', () => turn(-1));
+  next.addEventListener('click', () => turn(1));
+  pager.addEventListener('keydown', event => {
+    if (event.key === 'PageUp') { event.preventDefault(); turn(-1); }
+    else if (event.key === 'PageDown') { event.preventDefault(); turn(1); }
+  });
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(layout);
+  });
   window.addEventListener('load', layout);
+  window.addEventListener('hashchange', () => { if (location.hash === '#examples') alignViewer(); });
   document.fonts?.ready.then(layout);
+  reduced.addEventListener('change', () => render(false));
 })();

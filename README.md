@@ -1,6 +1,6 @@
-# Codex HTML Reply
+[skill网页](https://michel-johnson.github.io/HTML-Skill/)
 
-**在线演示：[English](https://michel-johnson.github.io/HTML-Skill/) · [简体中文](https://michel-johnson.github.io/HTML-Skill/variants/05-maker-sketchbook/index.html)**
+# Codex HTML Reply
 
 按用户明确要求，把 Codex 的当前回复写入独立、可刷新、带历史记录的 HTML 页面。默认回复保持普通聊天格式；Codex 只在明确调用 `$html-reply` 或要求 HTML 时写正文片段，再由 `publish.py` 负责归档、套模板、历史更新和校验。
 
