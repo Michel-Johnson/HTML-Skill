@@ -17,6 +17,34 @@
     .empty{display:none;margin:0 48px 30px;padding:24px;border:1.5px solid var(--line);background:var(--panel);font-size:20px;font-weight:750}
     @media(max-width:700px){main{width:calc(100% - 20px);margin:10px auto 28px}header{padding:30px 20px}.tools,.entries{padding:20px}.entry div{display:block}time{display:block;margin-top:5px}}
   </style>
+  <style id="showcase-bright-theme">
+    html body[data-html-reply-theme="soft-bauhaus-v1"]{
+      --paper:#fffdf8;--paper2:#fff6dd;--ink:#59554c;--muted:#7c7568;--line:#6f695f;
+      --accent:#f0bd55;--blue:#eaf4fc;--green:#edf6e9;--purple:#f3edf7;
+      --hr-paper:#fffdf8;--hr-paper-2:#fff6dd;--hr-ink:#59554c;--hr-muted:#7c7568;
+      --hr-accent:#f0bd55;--hr-blue:#eaf4fc;--hr-green:#edf6e9;
+      background:var(--paper)!important;color:var(--ink)!important
+    }
+    html body[data-html-reply-theme="soft-bauhaus-v1"] :where(header,section,article,.card,.panel,.metric,.file,.callout,table,fieldset,input,textarea,select){border-color:var(--line)!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] pre[data-hr-language]{border-color:var(--line)!important;border-left-color:#8bb8d0!important;background:#fbfaf4!important;color:#46423b!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] pre[data-hr-language]::before{color:#706b60!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] .hr-tok-key,
+    html body[data-html-reply-theme="soft-bauhaus-v1"] .hr-tok-property{color:#2d5f8b!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] .hr-tok-string{color:#3f7330!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] .hr-tok-number{color:#9a5b16!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] :is(.hr-tok-literal,.hr-tok-keyword){color:#74438b!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] .hr-tok-comment{color:#667067!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] .hr-tok-tag{color:#9c4f35!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] .hr-tok-variable{color:#806315!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] .hr-tok-punct{color:#59554c!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] #hr-history-button{border-color:var(--line)!important;background:var(--accent)!important;color:var(--ink)!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] #hr-history-drawer{border-color:var(--line)!important;background:var(--paper)!important;color:var(--ink)!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] .hr-head,
+    html body[data-html-reply-theme="soft-bauhaus-v1"] #hr-latest-link{border-color:var(--line)!important;background:var(--paper2)!important;color:var(--ink)!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] #hr-history-page{border-color:var(--line)!important;background:var(--green)!important;color:var(--ink)!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] .hr-item{border-color:var(--line)!important;background:#fff!important;color:var(--ink)!important}
+    html body[data-html-reply-theme="soft-bauhaus-v1"] .hr-item[aria-current="page"]{background:var(--blue)!important}
+  </style>
 </head>
 <body data-html-reply-theme="soft-bauhaus-v1">
   <main>
