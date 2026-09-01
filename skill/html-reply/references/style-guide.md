@@ -22,30 +22,36 @@
 
 ## Visual language
 
-- Use a soft-Bauhaus reading-report style: cream paper, charcoal lines, ochre accent, muted blue and green information panels.
+- Use a softened Bauhaus handbook style: warm sand outside the page, warm paper inside it, charcoal lines, and one ochre accent. Prefer neutral panels and shape or weight changes over adding blue, green, or other hues.
 - Use system sans-serif fonts only; avoid ornate serif or display fonts.
-- Use low-radius corners around 4–6 px, restrained borders, and almost no shadows.
+- Use low-radius corners around 4–6 px, mostly 1.5 px borders, 2 px section dividers, and no decorative shadows.
 - Keep the page spacious but efficient. Let the main content use the available horizontal space.
 - Preserve the user's approved page structure across replies; do not replace it with a new hero, dashboard, or centered showcase template merely because the current answer is a fix report.
 - On wide screens, avoid fixed narrow `max-width` containers that leave large decorative gutters. Keep only a small outer margin and let the content expand with the viewport.
-- Use a clear cover header, optional compact sticky table of contents, and a single reading column.
+- Treat the page as one continuous handbook sheet: one outer canvas, a clear cover header, and horizontal section dividers. Do not turn every top-level section into a separate white card.
+- Keep the page background visually quiet. Do not add decorative circles, squares, pseudo-element shapes, grids, dots, paper grain, noise, or repeating gradients behind the content.
+- Use ochre only for the primary emphasis, selected state, section number, or one key metric. If everything is ochre, nothing is emphasized.
 - Use color to distinguish meaning, not as decoration.
 
 Suggested tokens:
 
 ```css
 :root {
-  --paper: #faf9f5;
-  --paper-2: #efe8d6;
+  --outer: #ded3b8;
+  --paper: #ece3cd;
+  --panel: #efe8d6;
   --ink: #4f4a3c;
-  --muted: #8a8271;
+  --muted: #6b6455;
+  --hair: #d8d2c4;
   --accent: #d9a441;
-  --blue: #dce9f4;
-  --green: #dcebd9;
+  --gray: #6f6a60;
+  --gray-2: #b3a988;
+  --on-ink: #e9dec4;
+  --track: #e2dcce;
 }
 ```
 
-The finalizer enforces this foundation under the versioned body marker `data-html-reply-theme="soft-bauhaus-v1"`. Author pages may choose their own information structure, but must not depend on a conflicting narrow canvas, large rounded surfaces, decorative shadows, ornate fonts, or a different page/ink palette.
+The finalizer enforces this foundation under the versioned body marker `data-html-reply-theme="soft-bauhaus-v1"`. Keep the page and panels flat-colored and free of decorative background geometry or texture. Author pages may choose their own information structure, but must not depend on a conflicting narrow canvas, isolated white dashboard cards, large rounded surfaces, decorative shadows, ornate fonts, or a different page/ink palette.
 
 ## Information structure
 
@@ -56,7 +62,7 @@ Use only the sections needed by the current response:
 3. A concrete example, comparison, verification result, or next step when useful.
 4. Source note or artifact links when relevant.
 
-Do not force every page into the same number of cards. Avoid dashboards, excessive badges, decorative statistics, and overly fragmented layouts.
+Do not force every page into the same number of cards. Prefer continuous sections separated by rules. Use warm bordered panels only for real grouping; avoid dashboards, excessive badges, decorative statistics, and overly fragmented layouts.
 
 ## Code rendering
 
