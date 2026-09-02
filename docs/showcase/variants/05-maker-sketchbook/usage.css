@@ -52,8 +52,8 @@
 .usage-result-viewport { position: relative; flex: 1; min-height: 0; overflow: hidden; }
 .usage-result iframe { display: block; width: calc(100% + var(--preview-scrollbar-width, 0px)); height: 100%; min-height: 0; border: 0; background: #faf9f5; }
 /* 在原生尺寸下预热隐藏文档；只有首屏另有88%缩放。 */
-[data-result-preloading="true"] [data-result-dock][hidden] { display: flex !important; position: absolute; top: 37px; bottom: 0; left: 0; right: 0; visibility: hidden; pointer-events: none; }
-[data-result-preloading="true"] .usage-result[hidden] { display: flex !important; visibility: hidden; }
+[data-result-preloading="true"] [data-result-dock][hidden] { display: flex !important; position: absolute; top: 37px; bottom: 0; left: 0; right: 0; opacity: 0; pointer-events: none; }
+[data-result-preloading="true"] .usage-result[hidden] { display: flex !important; opacity: 0; }
 .codex-replica[data-result-preloading="true"] .codex-browser[hidden] { top: 35px; left: var(--cx-preview-offset); }
 .cursor-replica[data-result-preloading="true"] [data-result-dock][hidden] { top: 30px; bottom: 22px; left: 0; right: max(365px, 36%); }
 .usage-result[aria-busy="true"] .usage-result-viewport { pointer-events: none; }
@@ -64,7 +64,7 @@
   .cursor-replica[data-result-preloading="true"] [data-result-dock][hidden] { left: 0; right: 0; }
 }
 @media (max-width: 480px) {
-  .cursor-replica[data-result-preloading="true"] .cursor-editor { display: flex !important; position: absolute; inset: 30px 0 22px; visibility: hidden; pointer-events: none; }
+  .cursor-replica[data-result-preloading="true"] .cursor-editor { display: flex !important; position: absolute; inset: 30px 0 22px; opacity: 0; pointer-events: none; }
   .cursor-replica[data-result-preloading="true"] [data-result-dock][hidden] { inset: 0; }
 }
 .usage-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px 24px; margin-top: 24px; }

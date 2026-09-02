@@ -10,10 +10,11 @@
   const chapters = [...player.querySelectorAll('[data-usage-step]')];
   const ui = Object.fromEntries(['stage', 'result', 'frame', 'back', 'toggle', 'replay', 'progress', 'status'].map((name) => [name, element(name)]));
   const scrollbarProbe = element('scrollbar-probe');
+  let previewScrollbarWidth = 0;
   function fitPreviewScrollbars() {
     // 首屏与调用结果共用实测槽宽；首屏在88%缩放前补偿，避免漏改独立预览。
-    const width = scrollbarProbe.offsetWidth - scrollbarProbe.clientWidth;
-    document.documentElement.style.setProperty('--preview-scrollbar-width', `${Math.max(0, width)}px`);
+    previewScrollbarWidth = Math.max(0, scrollbarProbe.offsetWidth - scrollbarProbe.clientWidth);
+    document.documentElement.style.setProperty('--preview-scrollbar-width', `${previewScrollbarWidth}px`);
   }
   fitPreviewScrollbars();
   window.addEventListener('resize', fitPreviewScrollbars);
@@ -155,7 +156,12 @@
     const data = event.data;
     if (event.source !== ui.frame.contentWindow || !resultRequest || data?.type !== 'html-reply-preview:size' || data.requestId !== resultRequest) return;
     if (data.file !== requestedSource.split('/').pop() || !Number.isFinite(data.height) || data.height <= 0 || data.height > 32000) return;
-    if (!Number.isFinite(data.width) || data.width <= 0 || Math.abs(data.width - ui.frame.clientWidth) > 2) return;
+    if (!Number.isFinite(data.width) || data.width <= 0) return;
+    const widthDelta = Math.min(
+      Math.abs(data.width - ui.frame.clientWidth),
+      Math.abs(data.width + previewScrollbarWidth - ui.frame.clientWidth)
+    );
+    if (widthDelta > 2) return;
     if (readySource === requestedSource) return;
     readySource = requestedSource;
     resultFailed = false;
