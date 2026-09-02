@@ -3,13 +3,9 @@
   'use strict';
 
   const track = document.querySelector('[data-site-pages]');
-  const pager = document.querySelector('[data-site-pager]');
   const pages = track ? [...track.querySelectorAll(':scope > [data-site-page]')] : [];
-  const label = pager?.querySelector('[data-site-label]');
-  const status = pager?.querySelector('[data-site-status]');
-  if (!track || !pager || !label || !status || !pages.length) return;
+  if (!track || !pages.length) return;
 
-  const english = document.documentElement.lang.toLowerCase().startsWith('en');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const pageById = new Map(pages.map((page, index) => [page.id, index]));
   const pageLinks = [...document.querySelectorAll('a[href^="#"]')].filter(link => pageById.has(link.hash.slice(1)));
@@ -37,11 +33,8 @@
     syncLanguageLinks(hash);
   }
 
-  function updateControls() {
+  function updateNavigation() {
     const page = pages[index];
-    document.documentElement.dataset.siteTone = page.classList.contains('privacy') ? 'dark' : 'light';
-    label.textContent = page.dataset.siteLabel || page.id;
-    status.textContent = english ? `Page ${index + 1} of ${pages.length}` : `第 ${index + 1} / ${pages.length} 页`;
     pageLinks.forEach(link => {
       const current = link.hash === pageHash(page);
       if (current) link.setAttribute('aria-current', 'page');
@@ -68,7 +61,7 @@
       page.setAttribute('aria-hidden', String(!active));
       page.toggleAttribute('data-site-page-active', active);
     });
-    updateControls();
+    updateNavigation();
     updateHistory(options.history || 'none');
     if (changed && options.focus) focusPage(pages[index]);
     if (changed) {
