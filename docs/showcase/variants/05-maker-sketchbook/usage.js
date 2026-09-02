@@ -8,7 +8,7 @@
   const element = (name) => player.querySelector(`[data-usage-${name}]`);
   const platforms = [...player.querySelectorAll('[data-usage-platform]')];
   const chapters = [...player.querySelectorAll('[data-usage-step]')];
-  const ui = Object.fromEntries(['compatibility', 'stage', 'result', 'frame', 'back', 'toggle', 'replay', 'progress', 'status'].map((name) => [name, element(name)]));
+  const ui = Object.fromEntries(['stage', 'result', 'frame', 'back', 'toggle', 'replay', 'progress', 'status'].map((name) => [name, element(name)]));
   const scrollbarProbe = element('scrollbar-probe');
   function fitPreviewScrollbars() {
     // 首屏与调用结果共用实测槽宽；首屏在88%缩放前补偿，避免漏改独立预览。
@@ -39,20 +39,16 @@
   ]));
   const modes = {
     app: {
-      title: 'Codex App', token: '$html-reply', placeholder: t('随心输入', "Ask anything"), followup: t('随心输入', "Ask anything"),
-      note: t('流程演示：输入不发送到模型，结果为预先生成的公开 HTML 示例。', "Workflow demo. Input is not sent to a model; results are pre-generated public HTML examples.")
+      title: 'Codex App', token: '$html-reply', placeholder: t('随心输入', "Ask anything"), followup: t('随心输入', "Ask anything")
     },
     cli: {
-      title: t('Codex 终端', "Codex CLI"), token: '$html-reply', terminal: true, placeholder: 'Ask Codex to do anything', followup: 'Ask Codex to do anything',
-      note: t('终端流程示意：输入不执行真实命令，结果为预先生成的公开 HTML 示例。', "Terminal workflow demo. No real commands are executed; results are pre-generated public HTML examples.")
+      title: t('Codex 终端', "Codex CLI"), token: '$html-reply', terminal: true, placeholder: 'Ask Codex to do anything', followup: 'Ask Codex to do anything'
     },
     cursor: {
-      title: 'Cursor App', token: '/html-reply', placeholder: 'Plan, Build, / for skills, @ for context', followup: 'Plan, Build, / for skills, @ for context',
-      note: t('Cursor 流程示意：原生接入尚未适配，结果使用已生成的公开 HTML 示例。', "Cursor workflow demo. Native integration is not yet supported; results are pre-generated public HTML examples.")
+      title: 'Cursor App', token: '/html-reply', placeholder: 'Plan, Build, / for skills, @ for context', followup: 'Plan, Build, / for skills, @ for context'
     },
     claude: {
-      title: 'Claude Code CLI', token: '/html-reply', terminal: true, placeholder: 'Try "explain this codebase"', followup: 'Try "what should I do next?"',
-      note: t('Claude Code 流程示意：展示安装并适配 Skill 后的调用方式；原生接入尚未适配，结果为公开 HTML 示例。', "Claude Code workflow concept for an installed, compatible Skill. Native integration is not yet supported; results are public HTML examples.")
+      title: 'Claude Code CLI', token: '/html-reply', terminal: true, placeholder: 'Try "explain this codebase"', followup: 'Try "what should I do next?"'
     }
   };
   const request = t(' 把这份审查结果整理成 HTML，先给结论，再列修改建议。', " Turn this review into HTML. Start with the conclusion, then list the suggested changes.");
@@ -108,6 +104,8 @@
   let resultRequest = '';
   let resultSequence = 0;
   let resultTimeout = null;
+  let resultMeasureRetry = null;
+  let resultMeasureAttempts = 0;
   let resultFailed = false;
   let focusResultWhenReady = false;
   const setData = (node, key, value) => { if (node.dataset[key] !== String(value)) node.dataset[key] = String(value); };
@@ -130,22 +128,27 @@
     element('fallback').setAttribute('href', resultSource);
     if (!force && requestedSource === resultSource && ui.frame.getAttribute('src') === resultSource) return;
     clearTimeout(resultTimeout);
+    clearTimeout(resultMeasureRetry);
     requestedSource = resultSource;
     readySource = resultRequest = '';
+    resultMeasureAttempts = 0;
     resultFailed = false;
     ui.result.setAttribute('aria-busy', 'true');
     ui.frame.src = resultSource;
     resultTimeout = setTimeout(() => {
       if (readySource === requestedSource) return;
+      clearTimeout(resultMeasureRetry);
       resultFailed = true;
       render(); syncPlayback();
     }, 10000);
   }
 
   function measureResult() {
-    if (!requestedSource || ui.frame.getAttribute('src') !== requestedSource) return;
-    resultRequest = 'usage-result-' + (++resultSequence);
+    if (!requestedSource || readySource === requestedSource || ui.frame.getAttribute('src') !== requestedSource) return;
+    if (!resultRequest) resultRequest = 'usage-result-' + (++resultSequence);
     ui.frame.contentWindow?.postMessage({type: 'html-reply-preview:measure', requestId: resultRequest}, '*');
+    clearTimeout(resultMeasureRetry);
+    if (++resultMeasureAttempts < 5) resultMeasureRetry = setTimeout(measureResult, 200);
   }
   ui.frame.addEventListener('load', measureResult);
   window.addEventListener('message', event => {
@@ -157,6 +160,7 @@
     readySource = requestedSource;
     resultFailed = false;
     clearTimeout(resultTimeout);
+    clearTimeout(resultMeasureRetry);
     ui.result.setAttribute('aria-busy', 'false');
     render(); syncPlayback();
     if (focusResultWhenReady && !ui.result.hidden) { focusResultWhenReady = false; ui.back.focus(); }
@@ -278,8 +282,8 @@
     ui.result.hidden = !result;
     ui.result.inert = !result;
     if (result && lastPhase !== 'result') window.ShowcaseMotion?.enter(ui.result);
-    element('load-feedback').hidden = !resultRequested || readySource === resultSource;
-    element('load-message').textContent = resultFailed ? t('示例暂未加载，可重试或单独打开。', "The example has not loaded. Retry or open it in a new tab.") : t('正在打开公开示例…', "Opening the public example…");
+    element('load-feedback').hidden = !resultFailed;
+    element('load-message').textContent = t('示例暂未加载，可重试或单独打开。', "The example has not loaded. Retry or open it in a new tab.");
     element('retry').hidden = !resultFailed;
     positionPointer(view.pointer, phase === 'open', progressAt(time.open, time.result - 250));
     positionPointer(view.sendPointer, phase === 'send', progressAt(time.send, time.working - 150));
@@ -372,11 +376,12 @@
     views.get(mode).dock.append(ui.result);
     ui.frame.removeAttribute('src');
     clearTimeout(resultTimeout);
+    clearTimeout(resultMeasureRetry);
     requestedSource = readySource = resultRequest = '';
+    resultMeasureAttempts = 0;
     resultFailed = false;
     focusResultWhenReady = false;
     platforms.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.usagePlatform === mode)));
-    ui.compatibility.textContent = modes[mode].note;
     cursorDraft = null;
     cursorSent = null;
     editingCursor = false;
