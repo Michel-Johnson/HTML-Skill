@@ -7,11 +7,11 @@
   <link rel="alternate" hreflang="en" href="index.en.html">
   <meta name="description" content="亲手翻看 HTML Reply 生成的报告、对比、代码讲解和表单，了解怎么调用、文件存在哪里。">
   <title>HTML Reply! — 别再让好答案困在聊天框里。</title>
-  <link rel="stylesheet" href="page.css?v=workbench-layout-1">
+  <link rel="stylesheet" href="page.css?v=aligned-sections-20260905">
   <link rel="preload" href="fonts/CascadiaMono.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/NotoSansSC-UI.woff" as="font" type="font/woff" crossorigin>
-  <link rel="stylesheet" href="usage.css?v=theatre-4">
-  <link rel="stylesheet" href="cursor.css">
+  <link rel="stylesheet" href="usage.css?v=workbench-proportion-09">
+  <link rel="stylesheet" href="cursor.css?v=explorer-width-20260905">
   <link rel="stylesheet" href="codex.css">
   <link rel="stylesheet" href="cli.css">
   <link rel="stylesheet" href="claude.css">
@@ -23,7 +23,7 @@
   <script src="reading.js" defer></script>
   <script src="navigation.js" defer></script>
   <script src="preview.js" defer></script>
-  <script src="usage.js?v=theatre-4" defer></script>
+  <script src="usage.js?v=workbench-scrubber-1" defer></script>
   <script src="workbench.js" defer></script>
   <script src="cursor.js" defer></script>
 </head>
@@ -290,7 +290,7 @@
             </div>
             <div class="usage-playback"><button type="button" data-usage-toggle aria-label="播放调用演示">播放</button><button type="button" data-usage-replay>重播 ↻</button></div>
           </div>
-          <div class="usage-progress" aria-hidden="true"><div data-usage-progress></div></div>
+          <input class="usage-progress" type="range" min="0" max="11000" step="100" value="0" data-usage-progress aria-label="演示时间轴">
           <p class="usage-load-feedback" data-usage-load-feedback role="status" hidden><span data-usage-load-message>正在打开公开示例…</span> <button type="button" data-usage-retry hidden>重试</button> <a data-usage-fallback href="../../examples/review.html" target="_blank" rel="noopener">单独打开 ↗</a></p>
           <p class="usage-a11y-status" data-usage-status role="status">演示：在 Cursor Agent 输入框中输入 /html-reply 和你的请求。</p>
           <noscript><p>启用 JavaScript 可播放调用演示。在 Codex 输入 <code>$html-reply 把这份审查结果整理成 HTML，先给结论，再列修改建议。</code>，发送后打开「当前回复」。</p></noscript>

@@ -7,10 +7,10 @@
   <link rel="alternate" hreflang="en" href="index.en.html">
   <meta name="description" content="Explore HTML Reply reports, comparisons, code walkthroughs, and interactive forms. See how to call the Skill and where your files are stored.">
   <title>HTML Reply! — Give great answers a page of their own.</title>
-  <link rel="stylesheet" href="page.css?v=workbench-layout-1">
+  <link rel="stylesheet" href="page.css?v=aligned-sections-20260905">
   <link rel="preload" href="fonts/CascadiaMono.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="usage.css?v=theatre-4">
-  <link rel="stylesheet" href="cursor.css">
+  <link rel="stylesheet" href="usage.css?v=workbench-proportion-09">
+  <link rel="stylesheet" href="cursor.css?v=explorer-width-20260905">
   <link rel="stylesheet" href="codex.css">
   <link rel="stylesheet" href="cli.css">
   <link rel="stylesheet" href="claude.css">
@@ -22,7 +22,7 @@
   <script src="reading.js" defer></script>
   <script src="navigation.js" defer></script>
   <script src="preview.js" defer></script>
-  <script src="usage.js?v=theatre-4" defer></script>
+  <script src="usage.js?v=workbench-scrubber-1" defer></script>
   <script src="workbench.js" defer></script>
   <script src="cursor.js" defer></script>
 </head>
@@ -289,7 +289,7 @@ Type help to see the available examples.</pre>
             </div>
             <div class="usage-playback"><button type="button" data-usage-toggle aria-label="Play the workflow demo">Play</button><button type="button" data-usage-replay>Replay ↻</button></div>
           </div>
-          <div class="usage-progress" aria-hidden="true"><div data-usage-progress></div></div>
+          <input class="usage-progress" type="range" min="0" max="11000" step="100" value="0" data-usage-progress aria-label="Demo timeline">
           <p class="usage-load-feedback" data-usage-load-feedback role="status" hidden><span data-usage-load-message>Opening the public example…</span> <button type="button" data-usage-retry hidden>Retry</button> <a data-usage-fallback href="../../examples/en/review.html" target="_blank" rel="noopener">Open in a new tab ↗</a></p>
           <p class="usage-a11y-status" data-usage-status role="status">Demo: type /html-reply and your request in the Cursor Agent input.</p>
           <noscript><p>Enable JavaScript to play the demo. In Codex, type  <code>$html-reply Turn this review into HTML. Start with the conclusion, then list the suggested changes.</code>, send it, then open “Current reply”.</p></noscript>

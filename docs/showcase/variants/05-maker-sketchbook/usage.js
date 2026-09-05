@@ -294,7 +294,10 @@
     positionPointer(view.pointer, phase === 'open', progressAt(time.open, time.result - 250));
     positionPointer(view.sendPointer, phase === 'send', progressAt(time.send, time.working - 150));
     if (phase !== lastPhase && sent) view.scroll.scrollTop = view.scroll.scrollHeight;
-    ui.progress.style.width = `${Math.min(100, elapsed / time.end * 100)}%`;
+    const progressPercent = Math.min(100, elapsed / time.end * 100);
+    ui.progress.value = String(Math.round(elapsed));
+    ui.progress.style.setProperty('--usage-progress', `${progressPercent}%`);
+    ui.progress.setAttribute('aria-valuetext', t(`${(elapsed / 1000).toFixed(1)} 秒，共 11 秒`, `${(elapsed / 1000).toFixed(1)} of 11 seconds`));
 
     if (stage !== lastStage) {
       chapters.forEach((button, index) => {
@@ -522,6 +525,17 @@
     playOrPause();
   });
   ui.replay.addEventListener('click', replay);
+  ui.progress.addEventListener('pointerdown', event => {
+    event.stopPropagation();
+    intentToPlay = false;
+    syncPlayback();
+  });
+  ui.progress.addEventListener('input', event => {
+    event.stopPropagation();
+    editingCursor = false;
+    seek(Number(ui.progress.value));
+  });
+  ui.progress.addEventListener('change', event => event.stopPropagation());
   views.forEach((view) => view.open.addEventListener('click', () => {
     resetResultNavigation();
     openResult('review.html', true);
